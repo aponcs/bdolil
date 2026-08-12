@@ -1,0 +1,2949 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>আপন কম্পিউটার এন্ড ষ্টেশনারীজ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;600;700&family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1c2b22;
+    --paper:#f7f4ec;
+    --paper-2:#fffdf8;
+    --seal:#0b5e3a;
+    --seal-dark:#083f27;
+    --brass:#a97142;
+    --line:#d8cfb8;
+    --danger:#9c2b2b;
+    --muted:#6b6153;
+    --input-bg:#fff;
+    --block-bg:#fbf9f2;
+    --table-head-bg:#eef1e6;
+    --hover-bg:#eaf3ee;
+    --danger-bg:#fbeaea;
+    --callout-green:#eef4ee;
+    --callout-blue:#eaf3f9;
+    --callout-yellow:#fff8e6;
+    --heading:#083f27;
+  }
+  html[data-theme="dark"]{
+    --ink:#e7e3d6;
+    --paper:#12190f;
+    --paper-2:#1a231a;
+    --seal:#3fa06a;
+    --seal-dark:#0c150e;
+    --brass:#d1a25f;
+    --line:#3a4536;
+    --danger:#e2726a;
+    --muted:#a8ae9c;
+    --input-bg:#212b1f;
+    --block-bg:#1c2519;
+    --table-head-bg:#232f20;
+    --hover-bg:#233021;
+    --danger-bg:#3a2220;
+    --callout-green:#1d2c1e;
+    --callout-blue:#1b2733;
+    --callout-yellow:#332c17;
+    --heading:#6fd39a;
+  }
+  *{box-sizing:border-box;}
+  body{transition:background .2s,color .2s;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Hind Siliguri', sans-serif;
+    font-size:15px;
+    line-height:1.5;
+  }
+  h1,h2,h3,.serif{font-family:'Noto Serif Bengali', serif;}
+  .app-shell{display:flex;align-items:flex-start;min-height:100vh;}
+  .sidebar{
+    width:230px;flex-shrink:0;background:var(--seal-dark);color:#f4ecd8;
+    min-height:100vh;position:sticky;top:0;align-self:flex-start;
+    display:flex;flex-direction:column;transition:width .18s ease;
+    border-right:4px solid var(--brass);overflow-x:hidden;z-index:5;
+  }
+  .sidebar.collapsed{width:56px;}
+  .sidebar-toggle{
+    background:none;border:none;color:#f4ecd8;font-size:20px;
+    padding:16px;cursor:pointer;text-align:left;width:100%;flex-shrink:0;
+  }
+  .sidebar-toggle:hover{background:rgba(255,255,255,.08);}
+  .sidebar-brand{padding:0 16px 16px;border-bottom:1px solid rgba(255,255,255,.15);margin-bottom:8px;}
+  .sidebar.collapsed .sidebar-brand{display:none;}
+  .sidebar .brand-title{font-family:'Noto Serif Bengali',serif;font-size:17px;font-weight:700;line-height:1.3;}
+  .sidebar .brand-tagline{font-size:11px;color:#cdd9c9;margin-top:5px;line-height:1.45;}
+  .sidebar .tab-btn{
+    background:none;border:none;color:#d9e2d3;padding:12px 16px;
+    text-align:left;cursor:pointer;font-family:'Hind Siliguri',sans-serif;
+    font-size:14.5px;font-weight:600;display:flex;align-items:center;gap:12px;
+    white-space:nowrap;border-left:3px solid transparent;width:100%;
+  }
+  .sidebar .tab-btn .ic{font-size:17px;flex-shrink:0;width:20px;text-align:center;}
+  .sidebar.collapsed .tab-btn .label{display:none;}
+  .sidebar .tab-btn.active{background:rgba(255,255,255,.1);color:#fff;border-left-color:var(--brass);}
+  .sidebar .tab-btn:hover{background:rgba(255,255,255,.06);color:#fff;}
+  .content-area{flex:1;min-width:0;}
+  main{max-width:1080px;margin:24px auto 80px;padding:0 16px;}
+  .card{
+    background:var(--paper-2);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:20px 22px;
+    margin-bottom:18px;
+    box-shadow:0 1px 3px rgba(0,0,0,.04);
+  }
+  .card h2{
+    margin:0 0 4px;
+    font-size:18px;
+    color:var(--heading);
+    border-bottom:2px solid var(--line);
+    padding-bottom:8px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .card h2 .num{
+    background:var(--seal);
+    color:#fff;
+    font-size:12px;
+    font-family:'Hind Siliguri';
+    padding:2px 9px;
+    border-radius:20px;
+    margin-left:10px;
+  }
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px 16px;margin-top:14px;}
+  .grid.wide{grid-template-columns:repeat(auto-fit,minmax(320px,1fr));}
+  .grid.grid-inline5{grid-template-columns:repeat(5,minmax(0,1fr));}
+  @media (max-width:900px){ .grid.grid-inline5{grid-template-columns:repeat(2,1fr);} }
+  .field label{
+    display:block;font-size:12.5px;color:var(--muted);margin-bottom:4px;font-weight:600;
+  }
+  .field input, .field select, .field textarea{
+    width:100%;
+    padding:8px 10px;
+    border:1px solid var(--line);
+    border-radius:4px;
+    font-family:'Hind Siliguri',sans-serif;
+    font-size:14.5px;
+    background:var(--input-bg);
+    color:var(--ink);
+  }
+  .field textarea{resize:vertical;min-height:54px;}
+  .field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--seal);outline-offset:1px;}
+  .hint{font-size:12px;color:var(--brass);margin-top:3px;min-height:14px;}
+  .row-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center;}
+  .action-row{
+    display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+    margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);
+  }
+  .action-row:first-of-type{border-top:none;padding-top:0;}
+  .action-label{
+    font-size:12px;color:var(--muted);font-weight:700;
+    min-width:70px;text-transform:uppercase;letter-spacing:.3px;
+  }
+  .highlight-card{border:1.5px solid var(--seal);box-shadow:0 2px 10px rgba(11,94,58,.1);}
+  .lucide-icon{width:16px;height:16px;stroke-width:2.2;vertical-align:-3px;margin-right:2px;}
+  h2 .lucide-icon{width:18px;height:18px;vertical-align:-4px;}
+  .sidebar .tab-btn .lucide-icon{width:18px;height:18px;vertical-align:-4px;margin-right:4px;}
+  .sidebar-toggle .lucide-icon{width:20px;height:20px;margin:0;vertical-align:-4px;}
+  .home-btn .icon .lucide-icon{width:34px;height:34px;stroke-width:1.6;}
+  button.btn{
+    background:var(--seal);color:#fff;border:none;border-radius:4px;
+    padding:8px 14px;font-size:13.5px;font-weight:600;cursor:pointer;
+    font-family:'Hind Siliguri',sans-serif;
+  }
+  button.btn:hover{background:var(--seal-dark);}
+  button.btn.ghost{background:transparent;color:var(--seal);border:1px solid var(--seal);}
+  button.btn.ghost:hover{background:var(--hover-bg);}
+  button.btn.danger{background:transparent;color:var(--danger);border:1px solid var(--danger);}
+  button.btn.danger:hover{background:var(--danger-bg);}
+  button.btn.small{padding:5px 10px;font-size:12.5px;}
+  .person-block{
+    border:1px dashed var(--line);
+    border-radius:6px;
+    padding:14px 16px;
+    margin-top:12px;
+    background:var(--block-bg);
+    position:relative;
+  }
+  .person-block .pb-head{
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px;
+  }
+  .person-block .pb-head b{color:var(--heading);font-size:14.5px;}
+  select.reuse-select{max-width:220px;padding:6px 8px;border:1px solid var(--line);border-radius:4px;font-size:13px;}
+  select.plain-select{max-width:260px;padding:6px 8px;border:1px solid var(--line);border-radius:4px;font-size:13px;}
+  .bn-num{font-family:'Noto Sans Bengali','Hind Siliguri',sans-serif!important;font-weight:600;font-size:15.5px!important;letter-spacing:.3px;}
+  .addr-toggle{font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:6px;margin:8px 0 2px;}
+  .section-sub{font-size:12.5px;color:var(--brass);font-weight:700;margin:14px 0 -2px;text-transform:uppercase;letter-spacing:.4px;}
+  .bn-preview{font-size:12.5px;color:var(--heading);margin-top:3px;background:var(--callout-green);border-radius:3px;padding:3px 7px;display:inline-block;}
+  .top-actions{display:flex;justify-content:flex-end;gap:10px;margin:8px 0 18px;}
+  table.admin-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13.5px;}
+  table.admin-table th, table.admin-table td{border:1px solid var(--line);padding:7px 9px;text-align:left;}
+  table.admin-table th{background:var(--table-head-bg);color:var(--heading);}
+  .empty-note{color:var(--muted);font-size:13px;padding:10px 0;}
+  .badge{display:inline-block;background:var(--callout-green);color:var(--heading);font-size:11px;padding:2px 8px;border-radius:10px;margin-left:6px;}
+  footer.note{max-width:1080px;margin:0 auto 60px;padding:0 16px;color:var(--muted);font-size:12.5px;}
+  .home-hero{text-align:center;padding:30px 10px 10px;}
+  .home-hero h2{font-size:22px;color:var(--heading);margin-bottom:6px;}
+  .home-hero p{color:var(--muted);font-size:14px;max-width:560px;margin:0 auto;}
+  .home-buttons{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:26px 0;}
+  .home-btn{
+    background:var(--paper-2);border:1px solid var(--line);border-radius:8px;padding:24px 18px;
+    text-align:center;cursor:pointer;transition:.15s;
+  }
+  .home-btn:hover{border-color:var(--seal);box-shadow:0 2px 8px rgba(11,94,58,.12);transform:translateY(-2px);}
+  .home-btn .icon{font-size:30px;margin-bottom:8px;}
+  .home-btn .title{font-family:'Noto Serif Bengali',serif;font-size:16.5px;font-weight:700;color:var(--heading);}
+  .home-btn .desc{font-size:12.5px;color:var(--muted);margin-top:4px;}
+  .dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-top:14px;}
+  .dash-stat{background:var(--block-bg);border:1px solid var(--line);border-radius:6px;padding:16px;text-align:center;}
+  .dash-stat .n{font-size:26px;font-weight:700;color:var(--seal);font-family:'Noto Serif Bengali',serif;}
+  .dash-stat .l{font-size:12.5px;color:var(--muted);margin-top:4px;}
+  .nid-warn{color:var(--danger)!important;border-color:var(--danger)!important;font-weight:700;}
+  .nid-msg{font-size:11.5px;color:var(--danger);margin-top:3px;min-height:14px;font-weight:600;}
+  @media (max-width:700px){
+    .sidebar{width:56px;}
+    .sidebar .tab-btn .label, .sidebar-brand{display:none;}
+    .sidebar.collapsed{width:0;border-right:none;}
+    .sidebar.collapsed .sidebar-toggle{padding:16px 8px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+  <nav class="sidebar" id="sidebar">
+    <button class="sidebar-toggle" onclick="toggleSidebar()" title="মেনু বড়/ছোট করুন"><i data-lucide="menu" class="lucide-icon"></i></button>
+    <div class="sidebar-brand">
+      <div class="brand-title">দলিল লিখন সহায়ক</div>
+      <div class="brand-tagline">সাফ কবলা ও অন্যান্য দলিল দ্রুত প্রস্তুত করার সরঞ্জাম</div>
+    </div>
+    <button class="tab-btn active" data-tab="home"><span class="ic"><i data-lucide="home" class="lucide-icon"></i></span><span class="label">হোম</span></button>
+    <button class="tab-btn" data-tab="deed"><span class="ic"><i data-lucide="file-plus" class="lucide-icon"></i></span><span class="label">দলিল তৈরি করুন</span></button>
+    <button class="tab-btn" data-tab="saved"><span class="ic"><i data-lucide="folder-open" class="lucide-icon"></i></span><span class="label">সেভ করা তালিকা</span></button>
+    <button class="tab-btn" data-tab="area"><span class="ic"><i data-lucide="settings" class="lucide-icon"></i></span><span class="label">এডমিন</span></button>
+    <div style="flex:1;"></div>
+    <button class="tab-btn" id="themeToggleBtn" onclick="toggleTheme()"><span class="ic" id="themeToggleIcon"><i data-lucide="moon" class="lucide-icon"></i></span><span class="label" id="themeToggleLabel">ডার্ক মোড</span></button>
+  </nav>
+
+  <div class="content-area">
+<main>
+
+<!-- ================= HOME TAB ================= -->
+<section id="tab-home">
+  <div class="card home-hero">
+    <h2>আপন কম্পিউটার এন্ড ষ্টেশনারীজ</h2>
+    <p>বাম থেকে যেকোনো একটি অপশনে যান, অথবা নিচের বাটনগুলো ব্যবহার করুন।</p>
+  </div>
+
+  <div class="home-buttons">
+    <div class="home-btn" onclick="goToTab('deed')">
+      <div class="icon"><i data-lucide="file-plus" class="lucide-icon"></i></div>
+      <div class="title">দলিল তৈরি করুন</div>
+      <div class="desc">নতুন দলিলের ফর্ম পূরণ শুরু করুন</div>
+    </div>
+    <div class="home-btn" onclick="goToTab('saved')">
+      <div class="icon"><i data-lucide="folder-open" class="lucide-icon"></i></div>
+      <div class="title">সেভ করা তালিকা</div>
+      <div class="desc">আগে সংরক্ষিত খসড়া দেখুন বা লোড করুন</div>
+    </div>
+    <div class="home-btn" onclick="goToTab('area')">
+      <div class="icon"><i data-lucide="settings" class="lucide-icon"></i></div>
+      <div class="title">এডমিন</div>
+      <div class="desc">মৌজা, গ্রাম, শ্রেণি, লেখক ইত্যাদি তথ্য পরিচালনা করুন</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>ড্যাশবোর্ড</h2>
+    <div class="dash-grid" id="dashGrid">
+      <div class="dash-stat"><div class="n" id="dashDrafts">০</div><div class="l">সংরক্ষিত খসড়া</div></div>
+      <div class="dash-stat"><div class="n" id="dashMouza">০</div><div class="l">মৌজা এন্ট্রি</div></div>
+      <div class="dash-stat"><div class="n" id="dashWriters">০</div><div class="l">দলিল লেখক</div></div>
+    </div>
+  </div>
+</section>
+<section id="tab-deed" style="display:none;">
+
+  <div class="card">
+    <h2>১. রেজিস্ট্রেশন ও দলিলের প্রকৃতি</h2>
+    <div class="grid">
+      <div class="field">
+        <label>রেজিস্ট্রেশন কার্যালয়ের নাম</label>
+        <select id="regOffice"></select>
+      </div>
+      <div class="field">
+        <label>দলিলের প্রকৃতি</label>
+        <select id="deedType">
+          <option>সাফ কবলা</option>
+          <option>দানপত্র</option>
+          <option>হেবা ঘোষণাপত্র</option>
+          <option>বণ্টননামা</option>
+          <option>বায়নাপত্র</option>
+          <option>নাদাবীপত্র</option>
+          <option>অন্যান্য</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>২. মৌজা, এলাকা ও সম্পত্তির তফসিল <span class="num" id="scheduleCount">১</span></h2>
+    <p class="empty-note" style="margin-top:-4px;">একের বেশি তফসিল (আলাদা দাগ/খতিয়ান/মূল্যের জমি) থাকলে "আরও তফসিল যোগ করুন" চাপুন — নতুন তফসিলে আগের তফসিলের সব তথ্য কপি হয়ে আসবে, শুধু যা আলাদা (যেমন দাগ, খতিয়ান, পরিমাণ, মূল্য) তা বদলে দিন।</p>
+    <div id="scheduleList"></div>
+    <div class="row-actions" style="margin-top:10px;">
+      <button type="button" class="btn ghost" onclick="addSchedule()">+ আরও তফসিল যোগ করুন</button>
+    </div>
+    <div class="dash-grid" style="margin-top:14px;">
+      <div class="dash-stat"><div class="n" id="totalScheduleLand">০</div><div class="l">মোট জমির পরিমাণ (একর)</div></div>
+      <div class="dash-stat"><div class="n" id="totalSchedulePrice">০</div><div class="l">মোট মূল্য (টাকা)</div></div>
+    </div>
+    <p class="hint" style="margin-top:8px;">সংখ্যার ঘরগুলোতে বাংলা (০-৯) বা ইংরেজি (0-9) — দুই ধরনের সংখ্যাই লিখতে পারবেন।</p>
+  </div>
+
+  <div class="card">
+    <h2>৩. গ্রহীতাগণের তথ্য <span class="num" id="granteeCount">০</span></h2>
+    <div class="hint" id="granteeShareCheck" style="font-weight:700;"></div>
+    <div id="granteeList"></div>
+    <div class="row-actions"><button class="btn ghost" onclick="addPerson('grantees')">+ আরেকজন গ্রহীতা যোগ করুন</button></div>
+  </div>
+
+  <div class="card">
+    <h2>৪. দলিল দাতা/দাত্রীগণের তথ্য <span class="num" id="donorCount">০</span></h2>
+    <div class="hint" id="donorShareCheck" style="font-weight:700;"></div>
+    <div id="donorList"></div>
+    <div class="row-actions"><button class="btn ghost" onclick="addPerson('donors')">+ আরেকজন দাতা যোগ করুন</button></div>
+  </div>
+
+  <div class="card">
+    <h2>৫. দলিলের মূল বিবরণ <span class="num">স্বয়ংক্রিয় প্রজন্মিত</span></h2>
+    <p class="empty-note" style="margin-top:-4px;">দাতা/গ্রহীতা সংখ্যা, নাম, মূল্য ও জমির তথ্য অনুযায়ী নিচের বিবরণ (একবচন/বহুবচন সহ) স্বয়ংক্রিয়ভাবে তৈরি হয়। প্রয়োজনে সরাসরি সম্পাদনা করুন — সম্পাদিত লেখাই Word ফাইলে যাবে।</p>
+    <div class="row-actions" style="margin-top:0;">
+      <button type="button" class="btn small ghost" onclick="regenerateNarrative()">বিবরণ পুনরায় তৈরি করুন</button>
+    </div>
+    <div class="field" style="margin-top:10px;"><textarea id="narrativeText" lang="bn" spellcheck="true" style="min-height:170px;"></textarea></div>
+  </div>
+
+  <div class="card">
+    <h2>৬. সাক্ষীগণ <span class="num" id="witnessCount">০</span></h2>
+    <div id="witnessList"></div>
+    <div class="row-actions"><button class="btn ghost" onclick="addPerson('witnesses')">+ সাক্ষী যোগ করুন</button></div>
+  </div>
+
+  <div class="card">
+    <h2>৭. সনাক্তকারী <span class="num" id="identifierCount">০</span></h2>
+    <div id="identifierList"></div>
+    <div class="row-actions"><button class="btn ghost" onclick="addPerson('identifiers')">+ সনাক্তকারী যোগ করুন</button></div>
+  </div>
+
+  <div class="card">
+    <h2>৮. দলিল লেখকের তথ্য</h2>
+    <div class="row-actions" style="margin-top:0;">
+      <label style="font-size:12.5px;color:var(--muted);">এডমিন তালিকা থেকে নির্বাচন করুন:</label>
+      <select class="writer-select" id="writerReuse" onchange="reuseIntoWriter(this.value)"><option value="">— নির্বাচন করুন —</option></select>
+    </div>
+    <div class="grid" id="writerBlock" style="margin-top:10px;"></div>
+    <p class="hint">নতুন লেখক যোগ করতে "এলাকা তথ্য (এডমিন)" ট্যাবে যান।</p>
+  </div>
+
+  <div class="card">
+    <h2>৯. অতিরিক্ত তথ্য / কৈফিয়ত</h2>
+    <div class="field"><textarea id="extra" lang="bn" spellcheck="true" placeholder="প্রয়োজনে অতিরিক্ত শর্তাবলি বা মন্তব্য লিখুন"></textarea></div>
+  </div>
+
+  <div class="card">
+    <h2><i data-lucide="save" class="lucide-icon"></i> খসড়া সংরক্ষণ ও লোড</h2>
+    <p class="empty-note" style="margin-top:-4px;">এখন পর্যন্ত যা পূরণ করেছেন তা খসড়া হিসেবে সংরক্ষণ করুন — পরে যেকোনো সময় লোড করে বাকি তথ্য পূরণ বা সংশোধন করে তারপর ডাউনলোড করতে পারবেন।</p>
+
+    <div class="action-row">
+      <span class="action-label">নতুন খসড়া</span>
+      <button class="btn" onclick="saveDeedDraftAsNew()"><i data-lucide="plus" class="lucide-icon"></i> নতুন করে সংরক্ষণ করুন</button>
+      <button class="btn ghost" onclick="resaveDeedDraft()"><i data-lucide="refresh-cw" class="lucide-icon"></i> পুনরায় সংরক্ষণ করুন</button>
+    </div>
+
+    <div class="action-row">
+      <span class="action-label">পুরনো খসড়া</span>
+      <select class="reuse-select" id="draftSelect" style="max-width:240px;"><option value="">— সংরক্ষিত খসড়া বাছুন —</option></select>
+      <button class="btn small ghost" onclick="loadSelectedDraft()"><i data-lucide="folder-open" class="lucide-icon"></i> লোড করুন</button>
+      <button class="btn small danger" onclick="deleteSelectedDraft()"><i data-lucide="trash-2" class="lucide-icon"></i> মুছুন</button>
+    </div>
+  </div>
+
+  <div class="card highlight-card">
+    <h2><i data-lucide="file-down" class="lucide-icon"></i> দলিল ডাউনলোড করুন</h2>
+    <p class="empty-note" style="margin-top:-4px;">এডমিন ট্যাবে তৈরি করা টেমপ্লেট বেছে নিয়ে বর্তমান দলিলের তথ্য বসিয়ে Word ফাইলে ডাউনলোড করুন। নতুন টেমপ্লেট তৈরি বা সম্পাদনা করতে "এডমিন" ট্যাবে যান।</p>
+    <div class="action-row">
+      <select class="plain-select" id="templateSelectForExport" style="max-width:260px;"><option value="">— টেমপ্লেট নির্বাচন করুন —</option></select>
+      <button class="btn" onclick="exportCustomWord()"><i data-lucide="download" class="lucide-icon"></i> ডাউনলোড করুন</button>
+    </div>
+  </div>
+
+  <div class="top-actions">
+    <button class="btn ghost small" onclick="clearDeedForm()"><i data-lucide="rotate-ccw" class="lucide-icon"></i> ফর্ম রিসেট করুন</button>
+  </div>
+
+</section>
+
+<!-- ================= AREA (ADMIN) TAB ================= -->
+<section id="tab-area" style="display:none;">
+  <div class="card">
+    <h2>টেমপ্লেট তৈরি করুন (কাস্টম ফরম্যাট)</h2>
+    <p class="empty-note" style="margin-top:-4px;">নিজের ভাষায়, নিজের সাজানোয় দলিলের একটা টেমপ্লেট নিচে লিখুন বা পেস্ট করুন। যেখানে তথ্য বসাতে চান, নিচের তালিকা থেকে টোকেন (যেমনঃ <code>{{মৌজা}}</code>) বসিয়ে দিন — ডাউনলোড করার সময় সেই জায়গায় আসল তথ্য বসে যাবে। প্রয়োজনে টেবিলও যোগ করে নিজের মতো সাজিয়ে নিতে পারবেন।</p>
+    <details style="margin:10px 0;">
+      <summary style="cursor:pointer;color:var(--heading);font-weight:600;font-size:13.5px;">ব্যবহারযোগ্য টোকেনের তালিকা দেখুন</summary>
+      <div class="grid wide" style="margin-top:10px;font-size:12.5px;">
+        <div>
+          <b>এলাকা:</b><br>
+          {{মৌজা}}, {{ইউনিয়ন}}, {{থানা}}, {{জেলা}}, {{ভূমি_অফিস}}, {{রেজিস্ট্রেশন_অফিস}}, {{দলিলের_ধরন}}
+        </div>
+        <div>
+          <b>তফসিল সংখ্যা (প্রথম তফসিল):</b><br>
+          {{এসএ_জেএল}}, {{এসএ_জেএল_কথায়}}, {{আরএস_জেএল}}, {{আরএস_জেএল_কথায়}}, {{এসএ_খতিয়ান}}, {{এসএ_খতিয়ান_কথায়}}, {{আরএস_খতিয়ান}}, {{আরএস_খতিয়ান_কথায়}}, {{ডিপি}}, {{ডিপি_কথায়}}, {{নামজারি_সাবেক}}, {{নামজারি_সাবেক_কথায়}}, {{নামজারি_বর্তমান}}, {{নামজারি_বর্তমান_কথায়}}, {{এসএ_দাগ}}, {{এসএ_দাগ_কথায়}}, {{আরএস_দাগ}}, {{আরএস_দাগ_কথায়}}
+        </div>
+        <div>
+          <b>সব তফসিল একসাথে:</b><br>
+          {{তফসিলসমূহ}}, {{মোট_জমির_পরিমাণ}}, {{মোট_মূল্য}}
+        </div>
+        <div>
+          <b>জমি ও মূল্য (প্রথম তফসিল):</b><br>
+          {{জমির_পরিমাণ}}, {{জমির_পরিমাণ_কথায়}}, {{জমির_শ্রেণি}}, {{মূল্য}}, {{মূল্য_কথায়}}
+        </div>
+        <div>
+          <b>চৌহদ্দি (প্রথম তফসিল):</b><br>
+          {{চৌহদ্দি_উত্তর}}, {{চৌহদ্দি_দক্ষিণ}}, {{চৌহদ্দি_পূর্ব}}, {{চৌহদ্দি_পশ্চিম}}, {{অতিরিক্ত_চৌহদ্দি}}
+        </div>
+        <div>
+          <b>বিবরণ:</b><br>
+          {{বিবরণ}}, {{অতিরিক্ত_তথ্য}}, {{আজকের_তারিখ}}, {{আজকের_তারিখ_ইংরেজি}}, {{আজকের_তারিখ_বঙ্গাব্দ}}, {{আজকের_তারিখ_সম্পূর্ণ}}
+        </div>
+        <div>
+          <b>পক্ষগণ (প্রতিটি একসাথে তালিকা আকারে বসবে):</b><br>
+          {{দাতাগণ}}, {{গ্রহীতাগণ}}, {{সাক্ষীগণ}}, {{সনাক্তকারীগণ}}
+        </div>
+        <div>
+          <b>দলিল লেখক:</b><br>
+          {{লেখকের_নাম}}, {{লেখকের_পিতা}}, {{লেখকের_মাতা}}, {{লেখকের_ঠিকানা}}, {{লেখকের_সনদ}}, {{লেখকের_কার্যালয়}}
+        </div>
+      </div>
+      <p style="margin-top:10px;background:var(--callout-green);padding:8px 10px;border-radius:4px;font-size:12px;">
+        <b>একের বেশি দাতা/গ্রহীতা/সাক্ষী/সনাক্তকারী/তফসিল থাকলে:</b> আলাদা আলাদা টোকেন লাগবে না — শুধু <code>{{দাতাগণ}}</code>, <code>{{গ্রহীতাগণ}}</code>, <code>{{সাক্ষীগণ}}</code>, <code>{{সনাক্তকারীগণ}}</code> বা <code>{{তফসিলসমূহ}}</code> একবার বসালেই যতজন/যতটি এন্ট্রি থাকবে, সবগুলো ১, ২, ৩ নম্বর দিয়ে একের পর এক আসবে। যেমন দুইজন দাতা থাকলে <code>{{দাতাগণ}}</code> এর জায়গায় আসবেঃ<br>
+        "১. নাম: ..., পিতার নাম: ..., ...<br>
+        ২. নাম: ..., পিতার নাম: ..., ..."
+      </p>
+      <p style="margin-top:8px;background:var(--callout-blue);padding:8px 10px;border-radius:4px;font-size:12px;">
+        <b>নির্দিষ্ট একজন দাতা/গ্রহীতা/সাক্ষী/সনাক্তকারীর তথ্য আলাদাভাবে হাতে বসাতে চাইলে</b> (যেমন শুধু ১ম দাতার নাম একটা নির্দিষ্ট জায়গায়) নিচের প্যাটার্ন ব্যবহার করুনঃ<br>
+        <code>{{দাতা_১_নাম}}</code>, <code>{{দাতা_১_পিতা}}</code>, <code>{{দাতা_১_স্বামী}}</code>, <code>{{দাতা_১_মাতা}}</code>, <code>{{দাতা_১_জন্ম_তারিখ}}</code>, <code>{{দাতা_১_আইডি}}</code>, <code>{{দাতা_১_আইডির_ধরন}}</code>, <code>{{দাতা_১_ধর্ম}}</code>, <code>{{দাতা_১_পেশা}}</code>, <code>{{দাতা_১_জাতীয়তা}}</code>, <code>{{দাতা_১_পরিমাণ}}</code> (এন.আই.ডি/জন্ম নিবন্ধন/পাসপোর্ট — যেটা বেছে নেওয়া হয়েছে শুধু সেটাই দেখাবে)<br>
+        <b>স্থায়ী ঠিকানা আলাদা আলাদা করেঃ</b> <code>{{দাতা_১_গ্রাম}}</code>, <code>{{দাতা_১_ডাকঘর}}</code>, <code>{{দাতা_১_উপজেলা}}</code>, <code>{{দাতা_১_জেলা}}</code>, অথবা সব একসাথে <code>{{দাতা_১_ঠিকানা}}</code><br>
+        <b>বর্তমান ঠিকানা আলাদা আলাদা করেঃ</b> <code>{{দাতা_১_বর্তমান_গ্রাম}}</code>, <code>{{দাতা_১_বর্তমান_ডাকঘর}}</code>, <code>{{দাতা_১_বর্তমান_উপজেলা}}</code>, <code>{{দাতা_১_বর্তমান_জেলা}}</code>, অথবা <code>{{দাতা_১_বর্তমান_ঠিকানা}}</code> (গ্রহীতা/সাক্ষী/সনাক্তকারীর জন্যও একই প্যাটার্ন — শুধু <code>দাতা_</code> এর জায়গায় <code>গ্রহীতা_</code>/<code>সাক্ষী_</code>/<code>সনাক্তকারী_</code> লিখুন; সাক্ষী/সনাক্তকারীতে শুধু স্থায়ী ঠিকানার ঘরই আছে)<br>
+        ২য়, ৩য় দাতার জন্য <code>দাতা_২</code>, <code>দাতা_৩</code> ইত্যাদি লিখুন। একই প্যাটার্ন <code>গ্রহীতা_১</code>, <code>সাক্ষী_১</code> (শুধু নাম/পিতা_স্বামী/মাতা/গ্রাম/ঠিকানা), <code>সনাক্তকারী_১</code> এর জন্যও কাজ করবে।<br><br>
+        <b>নির্দিষ্ট তফসিলের তথ্য আলাদাভাবে বসাতে চাইলে</b> (একের বেশি তফসিল থাকলে ১ম তফসিলের বাইরে অন্যগুলোর তথ্য দরকার হলে)ঃ<br>
+        <code>{{তফসিল_১_মৌজা}}</code>, <code>{{তফসিল_১_এসএ_খতিয়ান}}</code>, <code>{{তফসিল_১_আরএস_খতিয়ান}}</code>, <code>{{তফসিল_১_ডিপি}}</code>, <code>{{তফসিল_১_নামজারি_সাবেক}}</code>, <code>{{তফসিল_১_এসএ_দাগ}}</code>, <code>{{তফসিল_১_জমির_পরিমাণ_কথায়}}</code>, <code>{{তফসিল_১_মূল্য_কথায়}}</code>, <code>{{তফসিল_১_চৌহদ্দি_উত্তর}}</code> ইত্যাদি — ২য় তফসিলের জন্য <code>তফসিল_২</code> লিখুন। (মনে রাখবেন সাদামাটা <code>{{এসএ_খতিয়ান}}</code> এর মতো টোকেনগুলো সবসময় শুধু ১ম তফসিলের তথ্য দেখায় — ২য়/৩য় তফসিলের জন্য অবশ্যই <code>তফসিল_২_...</code> প্যাটার্ন ব্যবহার করতে হবে, নাহলে সেটা খালি আসবে।)
+      </p>
+      <p style="margin-top:8px;background:var(--callout-yellow);padding:8px 10px;border-radius:4px;font-size:12px;">
+        <b>কোনো তথ্য খালি থাকলে সেই অংশ পুরোপুরি বাদ দিতে চাইলে:</b> <code>{{#টোকেন_নাম}}...{{/টোকেন_নাম}}</code> দিয়ে ঘিরে দিন। ভেতরের অংশ শুধু তখনই দেখাবে যখন ঐ টোকেনে তথ্য থাকবে, নাহলে পুরো অংশটাই (লেবেলসহ) বাদ পড়ে যাবে। যেমনঃ<br>
+        <code>{{#এসএ_খতিয়ান}}এস.এ খতিয়ানঃ {{এসএ_খতিয়ান}}{{/এসএ_খতিয়ান}}</code><br>
+        এস.এ খতিয়ান খালি রাখলে এই পুরো লাইনটাই ডকুমেন্টে আসবে না। নিচের "❓ শর্তসাপেক্ষ অংশ যোগ করুন" বাটন চাপলে এটা স্বয়ংক্রিয়ভাবে বসিয়ে দেবে। (দাতা/গ্রহীতার স্বামী/পিতার তথ্য এমনিতেই খালি থাকলে বাদ পড়ে যায়, আলাদা করে কিছু করতে হয় না।)
+      </p>
+    </details>
+    <div class="row-actions" style="margin-top:0;">
+      <button type="button" class="btn small ghost" onclick="insertTableIntoTemplate()"><i data-lucide="table" class="lucide-icon"></i> টেবিল যোগ করুন</button>
+      <button type="button" class="btn small ghost" onclick="insertPageBreakIntoTemplate()"><i data-lucide="scissors" class="lucide-icon"></i> নতুন পেজ (Page Break) যোগ করুন</button>
+      <button type="button" class="btn small ghost" onclick="centerSelectionInTemplate()"><i data-lucide="align-center" class="lucide-icon"></i> নির্বাচিত অংশ সেন্টারে আনুন</button>
+      <button type="button" class="btn small ghost" onclick="insertGapIntoTemplate()"><i data-lucide="move-horizontal" class="lucide-icon"></i> গ্যাপ/ট্যাব যোগ করুন</button>
+      <button type="button" class="btn small ghost" onclick="insertConditionalIntoTemplate()"><i data-lucide="help-circle" class="lucide-icon"></i> শর্তসাপেক্ষ অংশ (খালি হলে বাদ) যোগ করুন</button>
+      <button type="button" class="btn small ghost" onclick="makeSelectionBiggerInTemplate()"><i data-lucide="type" class="lucide-icon"></i> নির্বাচিত অংশ বড় করুন</button>
+      <button type="button" class="btn small ghost" onclick="makeTextBiggerInTemplate()"><i data-lucide="type" class="lucide-icon"></i> নির্বাচিত টেক্সট বড় করুন</button>
+    </div>
+    <div class="field" style="margin-top:10px;"><textarea id="customTemplateText" style="min-height:220px;" placeholder="যেমনঃ&#10;গণপ্রজাতন্ত্রী বাংলাদেশ সরকার&#10;{{দলিলের_ধরন}} দলিল&#10;&#10;মৌজাঃ {{মৌজা}}, উপজেলাঃ {{থানা}}, জেলাঃ {{জেলা}}&#10;মূল্যঃ {{মূল্য_কথায়}}&#10;&#10;দাতাগণঃ&#10;{{দাতাগণ}}&#10;&#10;গ্রহীতাগণঃ&#10;{{গ্রহীতাগণ}}"></textarea></div>
+    <div class="grid wide" style="margin-top:10px;">
+      <div class="field"><label>টেমপ্লেটের নাম</label><input id="templateNameInput" placeholder="যেমনঃ আমার সাফ কবলা ফরম্যাট"></div>
+      <div class="field">
+        <label>পেপার সাইজ</label>
+        <select id="templatePageSize">
+          <option value="A4">A4</option>
+          <option value="Deed8.5x13.5">৮.৫" × ১৩.৫" (দলিল/স্ট্যাম্প কাগজ)</option>
+          <option value="Legal">Legal (৮.৫" × ১৪")</option>
+          <option value="Letter">Letter (৮.৫" × ১১")</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>প্যারাগ্রাফ স্টাইল</label>
+        <label class="addr-toggle" style="margin-top:9px;"><input type="checkbox" id="templateJustify" checked> Justify (উভয় পাশ সমান করে সাজানো)</label>
+      </div>
+      <div class="field">
+        <label>টেক্সট সাইজ</label>
+        <select id="templateFontSize">
+          <option value="11">ছোট (১১pt)</option>
+          <option value="12" selected>সাধারণ (১২pt)</option>
+          <option value="14">বড় (১৪pt)</option>
+          <option value="16">অনেক বড় (১৬pt)</option>
+          <option value="18">সবচেয়ে বড় (১৮pt)</option>
+        </select>
+      </div>
+    </div>
+    <div class="row-actions">
+      <button class="btn" onclick="saveNamedTemplate()">এই নামে সংরক্ষণ করুন</button>
+      <button class="btn small ghost" onclick="clearTemplateEditor()">নতুন টেমপ্লেট (খালি করুন)</button>
+    </div>
+    <div class="section-sub">সংরক্ষিত টেমপ্লেট তালিকা</div>
+    <table class="admin-table" id="templateTable"></table>
+  </div>
+
+  <div class="card">
+    <h2>এলাকা-সংক্রান্ত তালিকা</h2>
+    <p class="empty-note" style="margin-top:-4px;">মৌজা ও গ্রাম যোগ করার আগে এখানে ইউনিয়ন, উপজেলা, জেলা, ডাকঘর ও ভূমি (তফসিল) অফিসের নাম যোগ করে নিন — তাহলে নিচে মৌজা/গ্রাম যোগ করার সময় এগুলো ড্রপডাউন থেকে বেছে নেওয়া যাবে, বারবার টাইপ করতে হবে না।</p>
+
+    <div class="section-sub">ইউনিয়ন/পৌরসভা তালিকা</div>
+    <div class="grid wide">
+      <div class="field"><label>ইউনিয়ন/পৌরসভার নাম</label><input id="al_union"></div>
+    </div>
+    <div class="row-actions"><button class="btn small" onclick="saveUnionEntry()">সংরক্ষণ করুন</button></div>
+    <table class="admin-table" id="unionTable"></table>
+
+    <div class="section-sub">উপজেলা/থানা তালিকা</div>
+    <div class="grid wide">
+      <div class="field"><label>উপজেলা/থানার নাম</label><input id="al_upazila"></div>
+    </div>
+    <div class="row-actions"><button class="btn small" onclick="saveUpazilaEntry()">সংরক্ষণ করুন</button></div>
+    <table class="admin-table" id="upazilaTable"></table>
+
+    <div class="section-sub">জেলা তালিকা</div>
+    <div class="grid wide">
+      <div class="field"><label>জেলার নাম</label><input id="al_district"></div>
+    </div>
+    <div class="row-actions"><button class="btn small" onclick="saveDistrictEntry()">সংরক্ষণ করুন</button></div>
+    <table class="admin-table" id="districtTable"></table>
+
+    <div class="section-sub">ডাকঘর তালিকা</div>
+    <div class="grid wide">
+      <div class="field"><label>ডাকঘরের নাম</label><input id="al_post"></div>
+    </div>
+    <div class="row-actions"><button class="btn small" onclick="savePostOfficeEntry()">সংরক্ষণ করুন</button></div>
+    <table class="admin-table" id="postOfficeTable"></table>
+
+    <div class="section-sub">ভূমি/তফসিল অফিস তালিকা</div>
+    <div class="grid wide">
+      <div class="field"><label>ভূমি অফিসের নাম</label><input id="al_landoffice"></div>
+    </div>
+    <div class="row-actions"><button class="btn small" onclick="saveLandOfficeEntry()">সংরক্ষণ করুন</button></div>
+    <table class="admin-table" id="landOfficeTable"></table>
+  </div>
+
+  <div class="card">
+    <h2>মৌজা → ইউনিয়ন/থানা/জেলা/অফিস ম্যাপিং</h2>
+    <p class="empty-note">এখানে একবার মৌজার তথ্য এন্ট্রি দিলে, দলিল ফর্মে মৌজার নাম লিখলেই সংশ্লিষ্ট তথ্য স্বয়ংক্রিয়ভাবে পূরণ হবে। এই তথ্য এই সরঞ্জামের সব ব্যবহারকারী দেখতে পাবেন।</p>
+    <div class="grid wide">
+      <div class="field"><label>মৌজার নাম</label><input id="am_mouza"></div>
+      <div class="field"><label>সিটি কর্পোরেশন/পৌরসভা/ইউনিয়ন</label><select id="am_union"></select></div>
+      <div class="field"><label>উপজেলা</label><select id="am_thana"></select></div>
+      <div class="field"><label>জেলা</label><select id="am_district"></select></div>
+      <div class="field"><label>ভূমি অফিসের নাম</label><select id="am_office"></select></div>
+    </div>
+    <div class="row-actions"><button class="btn" onclick="saveMouzaEntry()">সংরক্ষণ করুন</button></div>
+    <table class="admin-table" id="mouzaTable"></table>
+  </div>
+
+  <div class="card">
+    <h2>গ্রাম → ডাকঘর/উপজেলা/জেলা ম্যাপিং</h2>
+    <p class="empty-note">ব্যক্তির স্থায়ী/বর্তমান ঠিকানায় গ্রামের নাম দিলে ডাকঘর, উপজেলা ও জেলা স্বয়ংক্রিয়ভাবে পূরণ হবে।</p>
+    <div class="grid wide">
+      <div class="field"><label>গ্রামের নাম</label><input id="av_village"></div>
+      <div class="field"><label>ডাকঘর</label><select id="av_post"></select></div>
+      <div class="field"><label>উপজেলা</label><select id="av_upazila"></select></div>
+      <div class="field"><label>জেলা</label><select id="av_district"></select></div>
+    </div>
+    <div class="row-actions"><button class="btn" onclick="saveVillageEntry()">সংরক্ষণ করুন</button></div>
+    <table class="admin-table" id="villageTable"></table>
+  </div>
+
+  <div class="card">
+    <h2>জমির শ্রেণি</h2>
+    <p class="empty-note" style="margin-top:-4px;">এখানে যোগ করা শ্রেণিগুলো দলিল ফর্মে "জমির শ্রেণী" ড্রপডাউনে দেখা যাবে।</p>
+    <div class="grid wide">
+      <div class="field"><label>শ্রেণির নাম</label><input id="ac_class" placeholder="যেমনঃ চারা রকম ভূমি"></div>
+    </div>
+    <div class="row-actions"><button class="btn" onclick="saveClassEntry()">সংরক্ষণ করুন</button></div>
+    <table class="admin-table" id="classTable"></table>
+  </div>
+
+  <div class="card">
+    <h2>পেশার তালিকা</h2>
+    <p class="empty-note" style="margin-top:-4px;">এখানে যোগ করা পেশাগুলো দাতা/গ্রহীতার তথ্যে "পেশা" ড্রপডাউনে দেখা যাবে।</p>
+    <div class="grid wide">
+      <div class="field"><label>পেশার নাম</label><input id="ap_occupation" placeholder="যেমনঃ কৃষক, চাকুরিজীবী, ব্যবসায়ী"></div>
+    </div>
+    <div class="row-actions"><button class="btn" onclick="saveOccupationEntry()">সংরক্ষণ করুন</button></div>
+    <table class="admin-table" id="occupationTable"></table>
+  </div>
+
+  <div class="card">
+    <h2>ধর্মের তালিকা</h2>
+    <p class="empty-note" style="margin-top:-4px;">এখানে যোগ করা ধর্মগুলো দাতা/গ্রহীতার তথ্যে "ধর্ম" ড্রপডাউনে দেখা যাবে।</p>
+    <div class="grid wide">
+      <div class="field"><label>ধর্মের নাম</label><input id="ar_religion" placeholder="যেমনঃ ইসলাম, হিন্দু, বৌদ্ধ, খ্রিস্টান"></div>
+    </div>
+    <div class="row-actions"><button class="btn" onclick="saveReligionEntry()">সংরক্ষণ করুন</button></div>
+    <table class="admin-table" id="religionTable"></table>
+  </div>
+
+  <div class="card">
+    <h2>রেজিস্ট্রেশন কার্যালয়</h2>
+    <p class="empty-note" style="margin-top:-4px;">এখানে যোগ করা অফিসগুলো দলিল ফর্মে ড্রপডাউনে দেখা যাবে। তালিকার প্রথম নামটি ডিফল্ট হিসেবে বেছে নেওয়া হবে।</p>
+    <div class="grid wide">
+      <div class="field"><label>কার্যালয়ের নাম</label><input id="ao_office" placeholder="যেমনঃ সদর সাব-রেজিষ্ট্রারী অফিস, সুনামগঞ্জ"></div>
+    </div>
+    <div class="row-actions"><button class="btn" onclick="saveOfficeEntry()">সংরক্ষণ করুন</button></div>
+    <table class="admin-table" id="officeTable"></table>
+  </div>
+
+  <div class="card">
+    <h2>দলিল লেখক তালিকা</h2>
+    <p class="empty-note" style="margin-top:-4px;">এখানে যোগ করা লেখকদের তথ্য দলিল ফর্মের "দলিল লেখকের তথ্য" অংশে ড্রপডাউনে দেখা যাবে।</p>
+    <div class="grid wide">
+      <div class="field"><label>নাম</label><input id="aw_name"></div>
+      <div class="field"><label>পিতার নাম</label><input id="aw_father"></div>
+      <div class="field"><label>মাতার নাম</label><input id="aw_mother"></div>
+      <div class="field"><label>পূর্ণ ঠিকানা</label><input id="aw_address"></div>
+      <div class="field"><label>সনদ নং</label><input id="aw_cert"></div>
+      <div class="field"><label>কার্যালয়ের নাম</label><input id="aw_office"></div>
+    </div>
+    <div class="row-actions"><button class="btn" onclick="saveWriterEntry()">সংরক্ষণ করুন</button></div>
+    <table class="admin-table" id="writerTable"></table>
+  </div>
+
+  <div class="card">
+    <h2>সংরক্ষিত ব্যক্তিগণ</h2>
+    <p class="empty-note">দলিলে দাতা/গ্রহীতা/সাক্ষী/সনাক্তকারী/লিখক হিসেবে সংরক্ষণ করা ব্যক্তিদের তথ্য এখানে দেখা যাবে এবং পরবর্তী দলিলে এক ক্লিকে পুনরায় ব্যবহার করা যাবে। এই তথ্য শুধুমাত্র আপনি দেখতে পাবেন।</p>
+    <table class="admin-table" id="personsTable"></table>
+  </div>
+</section>
+
+<!-- ================= SAVED LIST TAB ================= -->
+<section id="tab-saved" style="display:none;">
+  <div class="card">
+    <h2>সংরক্ষিত খসড়া তালিকা</h2>
+    <p class="empty-note" style="margin-top:-4px;">এখানে আপনার সব সংরক্ষিত দলিলের খসড়া দেখা যাবে। "লোড করুন" চাপলে "দলিল তৈরি করুন" ট্যাবে গিয়ে সেই খসড়া খুলে যাবে।</p>
+    <table class="admin-table" id="savedListTable"></table>
+  </div>
+</section>
+
+</main>
+
+<footer class="note">তথ্যগুলো স্বয়ংক্রিয়ভাবে সংরক্ষিত হয়। Word ডাউনলোডের পর মাইক্রোসফট ওয়ার্ডে খুলে প্রয়োজনীয় বিন্যাস ঠিক করে নিন — এটি খসড়া তৈরি করে, চূড়ান্ত নিবন্ধনের আগে সংশ্লিষ্ট আইনজীবী/দলিল লেখকের মাধ্যমে যাচাই করে নিন।</footer>
+  </div>
+</div>
+
+<datalist id="mouzaList"></datalist>
+<datalist id="villageList"></datalist>
+
+<!-- ===================== FIREBASE SETUP ===================== -->
+<!-- ধাপ ৩ অনুযায়ী নিজের ফায়ারবেজ কনফিগ এখানে বসান -->
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="https://unpkg.com/docx@9.7.1/dist/index.iife.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBy2t1Me3jOd5CsHqo9Wbv2YT19TX17oLY",
+  authDomain: "bdolil.firebaseapp.com",
+  projectId: "bdolil",
+  storageBucket: "bdolil.firebasestorage.app",
+  messagingSenderId: "1058213665047",
+  appId: "1:1058213665047:web:0200ec45224a8d1068ff52"
+};
+let db = null;
+let firebaseReady = false;
+try{
+  firebase.initializeApp(firebaseConfig);
+  db = firebase.firestore();
+  firebaseReady = true;
+}catch(e){
+  console.error('Firebase init failed — কনফিগ ঠিকভাবে বসানো হয়নি', e);
+}
+</script>
+
+<script>
+/* ===================== STORAGE HELPERS (Firestore) ===================== */
+function splitKey(key){
+  const i = key.indexOf(':');
+  const col = i>-1 ? key.slice(0,i) : key;
+  const id = i>-1 ? key.slice(i+1) : 'default';
+  return {col, id: encodeURIComponent(id)};
+}
+async function storeSet(key, value){
+  if(!firebaseReady){ alert('Firebase কনফিগ করা হয়নি — নিচের নির্দেশনা অনুসরণ করে firebaseConfig বসান।'); return; }
+  try{
+    const {col,id} = splitKey(key);
+    await db.collection(col).doc(id).set({ value: JSON.stringify(value) });
+  }catch(e){ console.error('storage set failed', e); alert('সংরক্ষণ ব্যর্থ হয়েছে, ইন্টারনেট সংযোগ বা Firestore নিয়ম পরীক্ষা করুন।'); }
+}
+async function storeGet(key){
+  if(!firebaseReady) return null;
+  try{
+    const {col,id} = splitKey(key);
+    const doc = await db.collection(col).doc(id).get();
+    return doc.exists ? JSON.parse(doc.data().value) : null;
+  }catch(e){ return null; }
+}
+async function storeList(prefix){
+  if(!firebaseReady) return [];
+  try{
+    const col = prefix.replace(/:$/,'');
+    const snap = await db.collection(col).get();
+    return snap.docs.map(d => col + ':' + decodeURIComponent(d.id));
+  }catch(e){ return []; }
+}
+async function storeListWithData(prefix){
+  if(!firebaseReady) return [];
+  try{
+    const col = prefix.replace(/:$/,'');
+    const snap = await db.collection(col).get();
+    return snap.docs.map(d => {
+      let value = null;
+      try{ value = JSON.parse(d.data().value); }catch(e){ value = null; }
+      return { key: col + ':' + decodeURIComponent(d.id), value };
+    }).filter(item => item.value !== null);
+  }catch(e){ return []; }
+}
+async function storeDelete(key){
+  if(!firebaseReady) return;
+  try{
+    const {col,id} = splitKey(key);
+    await db.collection(col).doc(id).delete();
+  }catch(e){}
+}
+
+/* ===================== BANGLA NUMBER HELPERS ===================== */
+const bnDigit = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
+function toBnDigits(input){
+  return String(input).replace(/[0-9]/g, d => bnDigit[d]);
+}
+const enFromBn = {'০':'0','১':'1','২':'2','৩':'3','৪':'4','৫':'5','৬':'6','৭':'7','৮':'8','৯':'9'};
+function bnToEnDigits(str){
+  return String(str==null?'':str).replace(/[০-৯]/g, d => enFromBn[d]);
+}
+function parseNum(str){
+  const v = parseFloat(bnToEnDigits(str));
+  return isNaN(v) ? 0 : v;
+}
+const bn99 = ['','এক','দুই','তিন','চার','পাঁচ','ছয়','সাত','আট','নয়','দশ',
+'এগারো','বারো','তেরো','চৌদ্দ','পনেরো','ষোলো','সতেরো','আঠারো','উনিশ','বিশ',
+'একুশ','বাইশ','তেইশ','চব্বিশ','পঁচিশ','ছাব্বিশ','সাতাশ','আঠাশ','ঊনত্রিশ','ত্রিশ',
+'একত্রিশ','বত্রিশ','তেত্রিশ','চৌত্রিশ','পঁয়ত্রিশ','ছত্রিশ','সাঁইত্রিশ','আটত্রিশ','ঊনচল্লিশ','চল্লিশ',
+'একচল্লিশ','বিয়াল্লিশ','তেতাল্লিশ','চুয়াল্লিশ','পঁয়তাল্লিশ','ছেচল্লিশ','সাতচল্লিশ','আটচল্লিশ','ঊনপঞ্চাশ','পঞ্চাশ',
+'একান্ন','বায়ান্ন','তিপ্পান্ন','চুয়ান্ন','পঞ্চান্ন','ছাপ্পান্ন','সাতান্ন','আটান্ন','ঊনষাট','ষাট',
+'একষট্টি','বাষট্টি','তেষট্টি','চৌষট্টি','পঁয়ষট্টি','ছেষট্টি','সাতষট্টি','আটষট্টি','ঊনসত্তর','সত্তর',
+'একাত্তর','বাহাত্তর','তিয়াত্তর','চুয়াত্তর','পঁচাত্তর','ছিয়াত্তর','সাতাত্তর','আটাত্তর','ঊনাশি','আশি',
+'একাশি','বিরাশি','তিরাশি','চুরাশি','পঁচাশি','ছিয়াশি','সাতাশি','অষ্টাশি','ঊননব্বই','নব্বই',
+'একানব্বই','বিরানব্বই','তিরানব্বই','চুরানব্বই','পঁচানব্বই','ছিয়ানব্বই','সাতানব্বই','আটানব্বই','নিরানব্বই'];
+
+function numberToBanglaWords(n){
+  n = Math.round(n);
+  if(n === 0) return 'শূন্য';
+  if(n < 0) return 'ঋণাত্মক ' + numberToBanglaWords(-n);
+  let parts = [];
+  const crore = Math.floor(n/10000000); n%=10000000;
+  const lakh = Math.floor(n/100000); n%=100000;
+  const thousand = Math.floor(n/1000); n%=1000;
+  const hundred = Math.floor(n/100); n%=100;
+  const rest = n;
+  if(crore) parts.push((crore<100 ? bn99[crore] : numberToBanglaWords(crore)) + ' কোটি');
+  if(lakh) parts.push(bn99[lakh] + ' লক্ষ');
+  if(thousand) parts.push(bn99[thousand] + ' হাজার');
+  if(hundred) parts.push(bn99[hundred] + ' শত');
+  if(rest) parts.push(bn99[rest]);
+  return parts.join(' ');
+}
+function acreToShotokWords(acre){
+  if(!acre) return '';
+  const wholeAcres = Math.floor(acre);
+  const scaled = Math.round((acre - wholeAcres) * 1000000); // 6-decimal fraction as integer 0-999999
+  const block1 = Math.floor(scaled / 10000);          // শতক  (digits 1-2 after decimal)
+  const block2 = Math.floor((scaled % 10000) / 100);  // অযুতাংশ (digits 3-4)
+  const block3 = scaled % 100;                        // লক্ষাংশ (digits 5-6)
+  const parts = [];
+  if(wholeAcres > 0) parts.push(`${numberToBanglaWords(wholeAcres)} একর`);
+  if(block1 > 0) parts.push(`${numberToBanglaWords(block1)} শতক`);
+  if(block2 > 0) parts.push(`${numberToBanglaWords(block2)} অযুতাংশ`);
+  if(block3 > 0) parts.push(`${numberToBanglaWords(block3)} লক্ষাংশ`);
+  if(!parts.length) return 'শূন্য';
+  return parts.join(' ');
+}
+
+/* ===================== NARRATIVE / GRAMMAR HELPERS ===================== */
+function bengaliJoinNames(list){
+  const names = list.map(p=>p.name && p.name.trim()).filter(Boolean);
+  if(names.length===0) return '[নাম দেওয়া হয়নি]';
+  if(names.length===1) return names[0];
+  return names.slice(0,-1).join(', ') + ' ও ' + names[names.length-1];
+}
+function donorGrammar(){
+  const n = state.donors.length;
+  return n>1
+    ? {pron:'আমরা', poss:'আমাদের', role:'দাতাগণ', roleSing:'দাতা', together:' একত্রে'}
+    : {pron:'আমি', poss:'আমার', role:'দাতা', roleSing:'দাতা', together:''};
+}
+function granteeGrammar(){
+  const n = state.grantees.length;
+  return n>1
+    ? {pron2:'আপনারা', poss2:'আপনাদের', role:'গ্রহীতাগণ'}
+    : {pron2:'আপনি', poss2:'আপনার', role:'গ্রহীতা'};
+}
+function witnessGrammar(){
+  return state.witnesses.length>1 ? 'সাক্ষীগণ' : 'সাক্ষী';
+}
+function identifierGrammar(){
+  return state.identifiers.length>1 ? 'সনাক্তকারীগণ' : 'সনাক্তকারী';
+}
+
+function generateNarrative(){
+  const g = id => (document.getElementById(id)?document.getElementById(id).value:'');
+  const dGr = donorGrammar(), grGr = granteeGrammar();
+  const schedules = state.schedules;
+  const totalPrice = round6(schedules.reduce((sum,s)=>sum+parseNum(s.price),0));
+  const totalLand = round6(schedules.reduce((sum,s)=>sum+parseNum(s.landAmount),0));
+  const priceWords = totalPrice ? numberToBanglaWords(totalPrice)+' টাকা মাত্র' : '[মূল্য দেওয়া হয়নি]';
+  const landWords = totalLand ? acreToShotokWords(totalLand) : '[জমির পরিমাণ দেওয়া হয়নি]';
+  const donorNames = bengaliJoinNames(state.donors);
+  const granteeNames = bengaliJoinNames(state.grantees);
+  const deedType = g('deedType') || 'সাফ কবলা';
+  const first = schedules[0] || blankSchedule();
+  const district = first.district||'.........', thana = first.thana||'.........', office = g('regOffice')||'.........', mouza = first.mouza||'.........';
+  const scheduleDesc = schedules.length>1
+    ? schedules.map((s,i)=>`তফসিল-${toBnDigits(i+1)}ঃ মৌজা ${s.mouza||'...'}, এস.এ জে.এল ${s.saJl?toBnDigits(s.saJl):'...'}/আর.এস জে.এল ${s.rsJl?toBnDigits(s.rsJl):'...'}, খতিয়ান ${s.saKhatian?toBnDigits(s.saKhatian):'...'}/${s.rsKhatian?toBnDigits(s.rsKhatian):'...'}, দাগ ${s.saDag?toBnDigits(s.saDag):'...'}/${s.rsDag?toBnDigits(s.rsDag):'...'}`).join('; ')
+    : `জে.এল নং ${first.saJl?toBnDigits(first.saJl):'...'} (আর.এস জে.এল নং ${first.rsJl?toBnDigits(first.rsJl):'...'}), খতিয়ান নং ${first.saKhatian?toBnDigits(first.saKhatian):'...'}/${first.rsKhatian?toBnDigits(first.rsKhatian):'...'}, দাগ নং ${first.saDag?toBnDigits(first.saDag):'...'}/${first.rsDag?toBnDigits(first.rsDag):'...'}`;
+
+  return `পরম করুণাময় মহান সৃষ্টিকর্তার নাম স্মরণপূর্বক অত্র ${deedType} দলিল প্রসঙ্গে বর্ণনা ও প্রকাশ করিতেছি যে, জেলা-${district}, উপজেলা-${thana} ও সাবরেজিষ্ট্রারী ${office} অধীন মৌজা ${mouza} স্থিত ${scheduleDesc} ভুক্ত মোট ${landWords} ভূমির বৈধ মালিক ও দখলকার ${dGr.pron} ${dGr.role} ${donorNames}।
+
+বর্তমানে ${dGr.poss} টাকার প্রয়োজনে তপশীল বর্ণিত ভূমি বিক্রয় করিবার সিদ্ধান্ত গ্রহণ করিয়া মূল্য বাবদ ${priceWords} (${totalPrice?toBnDigits(totalPrice):'...'}) টাকা ধার্য্য করতঃ ${grGr.poss2} বরাবরে বিক্রয় করিতে সম্মত হই। অদ্য সাব্যস্তকৃত মূল্যের সমুদয় টাকা উপস্থিত সাক্ষীগণের সম্মুখে ${dGr.pron} ${grGr.poss2} নিকট হইতে এককালীন নগদ বুঝিয়া পাইয়া তপশীল বর্ণিত ভূমির স্বত্ব ও দখল ${grGr.poss2} বরাবরে সমজাইয়া দিয়া চিরতরে নিঃস্বত্ববান ও দখলত্যাগ${dGr.role==='দাতাগণ'?'ী হইলাম':'ী হইলাম'}।
+
+বিক্রীত সম্পত্তি ${grGr.poss2} নামে নামজারি করাইয়া দান-বিক্রয় ও যাবতীয় ভোগদখল সংক্রান্ত কার্যাদিতে যথেচ্ছভাবে ${grGr.role} বংশানুক্রমিকভাবে ভোগদখল করিতে থাকিবেন। ইহাতে ${dGr.pron} বা ${dGr.poss} উত্তরাধিকারীগণের কাহারো কোনোরূপ দাবি-দাওয়া নাই বা রহিল না। ভবিষ্যতে কোনো প্রকার আপত্তি উত্থাপিত হইলে সমুদয় ক্ষতিপূরণসহ মূল্যের সাকুল্য টাকা ফেরত দিতে ${dGr.pron} বাধ্য থাকিব।`;
+}
+
+function generateAffidavit(){
+  const dGr = donorGrammar();
+  const donorNames = bengaliJoinNames(state.donors);
+  const isPlural = state.donors.length>1;
+  return `${isPlural?'হলফকারীগণ':'হলফকারী'}: ${donorNames}।
+
+এই মর্মে ঘোষণাপূর্বক হলফনামা প্রদান করিতেছি যে, ${dGr.pron} বাংলাদেশের নাগরিক। ${dGr.pron} ঘোষণা করিতেছি যে, হস্তান্তরের জন্য প্রস্তাবিত স্থাবর সম্পত্তি কোনো আইনের অধীন ক্রোকের আওতাধীন নহে; উক্ত সম্পত্তি বাংলাদেশ পরিত্যক্ত সম্পত্তি (নিয়ন্ত্রণ, ব্যবস্থাপনা ও নিষ্পত্তি) আদেশ, ১৯৭২ অনুযায়ী পরিত্যক্ত সম্পত্তি নহে; হস্তান্তরের জন্য প্রস্তাবিত স্থাবর সম্পত্তি আপাততঃ বলবৎ কোনো আইনের কোনো বিধানের সহিত সাংঘর্ষিক নহে; এবং হস্তান্তরের জন্য প্রস্তাবিত স্থাবর সম্পত্তির বিবরণ সঠিকভাবে বর্ণিত হইয়াছে এবং তাহা আবাসগৃহ্য করা হয় নাই। উল্লিখিত সম্পত্তি হস্তান্তরকরণে আবেদনকারীর বৈধ অধিকার রহিয়াছে।
+
+দলিলে বর্ণিত কোনো তথ্য ভুলবশত লিপিবদ্ধ হইয়া থাকিলে তজ্জন্য ${dGr.pron} দায়ী থাকিব এবং প্রয়োজনে নিজ খরচায় ভুল শুদ্ধ করিয়া ক্ষতিপূরণসহ নতুন দলিল প্রস্তুত ও রেজিস্ট্রি করিয়া দিতে বাধ্য থাকিব। দলিলে বর্ণিত সম্পত্তিতে ${dGr.poss} বৈধ স্বত্ব ও অধিকার বহাল আছে এবং প্রদত্ত বিবরণ ${dGr.poss} জ্ঞান ও বিশ্বাসমতে সত্য।`;
+}
+
+function regenerateNarrative(){
+  document.getElementById('narrativeText').value = generateNarrative();
+}
+
+/* ===================== APP STATE ===================== */
+function idTypeLabel(t){
+  return t==='birth' ? 'জন্ম নিবন্ধন নং' : t==='passport' ? 'পাসপোর্ট নং' : 'জাতীয় পরিচয়পত্র নং';
+}
+function blankPerson(){
+  return {
+    name:'', father:'', husband:'', fatherOrHusband:'', mother:'', dob:'', religion:'', occupation:'',
+    nationality:'বাংলাদেশী', nid:'', idType:'nid', share:'', shareCustom:false,
+    pVillage:'', pPost:'', pUpazila:'', pDistrict:'',
+    sameAddr:true,
+    cVillage:'', cPost:'', cUpazila:'', cDistrict:''
+  };
+}
+function blankSchedule(){
+  return {
+    mouza:'', union:'', thana:'', district:'', office:'',
+    saJl:'', rsJl:'', saKhatian:'', rsKhatian:'', dp:'', mutationOld:'', mutationNew:'', saDag:'', rsDag:'',
+    landAmount:'', landClass:'', price:'',
+    bN:'', bS:'', bE:'', bW:'', extraBoundaries:[]
+  };
+}
+const state = {
+  donors:[blankPerson()],
+  grantees:[blankPerson()],
+  witnesses:[blankPerson(), blankPerson()],
+  identifiers:[blankPerson()],
+  writer: blankPerson(),
+  schedules: [blankSchedule()]
+};
+let mouzaDB = {};   // name -> {union,thana,district,office}
+let villageDB = {}; // name -> {post,upazila,district}
+let personsDB = []; // [{id,...personFields}]
+let classDB = [];   // [name, ...]
+let officeDB = [];  // [name, ...]
+let writersDB = []; // [{id,name,address,certNo,office}]
+let occupationDB = []; // [name, ...]
+let religionDB = [];   // [name, ...]
+let unionDB = [];
+let upazilaDB = [];
+let districtDB = [];
+let postOfficeDB = [];
+let landOfficeDB = [];
+let currentDraftId = null;
+
+/* ===================== TABS ===================== */
+// ===== এডমিন পাসওয়ার্ড এখানে পরিবর্তন করুন =====
+const ADMIN_PASSWORD = "bDolil%";
+let adminUnlocked = false;
+let savedUnlocked = false;
+
+// ===== এন্ট্রি-অনলি লিংক মোড: লিংকের শেষে ?entry=1 যোগ করলে শুধু দলিল-এন্ট্রি ফর্ম দেখাবে =====
+const ENTRY_ONLY_MODE = new URLSearchParams(location.search).get('entry') === '1';
+
+const allTabs = ['home','deed','area','saved'];
+document.querySelectorAll('.tab-btn[data-tab]').forEach(btn=>{
+  btn.addEventListener('click', ()=> activateTab(btn.dataset.tab));
+});
+function activateTab(tab){
+  if(ENTRY_ONLY_MODE && tab !== 'deed') return; // entry-only links can only use the deed form
+  if(tab === 'area' && !adminUnlocked){
+    const pass = prompt('এডমিন প্যানেলে ঢুকতে পাসওয়ার্ড দিন:');
+    if(pass === null) return; // cancelled
+    if(pass !== ADMIN_PASSWORD){ alert('পাসওয়ার্ড ভুল হয়েছে।'); return; }
+    adminUnlocked = true;
+  }
+  if(tab === 'saved' && !savedUnlocked){
+    const pass = prompt('সেভ করা তালিকা দেখতে পাসওয়ার্ড দিন:');
+    if(pass === null) return;
+    if(pass !== ADMIN_PASSWORD){ alert('পাসওয়ার্ড ভুল হয়েছে।'); return; }
+    savedUnlocked = true;
+  }
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab));
+  allTabs.forEach(t=>{
+    document.getElementById('tab-'+t).style.display = (t===tab) ? 'block' : 'none';
+  });
+  if(tab === 'area'){ renderAdminTables(); renderPersonsTable(); loadTemplateList(); }
+  if(tab === 'saved') renderSavedListTable();
+  if(tab === 'home') refreshDashboard();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+function goToTab(tab){ activateTab(tab); }
+if(ENTRY_ONLY_MODE){
+  document.querySelectorAll('.tab-btn[data-tab="home"], .tab-btn[data-tab="saved"], .tab-btn[data-tab="area"]').forEach(b=>{ b.style.display = 'none'; });
+}
+
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('collapsed');
+}
+
+function applyTheme(theme){
+  document.documentElement.setAttribute('data-theme', theme);
+  const icon = document.getElementById('themeToggleIcon');
+  const label = document.getElementById('themeToggleLabel');
+  if(theme === 'dark'){
+    if(icon) icon.innerHTML = '<i data-lucide="sun" class="lucide-icon"></i>';
+    if(label) label.textContent = 'লাইট মোড';
+  } else {
+    if(icon) icon.innerHTML = '<i data-lucide="moon" class="lucide-icon"></i>';
+    if(label) label.textContent = 'ডার্ক মোড';
+  }
+  if(window.lucide) lucide.createIcons();
+}
+function toggleTheme(){
+  const scrollY = window.scrollY;
+  const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+  const next = current === 'dark' ? 'light' : 'dark';
+  applyTheme(next);
+  try{ localStorage.setItem('dolil_theme', next); }catch(e){}
+  if(document.activeElement && document.activeElement.blur) document.activeElement.blur();
+  window.scrollTo(0, scrollY);
+}
+(function initTheme(){
+  let saved = 'light';
+  try{ saved = localStorage.getItem('dolil_theme') || 'light'; }catch(e){}
+  applyTheme(saved);
+})();
+
+async function refreshDashboard(){
+  try{
+    const [drafts, mouzas, writers] = await Promise.all([
+      storeList('deeddraft:'), storeList('mouza:'), storeList('writer:')
+    ]);
+    document.getElementById('dashDrafts').textContent = toBnDigits(drafts.length);
+    document.getElementById('dashMouza').textContent = toBnDigits(mouzas.length);
+    document.getElementById('dashWriters').textContent = toBnDigits(writers.length);
+  }catch(e){}
+}
+
+/* ===================== INIT ===================== */
+async function init(){
+  await Promise.all([
+    loadMouzaDB(), loadVillageDB(), loadPersonsDB(),
+    loadClassDB(), loadOfficeDB(), loadWritersDB(),
+    loadOccupationDB(), loadReligionDB(),
+    loadUnionDB(), loadUpazilaDB(), loadDistrictDB(),
+    loadPostOfficeDB(), loadLandOfficeDB(),
+    loadDraftList(), loadTemplateList()
+  ]);
+  renderAll();
+  bindSimpleFieldPreviews();
+  refreshDashboard();
+  ['aw_name','aw_father','aw_mother'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.addEventListener('input', ()=> stripDigitsFromField(el));
+  });
+  if(ENTRY_ONLY_MODE) activateTab('deed');
+}
+init();
+
+async function loadMouzaDB(){
+  mouzaDB = {};
+  const items = await storeListWithData('mouza:');
+  items.forEach(({key,value})=>{ mouzaDB[key.replace('mouza:','')] = value; });
+  const dl = document.getElementById('mouzaList');
+  dl.innerHTML = Object.keys(mouzaDB).map(n=>`<option value="${escapeHtml(n)}">`).join('');
+}
+async function loadVillageDB(){
+  villageDB = {};
+  const items = await storeListWithData('village:');
+  items.forEach(({key,value})=>{ villageDB[key.replace('village:','')] = value; });
+  const dl = document.getElementById('villageList');
+  dl.innerHTML = Object.keys(villageDB).map(n=>`<option value="${escapeHtml(n)}">`).join('');
+}
+async function loadPersonsDB(){
+  personsDB = [];
+  const items = await storeListWithData('person:');
+  items.forEach(({value})=>{ personsDB.push(value); });
+  personsDB.sort((a,b)=>{
+    const ta = a.savedAt || parseInt((a.id||'').split('_')[1]) || 0;
+    const tb = b.savedAt || parseInt((b.id||'').split('_')[1]) || 0;
+    return tb - ta; // most recent first
+  });
+  refreshReuseSelects();
+}
+async function loadClassDB(){
+  classDB = [];
+  const items = await storeListWithData('landclass:');
+  items.forEach(({value})=>{ classDB.push(value.name); });
+  classDB.sort();
+  if(document.getElementById('scheduleList')) renderSchedules();
+}
+async function loadOfficeDB(){
+  officeDB = [];
+  const items = await storeListWithData('regoffice:');
+  items.forEach(({value})=>{ officeDB.push(value.name); });
+  populateSelect('regOffice', officeDB, '');
+  if(officeDB.length){ document.getElementById('regOffice').value = officeDB[0]; }
+}
+async function loadWritersDB(){
+  writersDB = [];
+  const items = await storeListWithData('writer:');
+  items.forEach(({value})=>{ writersDB.push(value); });
+  const sel = document.getElementById('writerReuse');
+  sel.innerHTML = '<option value="">— নির্বাচন করুন —</option>' +
+    writersDB.map(w=>`<option value="${w.id}">${escapeHtml(w.name)}</option>`).join('');
+}
+async function loadOccupationDB(){
+  occupationDB = [];
+  const items = await storeListWithData('occupation:');
+  items.forEach(({value})=>{ occupationDB.push(value.name); });
+  occupationDB.sort();
+}
+async function loadReligionDB(){
+  religionDB = [];
+  const items = await storeListWithData('religion:');
+  items.forEach(({value})=>{ religionDB.push(value.name); });
+  religionDB.sort();
+}
+async function loadUnionDB(){
+  unionDB = [];
+  const items = await storeListWithData('union:');
+  items.forEach(({value})=>{ unionDB.push(value.name); });
+  unionDB.sort();
+  populateSelect('am_union', unionDB, 'নির্বাচন করুন');
+}
+async function loadUpazilaDB(){
+  upazilaDB = [];
+  const items = await storeListWithData('upazila:');
+  items.forEach(({value})=>{ upazilaDB.push(value.name); });
+  upazilaDB.sort();
+  populateSelect('am_thana', upazilaDB, 'নির্বাচন করুন');
+  populateSelect('av_upazila', upazilaDB, 'নির্বাচন করুন');
+}
+async function loadDistrictDB(){
+  districtDB = [];
+  const items = await storeListWithData('district:');
+  items.forEach(({value})=>{ districtDB.push(value.name); });
+  districtDB.sort();
+  populateSelect('am_district', districtDB, 'নির্বাচন করুন');
+  populateSelect('av_district', districtDB, 'নির্বাচন করুন');
+}
+async function loadPostOfficeDB(){
+  postOfficeDB = [];
+  const items = await storeListWithData('postoffice:');
+  items.forEach(({value})=>{ postOfficeDB.push(value.name); });
+  postOfficeDB.sort();
+  populateSelect('av_post', postOfficeDB, 'নির্বাচন করুন');
+}
+async function loadLandOfficeDB(){
+  landOfficeDB = [];
+  const items = await storeListWithData('landoffice:');
+  items.forEach(({value})=>{ landOfficeDB.push(value.name); });
+  landOfficeDB.sort();
+  populateSelect('am_office', landOfficeDB, 'নির্বাচন করুন');
+}
+function populateSelect(id, items, placeholder){
+  const sel = document.getElementById(id);
+  const current = sel.value;
+  sel.innerHTML = (placeholder!==null&&placeholder!==undefined ? `<option value="">${escapeHtml(placeholder)}</option>` : '') +
+    items.map(n=>`<option value="${escapeHtml(n)}">${escapeHtml(n)}</option>`).join('');
+  if(items.includes(current)) sel.value = current;
+}
+
+function escapeHtml(s){
+  return String(s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+const NAME_LIKE_FIELDS = ['name','father','husband','mother','fatherOrHusband'];
+function stripDigitsFromField(el){
+  const cursorPos = el.selectionStart;
+  const original = el.value;
+  const cleaned = original.replace(/[0-9০-৯]/g, '');
+  if(cleaned !== original){
+    const digitsRemovedBeforeCursor = (original.slice(0, cursorPos).match(/[0-9০-৯]/g)||[]).length;
+    const newPos = Math.max(0, cursorPos - digitsRemovedBeforeCursor);
+    el.value = cleaned;
+    el.setSelectionRange(newPos, newPos);
+  }
+}
+function jsAttr(s){
+  // safely embed a string inside a single-quoted JS string literal within an HTML attribute
+  return String(s||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;');
+}
+
+/* ===================== MOUZA / VILLAGE AUTOFILL ===================== */
+function bindVillageAutofill(inputEl, prefix, blockRoot){
+  inputEl.addEventListener('change', function(){
+    const v = villageDB[this.value.trim()];
+    if(v){
+      blockRoot.querySelector(`[data-f="${prefix}Post"]`).value = v.post||'';
+      blockRoot.querySelector(`[data-f="${prefix}Upazila"]`).value = v.upazila||'';
+      blockRoot.querySelector(`[data-f="${prefix}District"]`).value = v.district||'';
+      const pk = prefix==='p' ? 'pPost' : 'cPost';
+    }
+  });
+}
+
+function mutationToWords(raw){
+  const s = bnToEnDigits(raw).trim();
+  if(!s) return '';
+  const parts = s.split('-').map(p=>p.trim()).filter(Boolean);
+  return parts.map(p=>{
+    const n = parseInt(p,10);
+    return (isNaN(n)) ? p : numberToBanglaWords(n);
+  }).join('-');
+}
+
+/* ===================== NUMBER -> WORDS PREVIEWS ===================== */
+function bindSimpleFieldPreviews(){
+  ['regOffice','deedType'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.addEventListener('change', regenerateNarrative);
+  });
+}
+
+/* ===================== PERSON BLOCK RENDERING ===================== */
+const roleLabels = {donors:'দাতা', grantees:'গ্রহীতা', witnesses:'সাক্ষী', identifiers:'সনাক্তকারী'};
+
+function renderAll(){
+  ['donors','grantees','witnesses','identifiers'].forEach(renderPersonList);
+  renderWriterBlock();
+  renderSchedules();
+  refreshReuseSelects();
+  regenerateNarrative();
+}
+
+function renderPersonList(role){
+  const listIdMap = {donors:'donorList', grantees:'granteeList', witnesses:'witnessList', identifiers:'identifierList'};
+  const container = document.getElementById(listIdMap[role]);
+  container.innerHTML = '';
+  const simpleRoles = ['witnesses','identifiers'];
+  state[role].forEach((p, idx)=>{
+    const block = simpleRoles.includes(role) ? buildSimplePersonBlock(role, idx, p) : buildPersonBlock(role, idx, p);
+    container.appendChild(block);
+  });
+  const countIdMap = {donors:'donorCount', grantees:'granteeCount', witnesses:'witnessCount', identifiers:'identifierCount'};
+  document.getElementById(countIdMap[role]).textContent = toBnDigits(state[role].length);
+  if(role==='donors' || role==='grantees') refreshShareValidation();
+}
+
+function nidValidationHtml(){
+  return `<div class="hint nid-msg" data-nid-msg></div>`;
+}
+function checkNidField(inputEl, msgEl, idType){
+  if(idType === 'passport'){
+    const val = inputEl.value.trim();
+    const ok = val.length===0 || val.length>=6;
+    inputEl.classList.toggle('nid-warn', !ok);
+    if(msgEl) msgEl.textContent = ok ? '' : 'পাসপোর্ট নম্বর সঠিক মনে হচ্ছে না';
+    return;
+  }
+  const digits = bnToEnDigits(inputEl.value).replace(/\D/g,'');
+  const ok = digits.length===0 || digits.length===10 || digits.length===13 || digits.length===17;
+  inputEl.classList.toggle('nid-warn', !ok);
+  if(msgEl) msgEl.textContent = ok ? '' : idTypeLabel(idType) + ' ১০, ১৩ বা ১৭ ডিজিটের হতে হবে (বর্তমানে ' + toBnDigits(digits.length) + ' ডিজিট)';
+}
+
+function buildPersonBlock(role, idx, p){
+  const div = document.createElement('div');
+  div.className = 'person-block';
+  const occOptions = ['<option value="">নির্বাচন করুন</option>'].concat(occupationDB.map(o=>`<option value="${escapeHtml(o)}" ${p.occupation===o?'selected':''}>${escapeHtml(o)}</option>`)).join('');
+  const relOptions = ['<option value="">নির্বাচন করুন</option>'].concat(religionDB.map(r=>`<option value="${escapeHtml(r)}" ${p.religion===r?'selected':''}>${escapeHtml(r)}</option>`)).join('');
+  div.innerHTML = `
+    <div class="pb-head">
+      <b>${roleLabels[role]} নং ${toBnDigits(idx+1)}</b>
+      <div class="row-actions" style="margin:0;">
+        <select class="reuse-select" data-role="${role}" data-idx="${idx}" onchange="reuseIntoBlock('${role}',${idx},this.value)">
+          <option value="">পূর্বের তথ্য থেকে কপি করুন</option>
+        </select>
+        <button type="button" class="btn small ghost" onclick="savePersonFromBlock('${role}',${idx})">সংরক্ষণ করুন</button>
+        ${state[role].length>1 ? `<button type="button" class="btn small danger" onclick="removePerson('${role}',${idx})">মুছুন</button>` : ''}
+      </div>
+    </div>
+    <div class="grid">
+      <div class="field"><label>নাম</label><input data-f="name" value="${escapeHtml(p.name)}"></div>
+      ${(role==='donors'||role==='grantees') ? `<div class="field">
+        <label>${role==='donors'?'এই দাতার অংশের':'এই গ্রহীতার প্রাপ্য'} পরিমাণ (একরে)</label>
+        <input data-share-input class="bn-num" value="${escapeHtml(p.share)}" placeholder="যেমনঃ ০.০১৬৬" ${p.shareCustom?'':'readonly'}>
+        <label class="addr-toggle" style="margin-top:4px;"><input type="checkbox" data-share-custom ${p.shareCustom?'checked':''}> নিজে থেকে পরিমাণ লিখব (কাস্টম)</label>
+      </div>` : ''}
+      <div class="field"><label>পিতার নাম</label><input data-f="father" value="${escapeHtml(p.father)}"></div>
+      <div class="field"><label>স্বামীর নাম</label><input data-f="husband" value="${escapeHtml(p.husband)}"></div>
+      <div class="field"><label>মাতার নাম</label><input data-f="mother" value="${escapeHtml(p.mother)}"></div>
+      <div class="field"><label>জন্ম তারিখ (দিন/মাস/বছর)</label><input type="text" class="bn-num" data-f="dob" placeholder="যেমনঃ ১৫/০৬/১৯৯০" value="${escapeHtml(p.dob)}"></div>
+      <div class="field"><label>ধর্ম</label><select data-f="religion">${relOptions}</select></div>
+      <div class="field"><label>পেশা</label><select data-f="occupation">${occOptions}</select></div>
+      <div class="field"><label>জাতীয়তা</label><input data-f="nationality" value="${escapeHtml(p.nationality)}"></div>
+      <div class="field">
+        <label>পরিচিতির ধরন</label>
+        <div class="row-actions" style="margin:2px 0 0;gap:14px;">
+          <label style="font-size:13px;font-weight:normal;display:flex;align-items:center;gap:4px;"><input type="radio" name="idtype-${role}-${idx}" data-idtype value="nid" ${(!p.idType||p.idType==='nid')?'checked':''}> এন.আই.ডি</label>
+          <label style="font-size:13px;font-weight:normal;display:flex;align-items:center;gap:4px;"><input type="radio" name="idtype-${role}-${idx}" data-idtype value="birth" ${p.idType==='birth'?'checked':''}> জন্ম নিবন্ধন</label>
+          <label style="font-size:13px;font-weight:normal;display:flex;align-items:center;gap:4px;"><input type="radio" name="idtype-${role}-${idx}" data-idtype value="passport" ${p.idType==='passport'?'checked':''}> পাসপোর্ট</label>
+        </div>
+      </div>
+      <div class="field">
+        <label data-nid-label>${idTypeLabel(p.idType||'nid')}</label>
+        <input data-f="nid" class="bn-num" value="${escapeHtml(p.nid)}">
+        ${nidValidationHtml()}
+      </div>
+    </div>
+    <div class="section-sub">স্থায়ী ঠিকানা</div>
+    <div class="grid">
+      <div class="field"><label>গ্রাম/বাড়ী</label><input data-f="pVillage" list="villageList" value="${escapeHtml(p.pVillage)}"></div>
+      <div class="field"><label>ডাকঘর</label><input data-f="pPost" value="${escapeHtml(p.pPost)}"></div>
+      <div class="field"><label>উপজেলা</label><input data-f="pUpazila" value="${escapeHtml(p.pUpazila)}"></div>
+      <div class="field"><label>জেলা</label><input data-f="pDistrict" value="${escapeHtml(p.pDistrict)}"></div>
+    </div>
+    <label class="addr-toggle"><input type="checkbox" data-f="sameAddr" ${p.sameAddr?'checked':''}> বর্তমান ঠিকানা স্থায়ী ঠিকানার অনুরূপ</label>
+    <div class="grid current-addr-fields" style="${p.sameAddr?'display:none;':''}">
+      <div class="field"><label>গ্রাম/বাড়ী (বর্তমান)</label><input data-f="cVillage" list="villageList" value="${escapeHtml(p.cVillage)}"></div>
+      <div class="field"><label>ডাকঘর (বর্তমান)</label><input data-f="cPost" value="${escapeHtml(p.cPost)}"></div>
+      <div class="field"><label>উপজেলা (বর্তমান)</label><input data-f="cUpazila" value="${escapeHtml(p.cUpazila)}"></div>
+      <div class="field"><label>জেলা (বর্তমান)</label><input data-f="cDistrict" value="${escapeHtml(p.cDistrict)}"></div>
+    </div>
+  `;
+  // bind field inputs
+  div.querySelectorAll('[data-f]').forEach(el=>{
+    const f = el.dataset.f;
+    const evt = (el.type === 'checkbox') ? 'change' : (el.tagName==='SELECT' ? 'change' : 'input');
+    el.addEventListener(evt, ()=>{
+      if(el.type==='checkbox'){
+        p[f] = el.checked;
+        div.querySelector('.current-addr-fields').style.display = el.checked ? 'none' : '';
+      } else {
+        if(NAME_LIKE_FIELDS.includes(f)) stripDigitsFromField(el);
+        p[f] = el.value;
+      }
+    });
+  });
+  // share amount (donors/grantees only)
+  if(role==='donors' || role==='grantees'){
+    const shareInput = div.querySelector('[data-share-input]');
+    const shareCustomCb = div.querySelector('[data-share-custom]');
+    shareInput.addEventListener('input', ()=>{
+      p.share = shareInput.value;
+      refreshShareValidation();
+      regenerateNarrative();
+    });
+    shareCustomCb.addEventListener('change', ()=>{
+      p.shareCustom = shareCustomCb.checked;
+      if(!p.shareCustom){
+        const total = totalScheduleLandValue();
+        p.share = total ? toBnDigits(round6(total)) : '';
+      }
+      renderPersonList(role);
+    });
+  }
+  // NID live validation
+  const nidInput = div.querySelector('[data-f="nid"]');
+  const nidMsg = div.querySelector('[data-nid-msg]');
+  const nidLabel = div.querySelector('[data-nid-label]');
+  checkNidField(nidInput, nidMsg, p.idType||'nid');
+  nidInput.addEventListener('input', ()=> checkNidField(nidInput, nidMsg, p.idType||'nid'));
+  div.querySelectorAll('[data-idtype]').forEach(radio=>{
+    radio.addEventListener('change', ()=>{
+      p.idType = radio.value;
+      nidLabel.textContent = idTypeLabel(p.idType);
+      checkNidField(nidInput, nidMsg, p.idType);
+    });
+  });
+  // village autofill for permanent + present address
+  const pVillageInput = div.querySelector('[data-f="pVillage"]');
+  pVillageInput.addEventListener('change', function(){
+    const v = villageDB[this.value.trim()];
+    if(v){
+      div.querySelector('[data-f="pPost"]').value = p.pPost = v.post||'';
+      div.querySelector('[data-f="pUpazila"]').value = p.pUpazila = v.upazila||'';
+      div.querySelector('[data-f="pDistrict"]').value = p.pDistrict = v.district||'';
+    }
+  });
+  const cVillageInput = div.querySelector('[data-f="cVillage"]');
+  cVillageInput.addEventListener('change', function(){
+    const v = villageDB[this.value.trim()];
+    if(v){
+      div.querySelector('[data-f="cPost"]').value = p.cPost = v.post||'';
+      div.querySelector('[data-f="cUpazila"]').value = p.cUpazila = v.upazila||'';
+      div.querySelector('[data-f="cDistrict"]').value = p.cDistrict = v.district||'';
+    }
+  });
+  return div;
+}
+
+function buildSimplePersonBlock(role, idx, p){
+  const div = document.createElement('div');
+  div.className = 'person-block';
+  div.innerHTML = `
+    <div class="pb-head">
+      <b>${roleLabels[role]} নং ${toBnDigits(idx+1)}</b>
+      <div class="row-actions" style="margin:0;">
+        <select class="reuse-select" data-role="${role}" data-idx="${idx}" onchange="reuseIntoBlock('${role}',${idx},this.value)">
+          <option value="">পূর্বের তথ্য থেকে কপি করুন</option>
+        </select>
+        <button type="button" class="btn small ghost" onclick="savePersonFromBlock('${role}',${idx})">সংরক্ষণ করুন</button>
+        ${state[role].length>1 ? `<button type="button" class="btn small danger" onclick="removePerson('${role}',${idx})">মুছুন</button>` : ''}
+      </div>
+    </div>
+    <div class="grid">
+      <div class="field"><label>নাম</label><input data-f="name" value="${escapeHtml(p.name)}"></div>
+      <div class="field"><label>পিতা/স্বামীর নাম</label><input data-f="fatherOrHusband" value="${escapeHtml(p.fatherOrHusband)}"></div>
+      <div class="field"><label>মাতার নাম</label><input data-f="mother" value="${escapeHtml(p.mother)}"></div>
+      <div class="field"><label>গ্রাম</label><input data-f="pVillage" list="villageList" value="${escapeHtml(p.pVillage)}"></div>
+      <div class="field"><label>ডাকঘর</label><input data-f="pPost" value="${escapeHtml(p.pPost)}"></div>
+      <div class="field"><label>উপজেলা</label><input data-f="pUpazila" value="${escapeHtml(p.pUpazila)}"></div>
+      <div class="field"><label>জেলা</label><input data-f="pDistrict" value="${escapeHtml(p.pDistrict)}"></div>
+    </div>
+  `;
+  div.querySelectorAll('[data-f]').forEach(el=>{
+    const f = el.dataset.f;
+    el.addEventListener('input', ()=>{
+      if(NAME_LIKE_FIELDS.includes(f)) stripDigitsFromField(el);
+      p[f] = el.value;
+    });
+  });
+  const pVillageInput = div.querySelector('[data-f="pVillage"]');
+  pVillageInput.addEventListener('change', function(){
+    const v = villageDB[this.value.trim()];
+    if(v){
+      div.querySelector('[data-f="pPost"]').value = p.pPost = v.post||'';
+      div.querySelector('[data-f="pUpazila"]').value = p.pUpazila = v.upazila||'';
+      div.querySelector('[data-f="pDistrict"]').value = p.pDistrict = v.district||'';
+    }
+  });
+  return div;
+}
+
+/* ===================== SCHEDULE (তফসিল) BLOCKS ===================== */
+function renderSchedules(){
+  const container = document.getElementById('scheduleList');
+  container.innerHTML = '';
+  state.schedules.forEach((s, idx)=> container.appendChild(buildScheduleBlock(idx, s)));
+  document.getElementById('scheduleCount').textContent = toBnDigits(state.schedules.length);
+  refreshScheduleTotals();
+}
+
+function numPreview(val, kind){
+  if(!val || !String(val).trim()) return '';
+  if(kind==='money') return numberToBanglaWords(parseNum(val))+' টাকা মাত্র ('+toBnDigits(parseNum(val))+')';
+  if(kind==='land') return acreToShotokWords(parseNum(val));
+  if(kind==='mutation') return toBnDigits(bnToEnDigits(val)) + ' (' + mutationToWords(val) + ')';
+  const n = parseNum(val);
+  return n ? (toBnDigits(n)+' ('+numberToBanglaWords(n)+')') : '';
+}
+
+function buildScheduleBlock(idx, s){
+  const div = document.createElement('div');
+  div.className = 'person-block';
+  const classOptions = ['<option value="">নির্বাচন করুন</option>'].concat(classDB.map(c=>`<option value="${escapeHtml(c)}" ${s.landClass===c?'selected':''}>${escapeHtml(c)}</option>`)).join('');
+  div.innerHTML = `
+    <div class="pb-head">
+      <b>তফসিল নং ${toBnDigits(idx+1)}</b>
+      <div class="row-actions" style="margin:0;">
+        ${state.schedules.length>1 ? `<button type="button" class="btn small danger" onclick="removeSchedule(${idx})">মুছুন</button>` : ''}
+      </div>
+    </div>
+    <div class="grid grid-inline5">
+      <div class="field">
+        <label>মৌজার নাম</label>
+        <input data-s="mouza" list="mouzaList" value="${escapeHtml(s.mouza)}">
+        <div class="hint" data-mouza-hint></div>
+      </div>
+      <div class="field"><label>ইউনিয়ন</label><input data-s="union" value="${escapeHtml(s.union)}"></div>
+      <div class="field"><label>উপজেলা</label><input data-s="thana" value="${escapeHtml(s.thana)}"></div>
+      <div class="field"><label>জেলা</label><input data-s="district" value="${escapeHtml(s.district)}"></div>
+      <div class="field"><label>সংশ্লিষ্ট ভূমি অফিসের নাম</label><input data-s="office" value="${escapeHtml(s.office)}"></div>
+    </div>
+
+    <div class="section-sub">জে.এল নং</div>
+    <div class="grid">
+      <div class="field"><label>এস.এ জে.এল নং</label><input data-s="saJl" class="bn-num" inputmode="numeric" value="${escapeHtml(s.saJl)}">
+        <div class="bn-preview" data-w="saJl">${numPreview(s.saJl)}</div></div>
+      <div class="field"><label>আর.এস জে.এল নং</label><input data-s="rsJl" class="bn-num" inputmode="numeric" value="${escapeHtml(s.rsJl)}">
+        <div class="bn-preview" data-w="rsJl">${numPreview(s.rsJl)}</div></div>
+    </div>
+
+    <div class="section-sub">খতিয়ান নং</div>
+    <div class="grid">
+      <div class="field"><label>এস.এ খতিয়ান নং</label><input data-s="saKhatian" class="bn-num" inputmode="numeric" value="${escapeHtml(s.saKhatian)}">
+        <div class="bn-preview" data-w="saKhatian">${numPreview(s.saKhatian)}</div></div>
+      <div class="field"><label>আর.এস খতিয়ান নং</label><input data-s="rsKhatian" class="bn-num" inputmode="numeric" value="${escapeHtml(s.rsKhatian)}">
+        <div class="bn-preview" data-w="rsKhatian">${numPreview(s.rsKhatian)}</div></div>
+      <div class="field"><label>ডিপি খতিয়ান নং</label><input data-s="dp" class="bn-num" inputmode="numeric" value="${escapeHtml(s.dp)}">
+        <div class="bn-preview" data-w="dp">${numPreview(s.dp)}</div></div>
+      <div class="field"><label>নামজারি খতিয়ান নং (সাবেক)</label><input data-s="mutationOld" class="bn-num" inputmode="numeric" value="${escapeHtml(s.mutationOld)}">
+        <div class="bn-preview" data-w="mutationOld">${numPreview(s.mutationOld,'mutation')}</div></div>
+      <div class="field"><label>নামজারি খতিয়ান নং (বর্তমান)</label><input data-s="mutationNew" class="bn-num" inputmode="numeric" value="${escapeHtml(s.mutationNew)}">
+        <div class="bn-preview" data-w="mutationNew">${numPreview(s.mutationNew,'mutation')}</div></div>
+    </div>
+
+    <div class="section-sub">দাগ নং</div>
+    <div class="grid">
+      <div class="field"><label>এস.এ দাগ নং</label><input data-s="saDag" class="bn-num" inputmode="numeric" value="${escapeHtml(s.saDag)}">
+        <div class="bn-preview" data-w="saDag">${numPreview(s.saDag)}</div></div>
+      <div class="field"><label>আর.এস দাগ নং</label><input data-s="rsDag" class="bn-num" inputmode="numeric" value="${escapeHtml(s.rsDag)}">
+        <div class="bn-preview" data-w="rsDag">${numPreview(s.rsDag)}</div></div>
+    </div>
+
+    <div class="section-sub">জমির পরিমাণ ও মূল্য</div>
+    <div class="grid">
+      <div class="field">
+        <label>জমির পরিমাণ (একরে)</label>
+        <input data-s="landAmount" class="bn-num" inputmode="decimal" value="${escapeHtml(s.landAmount)}" placeholder="যেমনঃ ০.০৩৩৩ বা 0.0333">
+        <div class="bn-preview" data-w="landAmount">${numPreview(s.landAmount,'land')}</div>
+      </div>
+      <div class="field"><label>জমির শ্রেণী</label><select data-s="landClass">${classOptions}</select></div>
+      <div class="field">
+        <label>মূল্য (টাকা)</label>
+        <input data-s="price" class="bn-num" inputmode="numeric" value="${escapeHtml(s.price)}" placeholder="যেমনঃ ২০০০০০ বা 200000">
+        <div class="bn-preview" data-w="price">${numPreview(s.price,'money')}</div>
+      </div>
+    </div>
+
+    <div class="section-sub">চৌহদ্দি</div>
+    <div class="grid">
+      <div class="field"><label>উত্তরে</label><input data-s="bN" value="${escapeHtml(s.bN)}"></div>
+      <div class="field"><label>দক্ষিণে</label><input data-s="bS" value="${escapeHtml(s.bS)}"></div>
+      <div class="field"><label>পূর্বে</label><input data-s="bE" value="${escapeHtml(s.bE)}"></div>
+      <div class="field"><label>পশ্চিমে</label><input data-s="bW" value="${escapeHtml(s.bW)}"></div>
+    </div>
+    <div data-extra-boundary-list></div>
+    <div class="row-actions" style="margin-top:8px;"><button type="button" class="btn small ghost" data-add-boundary>+ আরও চৌহদ্দি যোগ করুন</button></div>
+  `;
+
+  // bind simple/select/text fields
+  div.querySelectorAll('[data-s]').forEach(el=>{
+    const f = el.dataset.s;
+    const evt = el.tagName==='SELECT' ? 'change' : 'input';
+    el.addEventListener(evt, ()=>{
+      s[f] = el.value;
+      const wEl = div.querySelector(`[data-w="${f}"]`);
+      if(wEl){
+        const kind = f==='price' ? 'money' : f==='landAmount' ? 'land' : (f==='mutationOld'||f==='mutationNew') ? 'mutation' : undefined;
+        wEl.textContent = numPreview(el.value, kind);
+      }
+      regenerateNarrative();
+      refreshScheduleTotals();
+    });
+  });
+
+  // mouza autofill
+  const mouzaInput = div.querySelector('[data-s="mouza"]');
+  const mouzaHint = div.querySelector('[data-mouza-hint]');
+  mouzaInput.addEventListener('change', function(){
+    const v = mouzaDB[this.value.trim()];
+    if(v){
+      div.querySelector('[data-s="union"]').value = s.union = v.union||'';
+      div.querySelector('[data-s="thana"]').value = s.thana = v.thana||'';
+      div.querySelector('[data-s="district"]').value = s.district = v.district||'';
+      div.querySelector('[data-s="office"]').value = s.office = v.office||'';
+      mouzaHint.textContent = '✓ সংরক্ষিত তথ্য থেকে স্বয়ংক্রিয়ভাবে পূরণ হয়েছে';
+    } else if(this.value.trim()){
+      mouzaHint.textContent = 'এই মৌজার তথ্য পূর্বে সংরক্ষিত নেই — "এডমিন" ট্যাবে যোগ করুন, নিচের ঘরগুলো নিজে পূরণ করুন';
+    } else { mouzaHint.textContent=''; }
+    regenerateNarrative();
+  });
+
+  // extra boundaries for this schedule
+  function renderExtraB(){
+    const wrap = div.querySelector('[data-extra-boundary-list]');
+    wrap.innerHTML = s.extraBoundaries.map((b,i)=>`
+      <div class="grid eb-row" style="margin-top:8px;grid-template-columns:1fr 2fr auto;align-items:end;">
+        <div class="field"><label>দিক/লেবেল</label><input data-eb="label" value="${escapeHtml(b.label)}" placeholder="যেমনঃ উত্তর-পূর্ব কোণে"></div>
+        <div class="field"><label>বিবরণ</label><input data-eb="value" value="${escapeHtml(b.value)}"></div>
+        <button type="button" class="btn small danger" data-remove-eb="${i}" style="height:38px;">মুছুন</button>
+      </div>
+    `).join('');
+    wrap.querySelectorAll('.eb-row').forEach((row,i)=>{
+      row.querySelectorAll('[data-eb]').forEach(el=>{
+        el.addEventListener('input', ()=>{ s.extraBoundaries[i][el.dataset.eb] = el.value; });
+      });
+      row.querySelector('[data-remove-eb]').addEventListener('click', ()=>{
+        s.extraBoundaries.splice(i,1);
+        renderExtraB();
+      });
+    });
+  }
+  renderExtraB();
+  div.querySelector('[data-add-boundary]').addEventListener('click', ()=>{
+    s.extraBoundaries.push({label:'', value:''});
+    renderExtraB();
+  });
+
+  return div;
+}
+
+function addSchedule(){
+  const last = state.schedules[state.schedules.length-1];
+  const copy = JSON.parse(JSON.stringify(last));
+  copy.extraBoundaries = last.extraBoundaries.map(b=>({...b}));
+  state.schedules.push(copy);
+  renderSchedules();
+}
+function removeSchedule(idx){
+  state.schedules.splice(idx,1);
+  renderSchedules();
+  regenerateNarrative();
+}
+function refreshScheduleTotals(){
+  let totalLand = 0, totalPrice = 0;
+  state.schedules.forEach(s=>{
+    totalLand += parseNum(s.landAmount);
+    totalPrice += parseNum(s.price);
+  });
+  totalLand = round6(totalLand);
+  totalPrice = round6(totalPrice);
+  document.getElementById('totalScheduleLand').textContent = toBnDigits(totalLand);
+  document.getElementById('totalSchedulePrice').textContent = toBnDigits(totalPrice);
+  syncAutoShares();
+  renderPersonList('donors');
+  renderPersonList('grantees');
+}
+
+function totalScheduleLandValue(){
+  return round6(state.schedules.reduce((sum,s)=>sum+parseNum(s.landAmount),0));
+}
+function syncAutoShares(){
+  const total = totalScheduleLandValue();
+  const totalStr = total ? toBnDigits(round6(total)) : '';
+  ['donors','grantees'].forEach(role=>{
+    state[role].forEach(p=>{ if(!p.shareCustom) p.share = totalStr; });
+  });
+}
+function round6(n){
+  return parseFloat(Number(n).toFixed(6));
+}
+function refreshShareValidation(){
+  const total = totalScheduleLandValue();
+  const check = (sum)=>{
+    const diff = round6(sum-total);
+    if(Math.abs(diff) < 0.000001) return {ok:true, msg: total ? ('✓ মোট জমির পরিমাণের সাথে মিলছে ('+toBnDigits(round6(sum))+' একর)') : ''};
+    if(diff > 0) return {ok:false, msg:'⚠ মোট জমির চেয়ে '+toBnDigits(Math.abs(diff))+' একর বেশি লেখা হয়েছে'};
+    return {ok:false, msg:'⚠ মোট জমির চেয়ে '+toBnDigits(Math.abs(diff))+' একর কম লেখা হয়েছে'};
+  };
+  const donorSum = state.donors.reduce((s,p)=>s+parseNum(p.share),0);
+  const granteeSum = state.grantees.reduce((s,p)=>s+parseNum(p.share),0);
+  const dEl = document.getElementById('donorShareCheck');
+  const gEl = document.getElementById('granteeShareCheck');
+  if(dEl){ const r = check(donorSum); dEl.textContent = r.msg; dEl.style.color = r.ok ? 'var(--heading)' : 'var(--danger)'; }
+  if(gEl){ const r = check(granteeSum); gEl.textContent = r.msg; gEl.style.color = r.ok ? 'var(--heading)' : 'var(--danger)'; }
+}
+
+function renderWriterBlock(){
+  const wrap = document.getElementById('writerBlock');
+  const p = state.writer;
+  wrap.innerHTML = `
+    <div class="field"><label>নাম</label><input data-wf="name" value="${escapeHtml(p.name)}" readonly></div>
+    <div class="field"><label>পিতার নাম</label><input data-wf="husband" value="${escapeHtml(p.husband)}" readonly></div>
+    <div class="field"><label>মাতার নাম</label><input data-wf="mother" value="${escapeHtml(p.mother)}" readonly></div>
+    <div class="field"><label>পূর্ণ ঠিকানা</label><input data-wf="father" value="${escapeHtml(p.father)}" readonly></div>
+    <div class="field"><label>সনদ নং</label><input data-wf="nid" value="${escapeHtml(p.nid)}" readonly></div>
+    <div class="field"><label>কার্যালয়ের নাম</label><input data-wf="occupation" value="${escapeHtml(p.occupation)}" readonly></div>
+  `;
+}
+
+/* ===================== ADD / REMOVE PERSONS ===================== */
+function addPerson(role){
+  state[role].push(blankPerson());
+  if(role==='donors' || role==='grantees') syncAutoShares();
+  renderPersonList(role);
+  if(role==='donors' || role==='grantees') regenerateNarrative();
+}
+function removePerson(role, idx){
+  state[role].splice(idx,1);
+  if(role==='donors' || role==='grantees') syncAutoShares();
+  renderPersonList(role);
+  if(role==='donors' || role==='grantees') regenerateNarrative();
+}
+
+/* ===================== SAVE / REUSE PERSONS ===================== */
+async function savePersonFromBlock(role, idx){
+  const p = (role==='writer') ? state.writer : state[role][idx];
+  if(!p.name || !p.name.trim()){ alert('সংরক্ষণ করতে হলে নাম আবশ্যক'); return; }
+  const nameKey = p.name.trim().toLowerCase();
+  const relKey = (p.father||p.husband||p.fatherOrHusband||'').trim().toLowerCase();
+  const existing = personsDB.find(pp =>
+    (pp.name||'').trim().toLowerCase()===nameKey &&
+    ((pp.father||pp.husband||pp.fatherOrHusband||'').trim().toLowerCase())===relKey
+  );
+  let id;
+  if(existing){
+    const wantUpdate = confirm('"'+p.name+'" নামে একজনের তথ্য আগে থেকেই সংরক্ষিত আছে।\n\n"OK" চাপুন — পুরনো তথ্য এই নতুন তথ্য দিয়ে হালনাগাদ (আপডেট) হবে।\n"Cancel" চাপুন — সম্পূর্ণ নতুন আলাদা এন্ট্রি হিসেবে সংরক্ষণ হবে।');
+    id = wantUpdate ? existing.id : ('p_' + Date.now() + '_' + Math.floor(Math.random()*1000));
+  } else {
+    id = 'p_' + Date.now() + '_' + Math.floor(Math.random()*1000);
+  }
+  const record = Object.assign({id, savedAt: Date.now()}, p);
+  await storeSet('person:'+id, record, false);
+  await loadPersonsDB();
+  alert('"' + p.name + '" সংরক্ষণ করা হয়েছে।');
+}
+
+function refreshReuseSelects(){
+  const optsHtml = '<option value="">পূর্বের তথ্য থেকে কপি করুন</option>' +
+    personsDB.map(pp=>`<option value="${pp.id}">${escapeHtml(pp.name)}${pp.father?(' — পিতাঃ '+escapeHtml(pp.father)):''}</option>`).join('');
+  document.querySelectorAll('.reuse-select').forEach(sel=>{ sel.innerHTML = optsHtml; });
+}
+
+function reuseIntoBlock(role, idx, personId){
+  if(!personId) return;
+  const src = personsDB.find(pp=>pp.id===personId);
+  if(!src) return;
+  const target = state[role][idx];
+  Object.assign(target, {
+    name:src.name, father:src.father, husband:src.husband, fatherOrHusband:src.fatherOrHusband||src.father||src.husband, mother:src.mother, dob:src.dob,
+    religion:src.religion, occupation:src.occupation, nationality:src.nationality, nid:src.nid,
+    pVillage:src.pVillage, pPost:src.pPost, pUpazila:src.pUpazila, pDistrict:src.pDistrict,
+    sameAddr:src.sameAddr, cVillage:src.cVillage, cPost:src.cPost, cUpazila:src.cUpazila, cDistrict:src.cDistrict
+  });
+  renderPersonList(role);
+}
+function reuseIntoWriter(writerId){
+  if(!writerId) { state.writer = blankPerson(); renderWriterBlock(); return; }
+  const src = writersDB.find(w=>w.id===writerId);
+  if(!src) return;
+  state.writer.name = src.name;
+  state.writer.husband = src.father;
+  state.writer.mother = src.mother;
+  state.writer.father = src.address;
+  state.writer.nid = src.certNo;
+  state.writer.occupation = src.office;
+  renderWriterBlock();
+}
+
+/* ===================== ADMIN: MOUZA / VILLAGE ===================== */
+async function saveMouzaEntry(){
+  const name = document.getElementById('am_mouza').value.trim();
+  if(!name){ alert('মৌজার নাম দিন'); return; }
+  const rec = {
+    union: document.getElementById('am_union').value.trim(),
+    thana: document.getElementById('am_thana').value.trim(),
+    district: document.getElementById('am_district').value.trim(),
+    office: document.getElementById('am_office').value.trim()
+  };
+  await storeSet('mouza:'+name, rec, true);
+  mouzaDB[name] = rec;
+  document.getElementById('mouzaList').innerHTML = Object.keys(mouzaDB).map(n=>`<option value="${escapeHtml(n)}">`).join('');
+  ['am_mouza','am_union','am_thana','am_district','am_office'].forEach(id=>document.getElementById(id).value='');
+  renderAdminTables();
+}
+async function saveVillageEntry(){
+  const name = document.getElementById('av_village').value.trim();
+  if(!name){ alert('গ্রামের নাম দিন'); return; }
+  const rec = {
+    post: document.getElementById('av_post').value.trim(),
+    upazila: document.getElementById('av_upazila').value.trim(),
+    district: document.getElementById('av_district').value.trim()
+  };
+  await storeSet('village:'+name, rec, true);
+  villageDB[name] = rec;
+  document.getElementById('villageList').innerHTML = Object.keys(villageDB).map(n=>`<option value="${escapeHtml(n)}">`).join('');
+  ['av_village','av_post','av_upazila','av_district'].forEach(id=>document.getElementById(id).value='');
+  renderAdminTables();
+}
+async function deleteMouzaEntry(name){
+  if(!confirm('"'+name+'" মুছে ফেলতে চান?')) return;
+  await storeDelete('mouza:'+name, true);
+  delete mouzaDB[name];
+  renderAdminTables();
+  document.getElementById('mouzaList').innerHTML = Object.keys(mouzaDB).map(n=>`<option value="${escapeHtml(n)}">`).join('');
+}
+async function deleteVillageEntry(name){
+  if(!confirm('"'+name+'" মুছে ফেলতে চান?')) return;
+  await storeDelete('village:'+name, true);
+  delete villageDB[name];
+  renderAdminTables();
+  document.getElementById('villageList').innerHTML = Object.keys(villageDB).map(n=>`<option value="${escapeHtml(n)}">`).join('');
+}
+
+async function saveClassEntry(){
+  const name = document.getElementById('ac_class').value.trim();
+  if(!name){ alert('শ্রেণির নাম দিন'); return; }
+  await storeSet('landclass:'+name, {name}, true);
+  document.getElementById('ac_class').value='';
+  await loadClassDB();
+  renderAdminTables();
+}
+async function deleteClassEntry(name){
+  if(!confirm('"'+name+'" মুছে ফেলতে চান?')) return;
+  await storeDelete('landclass:'+name, true);
+  await loadClassDB();
+  renderAdminTables();
+}
+async function saveOfficeEntry(){
+  const name = document.getElementById('ao_office').value.trim();
+  if(!name){ alert('কার্যালয়ের নাম দিন'); return; }
+  await storeSet('regoffice:'+name, {name}, true);
+  document.getElementById('ao_office').value='';
+  await loadOfficeDB();
+  renderAdminTables();
+}
+async function deleteOfficeEntry(name){
+  if(!confirm('"'+name+'" মুছে ফেলতে চান?')) return;
+  await storeDelete('regoffice:'+name, true);
+  await loadOfficeDB();
+  renderAdminTables();
+}
+async function saveWriterEntry(){
+  const name = document.getElementById('aw_name').value.trim();
+  if(!name){ alert('লেখকের নাম দিন'); return; }
+  const father = document.getElementById('aw_father').value.trim();
+  const mother = document.getElementById('aw_mother').value.trim();
+  const address = document.getElementById('aw_address').value.trim();
+  const certNo = document.getElementById('aw_cert').value.trim();
+  const office = document.getElementById('aw_office').value.trim();
+  const existing = writersDB.find(w => (w.name||'').trim().toLowerCase()===name.toLowerCase());
+  let id;
+  if(existing){
+    const wantUpdate = confirm('"'+name+'" নামে একজন লেখক আগে থেকেই তালিকায় আছেন।\n\n"OK" চাপুন — পুরনো তথ্য এই নতুন তথ্য দিয়ে হালনাগাদ (আপডেট) হবে।\n"Cancel" চাপুন — আলাদা নতুন এন্ট্রি হিসেবে সংরক্ষণ হবে।');
+    id = wantUpdate ? existing.id : ('w_'+Date.now()+'_'+Math.floor(Math.random()*1000));
+  } else {
+    id = 'w_'+Date.now()+'_'+Math.floor(Math.random()*1000);
+  }
+  const rec = {id, name, father, mother, address, certNo, office};
+  await storeSet('writer:'+rec.id, rec, true);
+  ['aw_name','aw_father','aw_mother','aw_address','aw_cert','aw_office'].forEach(idEl=>document.getElementById(idEl).value='');
+  await loadWritersDB();
+  renderAdminTables();
+}
+async function deleteWriterEntry(id){
+  if(!confirm('এই লেখক মুছে ফেলতে চান?')) return;
+  await storeDelete('writer:'+id, true);
+  await loadWritersDB();
+  renderAdminTables();
+}
+async function saveOccupationEntry(){
+  const name = document.getElementById('ap_occupation').value.trim();
+  if(!name){ alert('পেশার নাম দিন'); return; }
+  await storeSet('occupation:'+name, {name}, true);
+  document.getElementById('ap_occupation').value='';
+  await loadOccupationDB();
+  renderAdminTables();
+  renderAll();
+}
+async function deleteOccupationEntry(name){
+  if(!confirm('"'+name+'" মুছে ফেলতে চান?')) return;
+  await storeDelete('occupation:'+name, true);
+  await loadOccupationDB();
+  renderAdminTables();
+  renderAll();
+}
+async function saveReligionEntry(){
+  const name = document.getElementById('ar_religion').value.trim();
+  if(!name){ alert('ধর্মের নাম দিন'); return; }
+  await storeSet('religion:'+name, {name}, true);
+  document.getElementById('ar_religion').value='';
+  await loadReligionDB();
+  renderAdminTables();
+  renderAll();
+}
+async function deleteReligionEntry(name){
+  if(!confirm('"'+name+'" মুছে ফেলতে চান?')) return;
+  await storeDelete('religion:'+name, true);
+  await loadReligionDB();
+  renderAdminTables();
+  renderAll();
+}
+async function saveUnionEntry(){
+  const name = document.getElementById('al_union').value.trim();
+  if(!name){ alert('ইউনিয়নের নাম দিন'); return; }
+  await storeSet('union:'+name, {name}, true);
+  document.getElementById('al_union').value='';
+  await loadUnionDB();
+  renderAdminTables();
+}
+async function deleteUnionEntry(name){
+  if(!confirm('"'+name+'" মুছে ফেলতে চান?')) return;
+  await storeDelete('union:'+name, true);
+  await loadUnionDB();
+  renderAdminTables();
+}
+async function saveUpazilaEntry(){
+  const name = document.getElementById('al_upazila').value.trim();
+  if(!name){ alert('উপজেলার নাম দিন'); return; }
+  await storeSet('upazila:'+name, {name}, true);
+  document.getElementById('al_upazila').value='';
+  await loadUpazilaDB();
+  renderAdminTables();
+}
+async function deleteUpazilaEntry(name){
+  if(!confirm('"'+name+'" মুছে ফেলতে চান?')) return;
+  await storeDelete('upazila:'+name, true);
+  await loadUpazilaDB();
+  renderAdminTables();
+}
+async function saveDistrictEntry(){
+  const name = document.getElementById('al_district').value.trim();
+  if(!name){ alert('জেলার নাম দিন'); return; }
+  await storeSet('district:'+name, {name}, true);
+  document.getElementById('al_district').value='';
+  await loadDistrictDB();
+  renderAdminTables();
+}
+async function deleteDistrictEntry(name){
+  if(!confirm('"'+name+'" মুছে ফেলতে চান?')) return;
+  await storeDelete('district:'+name, true);
+  await loadDistrictDB();
+  renderAdminTables();
+}
+async function savePostOfficeEntry(){
+  const name = document.getElementById('al_post').value.trim();
+  if(!name){ alert('ডাকঘরের নাম দিন'); return; }
+  await storeSet('postoffice:'+name, {name}, true);
+  document.getElementById('al_post').value='';
+  await loadPostOfficeDB();
+  renderAdminTables();
+}
+async function deletePostOfficeEntry(name){
+  if(!confirm('"'+name+'" মুছে ফেলতে চান?')) return;
+  await storeDelete('postoffice:'+name, true);
+  await loadPostOfficeDB();
+  renderAdminTables();
+}
+async function saveLandOfficeEntry(){
+  const name = document.getElementById('al_landoffice').value.trim();
+  if(!name){ alert('ভূমি অফিসের নাম দিন'); return; }
+  await storeSet('landoffice:'+name, {name}, true);
+  document.getElementById('al_landoffice').value='';
+  await loadLandOfficeDB();
+  renderAdminTables();
+}
+async function deleteLandOfficeEntry(name){
+  if(!confirm('"'+name+'" মুছে ফেলতে চান?')) return;
+  await storeDelete('landoffice:'+name, true);
+  await loadLandOfficeDB();
+  renderAdminTables();
+}
+function renderAdminTables(){
+  const mt = document.getElementById('mouzaTable');
+  const mNames = Object.keys(mouzaDB);
+  mt.innerHTML = mNames.length ? `<tr><th>মৌজা</th><th>ইউনিয়ন</th><th>থানা</th><th>জেলা</th><th>অফিস</th><th></th></tr>` +
+    mNames.map(n=>{
+      const v = mouzaDB[n];
+      return `<tr><td>${escapeHtml(n)}</td><td>${escapeHtml(v.union)}</td><td>${escapeHtml(v.thana)}</td><td>${escapeHtml(v.district)}</td><td>${escapeHtml(v.office)}</td><td><button class="btn small danger" onclick="deleteMouzaEntry('${jsAttr(n)}')">মুছুন</button></td></tr>`;
+    }).join('')
+    : '<tr><td class="empty-note">এখনো কোনো মৌজা যোগ করা হয়নি।</td></tr>';
+
+  const vt = document.getElementById('villageTable');
+  const vNames = Object.keys(villageDB);
+  vt.innerHTML = vNames.length ? `<tr><th>গ্রাম</th><th>ডাকঘর</th><th>উপজেলা</th><th>জেলা</th><th></th></tr>` +
+    vNames.map(n=>{
+      const v = villageDB[n];
+      return `<tr><td>${escapeHtml(n)}</td><td>${escapeHtml(v.post)}</td><td>${escapeHtml(v.upazila)}</td><td>${escapeHtml(v.district)}</td><td><button class="btn small danger" onclick="deleteVillageEntry('${jsAttr(n)}')">মুছুন</button></td></tr>`;
+    }).join('')
+    : '<tr><td class="empty-note">এখনো কোনো গ্রাম যোগ করা হয়নি।</td></tr>';
+
+  const ct = document.getElementById('classTable');
+  ct.innerHTML = classDB.length ? `<tr><th>শ্রেণি</th><th></th></tr>` +
+    classDB.map(n=>`<tr><td>${escapeHtml(n)}</td><td><button class="btn small danger" onclick="deleteClassEntry('${jsAttr(n)}')">মুছুন</button></td></tr>`).join('')
+    : '<tr><td class="empty-note">এখনো কোনো শ্রেণি যোগ করা হয়নি।</td></tr>';
+
+  const ot = document.getElementById('officeTable');
+  ot.innerHTML = officeDB.length ? `<tr><th>কার্যালয়</th><th></th></tr>` +
+    officeDB.map(n=>`<tr><td>${escapeHtml(n)}</td><td><button class="btn small danger" onclick="deleteOfficeEntry('${jsAttr(n)}')">মুছুন</button></td></tr>`).join('')
+    : '<tr><td class="empty-note">এখনো কোনো কার্যালয় যোগ করা হয়নি।</td></tr>';
+
+  const wt = document.getElementById('writerTable');
+  wt.innerHTML = writersDB.length ? `<tr><th>নাম</th><th>পিতার নাম</th><th>মাতার নাম</th><th>ঠিকানা</th><th>সনদ নং</th><th>কার্যালয়</th><th></th></tr>` +
+    writersDB.map(w=>`<tr><td>${escapeHtml(w.name)}</td><td>${escapeHtml(w.father)}</td><td>${escapeHtml(w.mother)}</td><td>${escapeHtml(w.address)}</td><td>${escapeHtml(w.certNo)}</td><td>${escapeHtml(w.office)}</td><td><button class="btn small danger" onclick="deleteWriterEntry('${w.id}')">মুছুন</button></td></tr>`).join('')
+    : '<tr><td class="empty-note">এখনো কোনো লেখক যোগ করা হয়নি।</td></tr>';
+
+  const pt = document.getElementById('occupationTable');
+  pt.innerHTML = occupationDB.length ? `<tr><th>পেশা</th><th></th></tr>` +
+    occupationDB.map(n=>`<tr><td>${escapeHtml(n)}</td><td><button class="btn small danger" onclick="deleteOccupationEntry('${jsAttr(n)}')">মুছুন</button></td></tr>`).join('')
+    : '<tr><td class="empty-note">এখনো কোনো পেশা যোগ করা হয়নি।</td></tr>';
+
+  const rt = document.getElementById('religionTable');
+  rt.innerHTML = religionDB.length ? `<tr><th>ধর্ম</th><th></th></tr>` +
+    religionDB.map(n=>`<tr><td>${escapeHtml(n)}</td><td><button class="btn small danger" onclick="deleteReligionEntry('${jsAttr(n)}')">মুছুন</button></td></tr>`).join('')
+    : '<tr><td class="empty-note">এখনো কোনো ধর্ম যোগ করা হয়নি।</td></tr>';
+
+  const unt = document.getElementById('unionTable');
+  unt.innerHTML = unionDB.length ? `<tr><th>ইউনিয়ন</th><th></th></tr>` +
+    unionDB.map(n=>`<tr><td>${escapeHtml(n)}</td><td><button class="btn small danger" onclick="deleteUnionEntry('${jsAttr(n)}')">মুছুন</button></td></tr>`).join('')
+    : '<tr><td class="empty-note">এখনো কোনো ইউনিয়ন যোগ করা হয়নি।</td></tr>';
+
+  const upt = document.getElementById('upazilaTable');
+  upt.innerHTML = upazilaDB.length ? `<tr><th>উপজেলা</th><th></th></tr>` +
+    upazilaDB.map(n=>`<tr><td>${escapeHtml(n)}</td><td><button class="btn small danger" onclick="deleteUpazilaEntry('${jsAttr(n)}')">মুছুন</button></td></tr>`).join('')
+    : '<tr><td class="empty-note">এখনো কোনো উপজেলা যোগ করা হয়নি।</td></tr>';
+
+  const dit = document.getElementById('districtTable');
+  dit.innerHTML = districtDB.length ? `<tr><th>জেলা</th><th></th></tr>` +
+    districtDB.map(n=>`<tr><td>${escapeHtml(n)}</td><td><button class="btn small danger" onclick="deleteDistrictEntry('${jsAttr(n)}')">মুছুন</button></td></tr>`).join('')
+    : '<tr><td class="empty-note">এখনো কোনো জেলা যোগ করা হয়নি।</td></tr>';
+
+  const pot = document.getElementById('postOfficeTable');
+  pot.innerHTML = postOfficeDB.length ? `<tr><th>ডাকঘর</th><th></th></tr>` +
+    postOfficeDB.map(n=>`<tr><td>${escapeHtml(n)}</td><td><button class="btn small danger" onclick="deletePostOfficeEntry('${jsAttr(n)}')">মুছুন</button></td></tr>`).join('')
+    : '<tr><td class="empty-note">এখনো কোনো ডাকঘর যোগ করা হয়নি।</td></tr>';
+
+  const lot = document.getElementById('landOfficeTable');
+  lot.innerHTML = landOfficeDB.length ? `<tr><th>ভূমি অফিস</th><th></th></tr>` +
+    landOfficeDB.map(n=>`<tr><td>${escapeHtml(n)}</td><td><button class="btn small danger" onclick="deleteLandOfficeEntry('${jsAttr(n)}')">মুছুন</button></td></tr>`).join('')
+    : '<tr><td class="empty-note">এখনো কোনো ভূমি অফিস যোগ করা হয়নি।</td></tr>';
+}
+
+/* ===================== PERSONS TAB TABLE ===================== */
+async function deletePersonEntry(id){
+  if(!confirm('এই ব্যক্তির তথ্য মুছে ফেলতে চান?')) return;
+  await storeDelete('person:'+id, false);
+  personsDB = personsDB.filter(p=>p.id!==id);
+  renderPersonsTable();
+  refreshReuseSelects();
+}
+function renderPersonsTable(){
+  const t = document.getElementById('personsTable');
+  if(!personsDB.length){ document.getElementById('personsTable').innerHTML='<tr><td class="empty-note">এখনো কোনো ব্যক্তি সংরক্ষণ করা হয়নি।</td></tr>'; return; }
+  t.innerHTML = `<tr><th>নাম</th><th>পিতার নাম</th><th>স্বামীর নাম</th><th>মাতার নাম</th><th>এনআইডি</th><th>গ্রাম</th><th></th></tr>` +
+    personsDB.map(p=>`<tr><td>${escapeHtml(p.name)}</td><td>${escapeHtml(p.father||p.fatherOrHusband)}</td><td>${escapeHtml(p.husband)}</td><td>${escapeHtml(p.mother)}</td><td>${escapeHtml(p.nid)}</td><td>${escapeHtml(p.pVillage)}</td><td><button class="btn small danger" onclick="deletePersonEntry('${p.id}')">মুছুন</button></td></tr>`).join('');
+}
+
+async function renderSavedListTable(){
+  const t = document.getElementById('savedListTable');
+  const rows = await storeListWithData('deeddraft:');
+  const items = rows.filter(r=>r.value).map(r=>({key:r.key, name:r.value.savedName||r.key, savedAt:r.value.savedAt||''}));
+  items.sort((a,b)=> (b.savedAt||'').localeCompare(a.savedAt||''));
+  if(!items.length){ t.innerHTML = '<tr><td class="empty-note">এখনো কোনো খসড়া সংরক্ষণ করা হয়নি।</td></tr>'; return; }
+  t.innerHTML = `<tr><th>নাম</th><th>সংরক্ষণের সময়</th><th></th></tr>` +
+    items.map(it=>{
+      const dt = it.savedAt ? new Date(it.savedAt).toLocaleString('bn-BD') : '';
+      return `<tr><td>${escapeHtml(it.name)}</td><td>${escapeHtml(dt)}</td>
+        <td>
+          <button class="btn small" onclick="loadDraftByKeyAndGo('${it.key}')">লোড করুন</button>
+          <button class="btn small danger" onclick="deleteDraftByKey('${it.key}')">মুছুন</button>
+        </td></tr>`;
+    }).join('');
+}
+async function loadDraftByKeyAndGo(key){
+  const data = await storeGet(key);
+  if(!data){ alert('খসড়া লোড করা যায়নি'); return; }
+  applyFullState(data);
+  currentDraftId = key.replace('deeddraft:','');
+  regenerateNarrative();
+  activateTab('deed');
+}
+async function deleteDraftByKey(key){
+  if(!confirm('এই খসড়া মুছে ফেলতে চান?')) return;
+  await storeDelete(key);
+  renderSavedListTable();
+  refreshDashboard();
+}
+
+/* ===================== DRAFT SAVE / LOAD ===================== */
+const plainFieldIds = ['regOffice','deedType','extra','narrativeText'];
+
+function collectFullState(){
+  const fields = {};
+  plainFieldIds.forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) fields[id] = el.value;
+  });
+  return {
+    fields,
+    donors: state.donors, grantees: state.grantees,
+    witnesses: state.witnesses, identifiers: state.identifiers,
+    writer: state.writer, schedules: state.schedules
+  };
+}
+
+function applyFullState(data){
+  if(!data) return;
+  if(data.fields){
+    Object.keys(data.fields).forEach(id=>{
+      const el = document.getElementById(id);
+      if(el) el.value = data.fields[id];
+    });
+  }
+  state.donors = (data.donors && data.donors.length) ? data.donors : [blankPerson()];
+  state.grantees = (data.grantees && data.grantees.length) ? data.grantees : [blankPerson()];
+  state.witnesses = (data.witnesses && data.witnesses.length) ? data.witnesses : [blankPerson(),blankPerson()];
+  state.identifiers = (data.identifiers && data.identifiers.length) ? data.identifiers : [blankPerson()];
+  state.writer = data.writer || blankPerson();
+  state.schedules = (data.schedules && data.schedules.length) ? data.schedules : [blankSchedule()];
+  ['donors','grantees','witnesses','identifiers'].forEach(renderPersonList);
+  renderWriterBlock();
+  renderSchedules();
+}
+
+async function saveDeedDraftAsNew(){
+  const firstMouza = (state.schedules[0] && state.schedules[0].mouza) || '';
+  const defaultName = [firstMouza, state.donors[0] && state.donors[0].name, state.grantees[0] && state.grantees[0].name].filter(Boolean).join(' - ') || ('খসড়া ' + new Date().toLocaleDateString('bn-BD'));
+  const name = prompt('খসড়ার একটি নাম দিন (পরে খুঁজে পেতে সাহায্য করবে):', defaultName);
+  if(!name) return;
+  const id = 'd' + Date.now();
+  const data = collectFullState();
+  data.savedName = name;
+  data.savedAt = new Date().toISOString();
+  await storeSet('deeddraft:'+id, data);
+  currentDraftId = id;
+  await loadDraftList();
+  refreshDashboard();
+  document.getElementById('draftSelect').value = 'deeddraft:'+id;
+  alert('"'+name+'" নতুন খসড়া হিসেবে সংরক্ষণ করা হয়েছে। এরপর থেকে "পুনরায় খসড়া সংরক্ষণ করুন" চাপলে এই একই খসড়া হালনাগাদ হবে।');
+}
+
+async function resaveDeedDraft(){
+  if(!currentDraftId){
+    alert('এখনো কোনো খসড়া "নতুন করে সংরক্ষণ" করা হয়নি বা লোড করা হয়নি। প্রথমে "নতুন করে খসড়া সংরক্ষণ করুন" বাটনে চাপুন, অথবা "সেভ করা তালিকা" থেকে একটি পুরনো খসড়া লোড করুন।');
+    return;
+  }
+  const old = await storeGet('deeddraft:'+currentDraftId);
+  const data = collectFullState();
+  data.savedName = old ? old.savedName : ('খসড়া ' + currentDraftId);
+  data.savedAt = new Date().toISOString();
+  await storeSet('deeddraft:'+currentDraftId, data);
+  await loadDraftList();
+  refreshDashboard();
+  document.getElementById('draftSelect').value = 'deeddraft:'+currentDraftId;
+  alert('"'+data.savedName+'" খসড়া পুনরায় সংরক্ষণ (হালনাগাদ) করা হয়েছে।');
+}
+
+async function loadDraftList(){
+  const sel = document.getElementById('draftSelect');
+  const rows = await storeListWithData('deeddraft:');
+  const items = rows.filter(r=>r.value).map(r=>({key:r.key, name:r.value.savedName||r.key, savedAt:r.value.savedAt||''}));
+  items.sort((a,b)=> (b.savedAt||'').localeCompare(a.savedAt||''));
+  sel.innerHTML = '<option value="">— সংরক্ষিত খসড়া লোড করুন —</option>' +
+    items.map(it=>`<option value="${escapeHtml(it.key)}">${escapeHtml(it.name)}</option>`).join('');
+}
+
+async function loadSelectedDraft(){
+  const sel = document.getElementById('draftSelect');
+  if(!sel.value){ alert('একটি খসড়া নির্বাচন করুন'); return; }
+  const data = await storeGet(sel.value);
+  if(!data){ alert('খসড়া লোড করা যায়নি'); return; }
+  applyFullState(data);
+  currentDraftId = sel.value.replace('deeddraft:','');
+  regenerateNarrative();
+  alert('খসড়া লোড হয়েছে। এখন প্রয়োজনীয় তথ্য পরিবর্তন করে "পুনরায় খসড়া সংরক্ষণ করুন" বা Word ডাউনলোড করতে পারেন।');
+}
+
+async function deleteSelectedDraft(){
+  const sel = document.getElementById('draftSelect');
+  if(!sel.value){ alert('একটি খসড়া নির্বাচন করুন'); return; }
+  if(!confirm('এই খসড়া মুছে ফেলতে চান?')) return;
+  await storeDelete(sel.value);
+  await loadDraftList();
+}
+
+/* ===================== RESET ===================== */
+function clearDeedForm(){
+  if(!confirm('পুরো ফর্ম রিসেট করতে চান?')) return;
+  currentDraftId = null;
+  ['regOffice','extra'].forEach(id=>{
+    const el = document.getElementById(id); if(el) el.value='';
+  });
+  state.donors=[blankPerson()]; state.grantees=[blankPerson()];
+  state.witnesses=[blankPerson(),blankPerson()]; state.identifiers=[blankPerson()];
+  state.writer=blankPerson();
+  state.schedules=[blankSchedule()];
+  renderAll();
+}
+
+/* ===================== CUSTOM TEMPLATE ===================== */
+function templateBlockForPerson(p, simple){
+  if(simple){
+    const addr = [p.pVillage,p.pPost,p.pUpazila,p.pDistrict].filter(Boolean).join(', ');
+    const bits = [`নাম: ${p.name}`];
+    if(p.fatherOrHusband) bits.push(`পিতা/স্বামীর নাম: ${p.fatherOrHusband}`);
+    if(p.mother) bits.push(`মাতার নাম: ${p.mother}`);
+    if(addr) bits.push(`ঠিকানা: ${addr}`);
+    return bits.join(', ');
+  }
+  const bits = [`নাম: ${p.name}`];
+  if(p.father) bits.push(`পিতার নাম: ${p.father}`);
+  if(p.husband) bits.push(`স্বামীর নাম: ${p.husband}`);
+  if(p.mother) bits.push(`মাতার নাম: ${p.mother}`);
+  if(p.dob) bits.push(`জন্ম তারিখ: ${toBnDigits(p.dob)}`);
+  if(p.nid) bits.push(`${idTypeLabel(p.idType)}: ${toBnDigits(p.nid)}`);
+  if(p.religion) bits.push(`ধর্ম: ${p.religion}`);
+  if(p.occupation) bits.push(`পেশা: ${p.occupation}`);
+  if(p.share) bits.push(`পরিমাণ: ${toBnDigits(p.share)}`);
+  const addr = personAddressStr(p,'perm');
+  if(addr) bits.push(`ঠিকানা: ${addr}`);
+  return bits.join(', ');
+}
+function formatPersonListForTemplate(list, simple){
+  return list.map((p,i)=> toBnDigits(i+1)+'. '+templateBlockForPerson(p, simple)).join('\n');
+}
+function formatScheduleForTemplate(s, idx){
+  const parts = [
+    `মৌজাঃ ${s.mouza}`, `ইউনিয়নঃ ${s.union}`, `উপজেলাঃ ${s.thana}`, `জেলাঃ ${s.district}`, `ভূমি অফিসঃ ${s.office}`,
+    `এস.এ জে.এলঃ ${s.saJl?toBnDigits(s.saJl)+' ('+numberToBanglaWords(parseNum(s.saJl))+')':''}`,
+    `আর.এস জে.এলঃ ${s.rsJl?toBnDigits(s.rsJl)+' ('+numberToBanglaWords(parseNum(s.rsJl))+')':''}`,
+    `এস.এ খতিয়ানঃ ${s.saKhatian?toBnDigits(s.saKhatian)+' ('+numberToBanglaWords(parseNum(s.saKhatian))+')':''}`,
+    `আর.এস খতিয়ানঃ ${s.rsKhatian?toBnDigits(s.rsKhatian)+' ('+numberToBanglaWords(parseNum(s.rsKhatian))+')':''}`,
+    `ডিপি খতিয়ানঃ ${s.dp?toBnDigits(s.dp)+' ('+numberToBanglaWords(parseNum(s.dp))+')':''}`,
+    `নামজারি খতিয়ান (সাবেক)ঃ ${s.mutationOld?toBnDigits(bnToEnDigits(s.mutationOld))+' ('+mutationToWords(s.mutationOld)+')':''}`,
+    `নামজারি খতিয়ান (বর্তমান)ঃ ${s.mutationNew?toBnDigits(bnToEnDigits(s.mutationNew))+' ('+mutationToWords(s.mutationNew)+')':''}`,
+    `এস.এ দাগঃ ${s.saDag?toBnDigits(s.saDag)+' ('+numberToBanglaWords(parseNum(s.saDag))+')':''}`,
+    `আর.এস দাগঃ ${s.rsDag?toBnDigits(s.rsDag)+' ('+numberToBanglaWords(parseNum(s.rsDag))+')':''}`,
+    `জমির পরিমাণঃ ${s.landAmount?toBnDigits(parseNum(s.landAmount)):''} একর${s.landAmount?' ('+acreToShotokWords(parseNum(s.landAmount))+')':''}`,
+    `শ্রেণিঃ ${s.landClass}`, `মূল্যঃ ${s.price?(toBnDigits(parseNum(s.price))+' ('+numberToBanglaWords(parseNum(s.price))+' টাকা মাত্র)'):''}`,
+    `চৌহদ্দিঃ উত্তরেঃ ${s.bN}; দক্ষিণেঃ ${s.bS}; পূর্বেঃ ${s.bE}; পশ্চিমেঃ ${s.bW}${s.extraBoundaries.length?'; '+s.extraBoundaries.map(b=>b.label+'ঃ '+b.value).join('; '):''}`
+  ];
+  return `তফসিল-${toBnDigits(idx+1)}:\n` + parts.join('\n');
+}
+function addPersonTokensToMap(map, list, prefix, simple){
+  list.forEach((p, i)=>{
+    const n = toBnDigits(i+1);
+    map[`${prefix}_${n}_নাম`] = p.name || '';
+    if(simple){
+      map[`${prefix}_${n}_পিতা_স্বামী`] = p.fatherOrHusband || '';
+      map[`${prefix}_${n}_মাতা`] = p.mother || '';
+      map[`${prefix}_${n}_গ্রাম`] = p.pVillage || '';
+      map[`${prefix}_${n}_ডাকঘর`] = p.pPost || '';
+      map[`${prefix}_${n}_উপজেলা`] = p.pUpazila || '';
+      map[`${prefix}_${n}_জেলা`] = p.pDistrict || '';
+      map[`${prefix}_${n}_ঠিকানা`] = [p.pVillage,p.pPost,p.pUpazila,p.pDistrict].filter(Boolean).join(', ');
+    } else {
+      map[`${prefix}_${n}_পিতা`] = p.father || '';
+      map[`${prefix}_${n}_স্বামী`] = p.husband || '';
+      map[`${prefix}_${n}_মাতা`] = p.mother || '';
+      map[`${prefix}_${n}_জন্ম_তারিখ`] = p.dob ? toBnDigits(p.dob) : '';
+      map[`${prefix}_${n}_আইডি`] = p.nid ? toBnDigits(p.nid) : '';
+      map[`${prefix}_${n}_আইডির_ধরন`] = p.nid ? idTypeLabel(p.idType) : '';
+      map[`${prefix}_${n}_ধর্ম`] = p.religion || '';
+      map[`${prefix}_${n}_পেশা`] = p.occupation || '';
+      map[`${prefix}_${n}_জাতীয়তা`] = p.nationality || '';
+      map[`${prefix}_${n}_পরিমাণ`] = p.share ? toBnDigits(p.share) : '';
+      map[`${prefix}_${n}_গ্রাম`] = p.pVillage || '';
+      map[`${prefix}_${n}_ডাকঘর`] = p.pPost || '';
+      map[`${prefix}_${n}_উপজেলা`] = p.pUpazila || '';
+      map[`${prefix}_${n}_জেলা`] = p.pDistrict || '';
+      map[`${prefix}_${n}_ঠিকানা`] = personAddressStr(p,'perm');
+      const cVillage = p.sameAddr ? p.pVillage : p.cVillage;
+      const cPost = p.sameAddr ? p.pPost : p.cPost;
+      const cUpazila = p.sameAddr ? p.pUpazila : p.cUpazila;
+      const cDistrict = p.sameAddr ? p.pDistrict : p.cDistrict;
+      map[`${prefix}_${n}_বর্তমান_গ্রাম`] = cVillage || '';
+      map[`${prefix}_${n}_বর্তমান_ডাকঘর`] = cPost || '';
+      map[`${prefix}_${n}_বর্তমান_উপজেলা`] = cUpazila || '';
+      map[`${prefix}_${n}_বর্তমান_জেলা`] = cDistrict || '';
+      map[`${prefix}_${n}_বর্তমান_ঠিকানা`] = personAddressStr(p,'present');
+    }
+  });
+}
+function addScheduleTokensToMap(map, schedules){
+  schedules.forEach((s,i)=>{
+    const n = toBnDigits(i+1);
+    const land = parseNum(s.landAmount), price = parseNum(s.price);
+    map[`তফসিল_${n}_মৌজা`] = s.mouza || '';
+    map[`তফসিল_${n}_ইউনিয়ন`] = s.union || '';
+    map[`তফসিল_${n}_উপজেলা`] = s.thana || '';
+    map[`তফসিল_${n}_জেলা`] = s.district || '';
+    map[`তফসিল_${n}_ভূমি_অফিস`] = s.office || '';
+    map[`তফসিল_${n}_এসএ_জেএল`] = s.saJl ? toBnDigits(s.saJl) : '';
+    map[`তফসিল_${n}_আরএস_জেএল`] = s.rsJl ? toBnDigits(s.rsJl) : '';
+    map[`তফসিল_${n}_এসএ_খতিয়ান`] = s.saKhatian ? toBnDigits(s.saKhatian) : '';
+    map[`তফসিল_${n}_আরএস_খতিয়ান`] = s.rsKhatian ? toBnDigits(s.rsKhatian) : '';
+    map[`তফসিল_${n}_ডিপি`] = s.dp ? toBnDigits(s.dp) : '';
+    map[`তফসিল_${n}_নামজারি_সাবেক`] = s.mutationOld ? toBnDigits(bnToEnDigits(s.mutationOld)) : '';
+    map[`তফসিল_${n}_নামজারি_বর্তমান`] = s.mutationNew ? toBnDigits(bnToEnDigits(s.mutationNew)) : '';
+    map[`তফসিল_${n}_এসএ_দাগ`] = s.saDag ? toBnDigits(s.saDag) : '';
+    map[`তফসিল_${n}_আরএস_দাগ`] = s.rsDag ? toBnDigits(s.rsDag) : '';
+    map[`তফসিল_${n}_জমির_পরিমাণ`] = land ? toBnDigits(land) : '';
+    map[`তফসিল_${n}_জমির_পরিমাণ_কথায়`] = land ? acreToShotokWords(land) : '';
+    map[`তফসিল_${n}_শ্রেণি`] = s.landClass || '';
+    map[`তফসিল_${n}_মূল্য`] = price ? toBnDigits(price) : '';
+    map[`তফসিল_${n}_মূল্য_কথায়`] = price ? (numberToBanglaWords(price)+' টাকা মাত্র') : '';
+    map[`তফসিল_${n}_চৌহদ্দি_উত্তর`] = s.bN || '';
+    map[`তফসিল_${n}_চৌহদ্দি_দক্ষিণ`] = s.bS || '';
+    map[`তফসিল_${n}_চৌহদ্দি_পূর্ব`] = s.bE || '';
+    map[`তফসিল_${n}_চৌহদ্দি_পশ্চিম`] = s.bW || '';
+  });
+}
+function isGregorianLeap(y){
+  return (y%4===0 && y%100!==0) || y%400===0;
+}
+function toBanglaCalendarDate(date){
+  date = date || new Date();
+  const gYear = date.getFullYear();
+  const aprilFourteen = new Date(gYear, 3, 14);
+  let bYear, refYear;
+  if(date >= aprilFourteen){ bYear = gYear - 593; refYear = gYear; }
+  else { bYear = gYear - 594; refYear = gYear - 1; }
+  const startOfBanglaYear = new Date(refYear, 3, 14);
+  const diffDays = Math.floor((date - startOfBanglaYear) / 86400000);
+  const isBanglaLeap = isGregorianLeap(refYear + 1);
+  const monthLengths = [31,31,31,31,31,31,30,30,30,30, isBanglaLeap?30:29, 30];
+  const monthNames = ['বৈশাখ','জ্যৈষ্ঠ','আষাঢ়','শ্রাবণ','ভাদ্র','আশ্বিন','কার্তিক','অগ্রহায়ণ','পৌষ','মাঘ','ফাল্গুন','চৈত্র'];
+  let remaining = diffDays, monthIdx = 0;
+  while(monthIdx < 11 && remaining >= monthLengths[monthIdx]){ remaining -= monthLengths[monthIdx]; monthIdx++; }
+  const bDay = remaining + 1;
+  return { day: bDay, month: monthNames[monthIdx], year: bYear,
+    text: `${toBnDigits(bDay)} ${monthNames[monthIdx]}, ${toBnDigits(bYear)} বঙ্গাব্দ` };
+}
+function buildFieldMap(){
+  const g = id => (document.getElementById(id) ? document.getElementById(id).value : '');
+  const s0 = state.schedules[0] || blankSchedule();
+  const land0 = parseNum(s0.landAmount), price0 = parseNum(s0.price);
+  const extraB = s0.extraBoundaries.map(b=>`${b.label}ঃ ${b.value}`).join('; ');
+  const map = {
+    'মৌজা': s0.mouza, 'ইউনিয়ন': s0.union, 'থানা': s0.thana, 'জেলা': s0.district,
+    'ভূমি_অফিস': s0.office, 'রেজিস্ট্রেশন_অফিস': g('regOffice'), 'দলিলের_ধরন': g('deedType'),
+    'এসএ_জেএল': s0.saJl?toBnDigits(s0.saJl):'', 'এসএ_জেএল_কথায়': s0.saJl?numberToBanglaWords(parseNum(s0.saJl)):'',
+    'আরএস_জেএল': s0.rsJl?toBnDigits(s0.rsJl):'', 'আরএস_জেএল_কথায়': s0.rsJl?numberToBanglaWords(parseNum(s0.rsJl)):'',
+    'এসএ_খতিয়ান': s0.saKhatian?toBnDigits(s0.saKhatian):'', 'এসএ_খতিয়ান_কথায়': s0.saKhatian?numberToBanglaWords(parseNum(s0.saKhatian)):'',
+    'আরএস_খতিয়ান': s0.rsKhatian?toBnDigits(s0.rsKhatian):'', 'আরএস_খতিয়ান_কথায়': s0.rsKhatian?numberToBanglaWords(parseNum(s0.rsKhatian)):'',
+    'ডিপি': s0.dp?toBnDigits(s0.dp):'', 'ডিপি_কথায়': s0.dp?numberToBanglaWords(parseNum(s0.dp)):'',
+    'নামজারি_সাবেক': s0.mutationOld?toBnDigits(bnToEnDigits(s0.mutationOld)):'', 'নামজারি_সাবেক_কথায়': s0.mutationOld?mutationToWords(s0.mutationOld):'',
+    'নামজারি_বর্তমান': s0.mutationNew?toBnDigits(bnToEnDigits(s0.mutationNew)):'', 'নামজারি_বর্তমান_কথায়': s0.mutationNew?mutationToWords(s0.mutationNew):'',
+    'এসএ_দাগ': s0.saDag?toBnDigits(s0.saDag):'', 'এসএ_দাগ_কথায়': s0.saDag?numberToBanglaWords(parseNum(s0.saDag)):'',
+    'আরএস_দাগ': s0.rsDag?toBnDigits(s0.rsDag):'', 'আরএস_দাগ_কথায়': s0.rsDag?numberToBanglaWords(parseNum(s0.rsDag)):'',
+    'জমির_পরিমাণ': land0?toBnDigits(land0):'', 'জমির_পরিমাণ_কথায়': land0?acreToShotokWords(land0):'',
+    'জমির_শ্রেণি': s0.landClass,
+    'মূল্য': price0?toBnDigits(price0):'', 'মূল্য_কথায়': price0?(numberToBanglaWords(price0)+' টাকা মাত্র'):'',
+    'চৌহদ্দি_উত্তর': s0.bN, 'চৌহদ্দি_দক্ষিণ': s0.bS, 'চৌহদ্দি_পূর্ব': s0.bE, 'চৌহদ্দি_পশ্চিম': s0.bW,
+    'অতিরিক্ত_চৌহদ্দি': extraB,
+    'তফসিলসমূহ': state.schedules.map((s,i)=>formatScheduleForTemplate(s,i)).join('\n\n'),
+    'মোট_জমির_পরিমাণ': toBnDigits(round6(state.schedules.reduce((sum,s)=>sum+parseNum(s.landAmount),0))),
+    'মোট_মূল্য': toBnDigits(round6(state.schedules.reduce((sum,s)=>sum+parseNum(s.price),0))),
+    'বিবরণ': g('narrativeText'),
+    'দাতাগণ': formatPersonListForTemplate(state.donors,false),
+    'গ্রহীতাগণ': formatPersonListForTemplate(state.grantees,false),
+    'সাক্ষীগণ': formatPersonListForTemplate(state.witnesses,true),
+    'সনাক্তকারীগণ': formatPersonListForTemplate(state.identifiers,true),
+    'লেখকের_নাম': state.writer.name, 'লেখকের_পিতা': state.writer.husband, 'লেখকের_মাতা': state.writer.mother,
+    'লেখকের_ঠিকানা': state.writer.father, 'লেখকের_সনদ': state.writer.nid, 'লেখকের_কার্যালয়': state.writer.occupation,
+    'অতিরিক্ত_তথ্য': g('extra'), 'আজকের_তারিখ': new Date().toLocaleDateString('bn-BD'),
+    'আজকের_তারিখ_ইংরেজি': (()=>{ const d=new Date(); return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear(); })(),
+    'আজকের_তারিখ_বঙ্গাব্দ': toBanglaCalendarDate().text,
+    'আজকের_তারিখ_সম্পূর্ণ': (()=>{ const d=new Date(); const en=String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear(); return toBanglaCalendarDate().text+' মোতাবেক '+toBnDigits(en)+' ইংরেজি'; })()
+  };
+  addPersonTokensToMap(map, state.donors, 'দাতা', false);
+  addPersonTokensToMap(map, state.grantees, 'গ্রহীতা', false);
+  addPersonTokensToMap(map, state.witnesses, 'সাক্ষী', true);
+  addPersonTokensToMap(map, state.identifiers, 'সনাক্তকারী', true);
+  addScheduleTokensToMap(map, state.schedules);
+  return map;
+}
+const pageSizeCss = {
+  'A4': {size:'21cm 29.7cm', orient:'portrait'},
+  'Legal': {size:'8.5in 14in', orient:'portrait'},
+  'Letter': {size:'8.5in 11in', orient:'portrait'},
+  'Deed8.5x13.5': {size:'8.5in 13.5in', orient:'portrait'}
+};
+const pageSizeTwipsRtf = {
+  'A4': {w:11907, h:16840},
+  'Legal': {w:12240, h:20160},
+  'Letter': {w:12240, h:15840},
+  'Deed8.5x13.5': {w:12240, h:19440}
+};
+function rtfInline(el, bold){
+  let out = '';
+  el.childNodes.forEach(node=>{
+    if(node.nodeType === 3){
+      out += rtfEsc(node.textContent);
+    } else if(node.nodeType === 1){
+      const tag = node.tagName.toLowerCase();
+      const styleAttr = node.getAttribute('style') || '';
+      if(tag === 'br'){
+        out += /page-break/.test(styleAttr) ? '\\page\n' : '\\line\n';
+      } else if(tag === 'b' || tag === 'strong'){
+        out += '\\b ' + rtfInline(node, true) + '\\b0 ';
+      } else if(tag === 'span' && /font-size/.test(styleAttr)){
+        const m = /font-size:\s*([\d.]+)pt/.exec(styleAttr);
+        const half = m ? Math.round(parseFloat(m[1])*2) : 24;
+        out += `\\fs${half} ` + rtfInline(node, bold) + '\\fs24 ';
+      } else {
+        out += rtfInline(node, bold);
+      }
+    }
+  });
+  return out;
+}
+function rtfTable(table){
+  let out = '';
+  const rows = table.querySelectorAll(':scope > tbody > tr, :scope > tr');
+  rows.forEach(tr=>{
+    const cells = tr.querySelectorAll('td,th');
+    const n = cells.length || 1;
+    const cellWidth = Math.floor(9000/n);
+    let rowDef = '\\trowd\\trgaph108\\trleft0';
+    for(let i=1;i<=n;i++) rowDef += `\\cellx${cellWidth*i}`;
+    out += rowDef + '\n';
+    cells.forEach(td=>{ out += '\\pard\\intbl ' + rtfInline(td,false) + '\\cell\n'; });
+    out += '\\row\n';
+  });
+  return out;
+}
+function htmlFragmentToRtf(htmlFragment, defaultJustify){
+  const container = document.createElement('div');
+  container.innerHTML = htmlFragment;
+  const defAlign = defaultJustify ? '\\qj ' : '\\ql ';
+  let out = '';
+  Array.from(container.childNodes).forEach(node=>{
+    if(node.nodeType === 3){
+      if(node.textContent.trim()) out += '\\pard ' + defAlign + rtfEsc(node.textContent) + '\\par\n';
+      return;
+    }
+    if(node.nodeType !== 1) return;
+    const tag = node.tagName.toLowerCase();
+    const styleAttr = node.getAttribute('style') || '';
+    if(tag === 'table'){
+      out += rtfTable(node) + '\\pard\\par\n';
+    } else if(tag === 'div' && /text-align:\s*center/.test(styleAttr)){
+      out += '\\pard\\qc ' + rtfInline(node,false) + '\\par\n';
+    } else if(tag === 'br'){
+      out += /page-break/.test(styleAttr) ? '\\page\n' : '\\pard\\par\n';
+    } else {
+      out += '\\pard ' + defAlign + rtfInline(node,false) + '\\par\n';
+    }
+  });
+  return out;
+}
+async function exportCustomWord(){
+  const sel = document.getElementById('templateSelectForExport');
+  if(!sel || !sel.value){ alert('প্রথমে একটা টেমপ্লেট নির্বাচন করুন। কোনো টেমপ্লেট না থাকলে "এডমিন" ট্যাবে গিয়ে একটা তৈরি করুন।'); return; }
+  const data = await storeGet('customtemplate:'+sel.value, true);
+  if(!data || !data.text){ alert('টেমপ্লেট লোড করা যায়নি'); return; }
+  const map = buildFieldMap();
+  let filled = data.text.replace(/\{\{#([^}]+?)\}\}([\s\S]*?)\{\{\/\1\}\}\n?/g, (match, key, inner)=>{
+    const trimmedKey = key.trim();
+    return (trimmedKey in map && map[trimmedKey]) ? inner : '';
+  });
+  filled = filled.replace(/\{\{\s*([^}]+?)\s*\}\}/g, (match, key)=>{
+    if(key in map) return escapeHtml(map[key]).replace(/\n/g,'<br/>');
+    if(/^(দাতা|গ্রহীতা|সাক্ষী|সনাক্তকারী|তফসিল)_[০-৯0-9]+_/.test(key)) return ''; // unused indexed token (e.g. দাতা_২ when there's only 1 donor)
+    return match;
+  });
+  filled = fixBengaliNukta(filled);
+  const align = data.justify !== false ? docx.AlignmentType.JUSTIFIED : undefined;
+  const baseSize = (parseInt(data.fontSize) || 12) * 2; // docx uses half-points
+  await downloadDocxFromHtml(filled, sel.value, pageSizeTwipsMap[data.pageSize] || pageSizeTwipsMap['A4'], align, baseSize);
+}
+
+async function loadTemplateList(){
+  const rows = await storeListWithData('customtemplate:');
+  const items = rows.filter(r=>r.value).map(r=>({name: r.key.replace('customtemplate:',''), text: r.value.text, pageSize: r.value.pageSize, justify: r.value.justify}));
+  items.sort((a,b)=>a.name.localeCompare(b.name,'bn'));
+
+  const t = document.getElementById('templateTable');
+  if(t){
+    t.innerHTML = items.length ? `<tr><th>নাম</th><th></th></tr>` +
+      items.map(it=>`<tr><td>${escapeHtml(it.name)}</td><td>
+        <button class="btn small ghost" onclick="loadTemplateForEdit('${jsAttr(it.name)}')">সম্পাদনা করুন</button>
+        <button class="btn small danger" onclick="deleteTemplateEntry('${jsAttr(it.name)}')">মুছুন</button>
+      </td></tr>`).join('')
+      : '<tr><td class="empty-note">এখনো কোনো টেমপ্লেট সংরক্ষণ করা হয়নি।</td></tr>';
+  }
+
+  const sel = document.getElementById('templateSelectForExport');
+  if(sel){
+    const current = sel.value;
+    sel.innerHTML = '<option value="">— টেমপ্লেট নির্বাচন করুন —</option>' +
+      items.map(it=>`<option value="${escapeHtml(it.name)}">${escapeHtml(it.name)}</option>`).join('');
+    if(items.find(it=>it.name===current)) sel.value = current;
+  }
+}
+
+async function saveNamedTemplate(){
+  const name = document.getElementById('templateNameInput').value.trim();
+  if(!name){ alert('টেমপ্লেটের একটা নাম দিন'); return; }
+  const text = document.getElementById('customTemplateText').value;
+  if(!text.trim()){ alert('টেমপ্লেটের লেখা খালি রাখা যাবে না'); return; }
+  const pageSize = document.getElementById('templatePageSize').value;
+  const justify = document.getElementById('templateJustify').checked;
+  const fontSize = document.getElementById('templateFontSize').value;
+  await storeSet('customtemplate:'+name, {text, pageSize, justify, fontSize}, true);
+  await loadTemplateList();
+  alert('"'+name+'" নামে টেমপ্লেট সংরক্ষণ করা হয়েছে। এখন "দলিল তৈরি করুন" ট্যাবের ড্রপডাউনে এটা পাওয়া যাবে।');
+}
+
+async function loadTemplateForEdit(name){
+  const data = await storeGet('customtemplate:'+name, true);
+  if(!data){ alert('টেমপ্লেট লোড করা যায়নি'); return; }
+  document.getElementById('templateNameInput').value = name;
+  document.getElementById('customTemplateText').value = data.text;
+  document.getElementById('templatePageSize').value = data.pageSize || 'A4';
+  document.getElementById('templateJustify').checked = data.justify !== false;
+  document.getElementById('templateFontSize').value = data.fontSize || '12';
+}
+
+async function deleteTemplateEntry(name){
+  if(!confirm('"'+name+'" টেমপ্লেট মুছে ফেলতে চান?')) return;
+  await storeDelete('customtemplate:'+name, true);
+  await loadTemplateList();
+}
+
+function clearTemplateEditor(){
+  document.getElementById('templateNameInput').value = '';
+  document.getElementById('customTemplateText').value = '';
+  document.getElementById('templatePageSize').value = 'A4';
+  document.getElementById('templateJustify').checked = true;
+  document.getElementById('templateFontSize').value = '12';
+}
+
+function insertTableIntoTemplate(){
+  const colsStr = prompt('কয়টি কলাম (field) চান? (প্রতিটা কলামের উপরে শিরোনাম, নিচে মান থাকবে — যেমন সরকারি দলিলের মতো)', '4');
+  if(colsStr===null) return;
+  const cols = Math.max(1, parseInt(bnToEnDigits(colsStr))||1);
+  let tableHtml = '\n<table border="1" cellspacing="0" cellpadding="6" style="width:100%;border-collapse:collapse;">\n  <tr>\n';
+  for(let c=0;c<cols;c++) tableHtml += `    <td><b>শিরোনাম ${toBnDigits(c+1)}</b></td>\n`;
+  tableHtml += '  </tr>\n  <tr>\n';
+  for(let c=0;c<cols;c++) tableHtml += `    <td>মান</td>\n`;
+  tableHtml += '  </tr>\n</table>\n';
+  const ta = document.getElementById('customTemplateText');
+  const start = ta.selectionStart, end = ta.selectionEnd;
+  ta.value = ta.value.slice(0,start) + tableHtml + ta.value.slice(end);
+  ta.focus();
+  ta.selectionStart = ta.selectionEnd = start + tableHtml.length;
+}
+
+function insertPageBreakIntoTemplate(){
+  const marker = '\n<br style="page-break-before:always;">\n';
+  const ta = document.getElementById('customTemplateText');
+  const start = ta.selectionStart, end = ta.selectionEnd;
+  ta.value = ta.value.slice(0,start) + marker + ta.value.slice(end);
+  ta.focus();
+  ta.selectionStart = ta.selectionEnd = start + marker.length;
+}
+
+function centerSelectionInTemplate(){
+  const ta = document.getElementById('customTemplateText');
+  const start = ta.selectionStart, end = ta.selectionEnd;
+  const selected = ta.value.slice(start, end);
+  if(!selected){ alert('আগে যে লেখা বা টেবিলের অংশ সেন্টারে আনতে চান তা মাউস দিয়ে সিলেক্ট (হাইলাইট) করুন, তারপর এই বাটনে চাপুন।'); return; }
+  const wrapped = `<div style="text-align:center;">${selected}</div>`;
+  ta.value = ta.value.slice(0,start) + wrapped + ta.value.slice(end);
+  ta.focus();
+  ta.selectionStart = start;
+  ta.selectionEnd = start + wrapped.length;
+}
+
+function insertGapIntoTemplate(){
+  const gap = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+  const ta = document.getElementById('customTemplateText');
+  const start = ta.selectionStart, end = ta.selectionEnd;
+  ta.value = ta.value.slice(0,start) + gap + ta.value.slice(end);
+  ta.focus();
+  ta.selectionStart = ta.selectionEnd = start + gap.length;
+}
+
+function insertConditionalIntoTemplate(){
+  const tokenName = prompt('কোন টোকেনের তথ্য খালি থাকলে এই অংশটা পুরোপুরি বাদ যাবে? উপরের টোকেন তালিকা থেকে {{ }} ছাড়া শুধু নাম লিখুন (যেমনঃ এসএ_খতিয়ান):');
+  if(!tokenName || !tokenName.trim()) return;
+  const key = tokenName.trim().replace(/[{}]/g,'');
+  const ta = document.getElementById('customTemplateText');
+  const start = ta.selectionStart, end = ta.selectionEnd;
+  const selected = ta.value.slice(start,end) || `এস.এ খতিয়ানঃ {{${key}}}`;
+  const wrapped = `{{#${key}}}${selected}{{/${key}}}`;
+  ta.value = ta.value.slice(0,start) + wrapped + ta.value.slice(end);
+  ta.focus();
+  ta.selectionStart = start;
+  ta.selectionEnd = start + wrapped.length;
+}
+
+function makeSelectionBiggerInTemplate(){
+  const ta = document.getElementById('customTemplateText');
+  const start = ta.selectionStart, end = ta.selectionEnd;
+  const selected = ta.value.slice(start, end);
+  if(!selected){ alert('আগে যে লেখা বড় করতে চান তা মাউস দিয়ে সিলেক্ট (হাইলাইট) করুন, তারপর এই বাটনে চাপুন।'); return; }
+  const sizeStr = prompt('কত পয়েন্ট (pt) সাইজ চান? (সাধারণ লেখা ১২pt, শিরোনামের জন্য ১৬-২০pt ভালো)', '18');
+  if(!sizeStr) return;
+  const size = parseInt(bnToEnDigits(sizeStr)) || 18;
+  const wrapped = `<span style="font-size:${size}pt;">${selected}</span>`;
+  ta.value = ta.value.slice(0,start) + wrapped + ta.value.slice(end);
+  ta.focus();
+  ta.selectionStart = start;
+  ta.selectionEnd = start + wrapped.length;
+}
+
+function makeTextBiggerInTemplate(){
+  const ta = document.getElementById('customTemplateText');
+  const start = ta.selectionStart, end = ta.selectionEnd;
+  const selected = ta.value.slice(start, end);
+  if(!selected){ alert('আগে যে লেখা বড় করতে চান তা মাউস দিয়ে সিলেক্ট (হাইলাইট) করুন, তারপর এই বাটনে চাপুন।'); return; }
+  const sizeStr = prompt('কত সাইজ (পয়েন্ট) করতে চান? সাধারণ লেখা ১২ পয়েন্ট।', '18');
+  if(!sizeStr) return;
+  const size = parseInt(bnToEnDigits(sizeStr)) || 18;
+  const wrapped = `<span style="font-size:${size}pt;">${selected}</span>`;
+  ta.value = ta.value.slice(0,start) + wrapped + ta.value.slice(end);
+  ta.focus();
+  ta.selectionStart = start;
+  ta.selectionEnd = start + wrapped.length;
+}
+
+function downloadAsWord(html, filenameBase){
+  const normalized = fixBengaliNukta(html);
+  try{
+    if(typeof htmlDocx !== 'undefined' && htmlDocx.asBlob){
+      const blob = htmlDocx.asBlob(normalized);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filenameBase + '.docx';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      return;
+    }
+  }catch(e){ console.error('docx generation failed, falling back', e); }
+  // fallback: HTML-as-.doc (works everywhere, but may mis-render nukta characters in some Word versions)
+  const blob = new Blob(['\ufeff', normalized], {type:'application/msword'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filenameBase + '.doc';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+/* ===================== HTML -> REAL DOCX CONVERTER ===================== */
+function fixBengaliNukta(str){
+  // ড়/ঢ়/য় are NOT canonical Unicode decompositions, so .normalize('NFC') alone does not fix them.
+  // Run NFC first (fixes ordinary matra/vowel-sign ordering issues), then manually
+  // recompose the three base-consonant + nukta sequences into their precomposed letters.
+  return String(str).normalize('NFC')
+    .replace(/\u09A1\u09BC/g, '\u09DC') // ড + ় -> ড়
+    .replace(/\u09A2\u09BC/g, '\u09DD') // ঢ + ় -> ঢ়
+    .replace(/\u09AF\u09BC/g, '\u09DF'); // য + ় -> য়
+}
+const DOCX_FONT = 'Nikosh';
+function styleAttrs(el){
+  const style = (el.getAttribute && el.getAttribute('style')) || '';
+  const out = {};
+  const centerMatch = /text-align\s*:\s*center/i.test(style);
+  const justifyMatch = /text-align\s*:\s*justify/i.test(style);
+  if(centerMatch) out.align = docx.AlignmentType.CENTER;
+  else if(justifyMatch) out.align = docx.AlignmentType.JUSTIFIED;
+  const sizeMatch = style.match(/font-size\s*:\s*(\d+(?:\.\d+)?)pt/i);
+  if(sizeMatch) out.size = Math.round(parseFloat(sizeMatch[1]) * 2); // docx uses half-points
+  return out;
+}
+function parseInlineRuns(node, ctx){
+  ctx = ctx || {bold:false, size:24};
+  let runs = [];
+  node.childNodes.forEach(child=>{
+    if(child.nodeType === 3){ // text node
+      const text = fixBengaliNukta(child.textContent);
+      if(text) runs.push(new docx.TextRun({text, bold: ctx.bold, font: DOCX_FONT, size: ctx.size}));
+    } else if(child.nodeType === 1){
+      const tag = child.tagName.toLowerCase();
+      if(tag === 'br'){
+        runs.push(new docx.TextRun({text:'', break:1, font: DOCX_FONT, size: ctx.size}));
+      } else if(tag === 'b' || tag === 'strong'){
+        runs = runs.concat(parseInlineRuns(child, Object.assign({}, ctx, {bold:true})));
+      } else {
+        const st = styleAttrs(child);
+        runs = runs.concat(parseInlineRuns(child, Object.assign({}, ctx, st.size?{size:st.size}:{})));
+      }
+    }
+  });
+  return runs;
+}
+function htmlToDocxBlocks(container, defaultAlign, defaultSize){
+  defaultSize = defaultSize || 24;
+  const blocks = [];
+  container.childNodes.forEach(node=>{
+    if(node.nodeType === 3){
+      if(node.textContent.trim()) blocks.push(new docx.Paragraph({children:[new docx.TextRun({text:fixBengaliNukta(node.textContent), font:DOCX_FONT, size:defaultSize})], alignment: defaultAlign}));
+      return;
+    }
+    if(node.nodeType !== 1) return;
+    const tag = node.tagName.toLowerCase();
+    if(tag === 'table'){
+      const rows = [];
+      node.querySelectorAll('tr').forEach(tr=>{
+        const cells = [];
+        tr.querySelectorAll('td,th').forEach(td=>{
+          const cellBlocks = htmlToDocxBlocks(td, defaultAlign, defaultSize);
+          cells.push(new docx.TableCell({
+            children: cellBlocks.length ? cellBlocks : [new docx.Paragraph('')],
+            width: {size: 100/Math.max(tr.children.length,1), type: docx.WidthType.PERCENTAGE}
+          }));
+        });
+        if(cells.length) rows.push(new docx.TableRow({children:cells}));
+      });
+      if(rows.length) blocks.push(new docx.Table({rows, width:{size:100,type:docx.WidthType.PERCENTAGE}}));
+    } else if(tag === 'h1' || tag === 'h2'){
+      blocks.push(new docx.Paragraph({
+        children: parseInlineRuns(node, {bold:true, size: tag==='h1'?32:26}),
+        alignment: tag==='h1' ? docx.AlignmentType.CENTER : undefined,
+        spacing: {after:200}
+      }));
+    } else if(tag === 'br'){
+      blocks.push(new docx.Paragraph(''));
+    } else if(tag === 'div' || tag === 'p'){
+      if(node.querySelector('table')){
+        blocks.push(...htmlToDocxBlocks(node, defaultAlign, defaultSize));
+      } else {
+        const st = styleAttrs(node);
+        const runs = parseInlineRuns(node, {bold:false, size: st.size||defaultSize});
+        if(runs.length) blocks.push(new docx.Paragraph({children: runs, alignment: st.align || defaultAlign, spacing:{after:120}}));
+      }
+    } else {
+      if(node.querySelector('table')){
+        blocks.push(...htmlToDocxBlocks(node, defaultAlign, defaultSize));
+      } else {
+        const st = styleAttrs(node);
+        const runs = parseInlineRuns(node, {bold:false, size: st.size||defaultSize});
+        if(runs.length) blocks.push(new docx.Paragraph({children: runs, alignment: st.align || defaultAlign, spacing:{after:120}}));
+      }
+    }
+  });
+  return blocks;
+}
+const pageSizeTwipsMap = {
+  'A4': {width:11906, height:16838},
+  'Legal': {width:12240, height:20160},
+  'Letter': {width:12240, height:15840},
+  'Deed8.5x13.5': {width:12240, height:19440}
+};
+async function downloadDocxFromHtml(htmlStr, filename, pageSizeTwips, defaultAlign, defaultSize){
+  defaultSize = defaultSize || 24;
+  let bodyEl;
+  if(/<html[\s>]/i.test(htmlStr)){
+    const parsed = new DOMParser().parseFromString(htmlStr, 'text/html');
+    bodyEl = parsed.body;
+  } else {
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = htmlStr;
+    bodyEl = wrapper;
+  }
+  const blocks = htmlToDocxBlocks(bodyEl, defaultAlign, defaultSize);
+  const sectionProps = {};
+  if(pageSizeTwips){
+    sectionProps.page = { size: { width: pageSizeTwips.width, height: pageSizeTwips.height }, margin: {top:1440,bottom:1440,left:1440,right:1440} };
+  }
+  const doc = new docx.Document({
+    sections: [{ properties: sectionProps, children: blocks.length ? blocks : [new docx.Paragraph('')] }],
+    styles: { default: { document: { run: { font: DOCX_FONT, size: defaultSize } } } }
+  });
+  const blob = await docx.Packer.toBlob(doc);
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename + '.docx';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+/* ===================== WORD EXPORT ===================== */
+function personAddressStr(p, which){
+  if(which==='present' && p.sameAddr){
+    return [p.pVillage,p.pPost,p.pUpazila,p.pDistrict].filter(Boolean).join(', ') + ' (স্থায়ী ঠিকানার অনুরূপ)';
+  }
+  const v = which==='present' ? [p.cVillage,p.cPost,p.cUpazila,p.cDistrict] : [p.pVillage,p.pPost,p.pUpazila,p.pDistrict];
+  return v.filter(Boolean).join(', ');
+}
+function personRowsHtml(list, title, simple){
+  if(simple){
+    return list.map((p,i)=>`
+      <p><b>${title} নং ${toBnDigits(i+1)}:</b></p>
+      <table border="1" cellspacing="0" cellpadding="4" style="width:100%;border-collapse:collapse;font-size:11pt;">
+        <tr><td><b>নাম</b></td><td><b>পিতা/স্বামীর নাম</b></td><td><b>মাতার নাম</b></td></tr>
+        <tr><td>${escapeHtml(p.name)}</td><td>${escapeHtml(p.fatherOrHusband)}</td><td>${escapeHtml(p.mother)}</td></tr>
+      </table>
+      <table border="1" cellspacing="0" cellpadding="4" style="width:100%;border-collapse:collapse;font-size:11pt;margin-top:4px;">
+        <tr><td><b>ঠিকানা</b></td></tr>
+        <tr><td>${escapeHtml([p.pVillage,p.pPost,p.pUpazila,p.pDistrict].filter(Boolean).join(', '))}</td></tr>
+      </table><br/>
+    `).join('');
+  }
+  return list.map((p,i)=>`
+    <p><b>${title} নং ${toBnDigits(i+1)}:</b></p>
+    <table border="1" cellspacing="0" cellpadding="4" style="width:100%;border-collapse:collapse;font-size:11pt;">
+      <tr><td><b>নাম</b></td><td><b>পিতার নাম</b></td><td><b>স্বামীর নাম</b></td><td><b>মাতার নাম</b></td></tr>
+      <tr><td>${escapeHtml(p.name)}</td><td>${escapeHtml(p.father)}</td><td>${escapeHtml(p.husband)||'প্রযোজ্য নহে'}</td><td>${escapeHtml(p.mother)}</td></tr>
+    </table>
+    ${p.share ? `<table border="1" cellspacing="0" cellpadding="4" style="width:100%;border-collapse:collapse;font-size:11pt;margin-top:4px;">
+      <tr><td><b>অংশের/প্রাপ্য পরিমাণ</b></td></tr>
+      <tr><td>${escapeHtml(toBnDigits(p.share))}</td></tr>
+    </table>` : ''}
+    <table border="1" cellspacing="0" cellpadding="4" style="width:100%;border-collapse:collapse;font-size:11pt;margin-top:4px;">
+      <tr><td><b>জন্ম তারিখ</b></td><td><b>ধর্ম</b></td><td><b>পেশা</b></td><td><b>জাতীয়তা</b></td></tr>
+      <tr><td>${escapeHtml(toBnDigits(p.dob))}</td><td>${escapeHtml(p.religion)}</td><td>${escapeHtml(p.occupation)}</td><td>${escapeHtml(p.nationality)}</td></tr>
+    </table>
+    <table border="1" cellspacing="0" cellpadding="4" style="width:100%;border-collapse:collapse;font-size:11pt;margin-top:4px;">
+      <tr><td><b>${idTypeLabel(p.idType)}</b></td></tr>
+      <tr><td>${escapeHtml(toBnDigits(p.nid))}</td></tr>
+    </table>
+    <table border="1" cellspacing="0" cellpadding="4" style="width:100%;border-collapse:collapse;font-size:11pt;margin-top:4px;">
+      <tr><td><b>স্থায়ী ঠিকানা</b></td><td><b>বর্তমান ঠিকানা</b></td></tr>
+      <tr><td>${escapeHtml(personAddressStr(p,'perm'))}</td><td>${escapeHtml(personAddressStr(p,'present'))}</td></tr>
+    </table><br/>
+  `).join('');
+}
+
+function scheduleBlockHtml(s, idx){
+  const land = parseNum(s.landAmount);
+  const price = parseNum(s.price);
+  return `
+    <p><b>তফসিল নং ${toBnDigits(idx+1)}</b></p>
+    <table border="1" cellspacing="0" cellpadding="4">
+      <tr><td><b>জেলা</b></td><td><b>উপজেলা</b></td><td><b>ইউনিয়ন</b></td><td><b>মৌজা</b></td><td><b>ভূমি অফিস</b></td></tr>
+      <tr><td>${escapeHtml(s.district)}</td><td>${escapeHtml(s.thana)}</td><td>${escapeHtml(s.union)}</td><td>${escapeHtml(s.mouza)}</td><td>${escapeHtml(s.office)}</td></tr>
+    </table>
+    <table border="1" cellspacing="0" cellpadding="4" style="margin-top:6px;">
+      <tr><td><b>এস.এ জে.এল</b></td><td><b>আর.এস জে.এল</b></td><td><b>এস.এ খতিয়ান</b></td><td><b>আর.এস খতিয়ান</b></td><td><b>ডিপি খতিয়ান</b></td></tr>
+      <tr><td>${s.saJl?toBnDigits(s.saJl)+' ('+numberToBanglaWords(parseNum(s.saJl))+')':''}</td><td>${s.rsJl?toBnDigits(s.rsJl)+' ('+numberToBanglaWords(parseNum(s.rsJl))+')':''}</td><td>${s.saKhatian?toBnDigits(s.saKhatian)+' ('+numberToBanglaWords(parseNum(s.saKhatian))+')':''}</td><td>${s.rsKhatian?toBnDigits(s.rsKhatian)+' ('+numberToBanglaWords(parseNum(s.rsKhatian))+')':''}</td><td>${s.dp?toBnDigits(s.dp)+' ('+numberToBanglaWords(parseNum(s.dp))+')':''}</td></tr>
+    </table>
+    <table border="1" cellspacing="0" cellpadding="4" style="margin-top:6px;">
+      <tr><td><b>নামজারি খতিয়ান (সাবেক)</b></td><td><b>নামজারি খতিয়ান (বর্তমান)</b></td><td><b>এস.এ দাগ</b></td><td><b>আর.এস দাগ</b></td></tr>
+      <tr><td>${s.mutationOld?toBnDigits(bnToEnDigits(s.mutationOld))+' ('+mutationToWords(s.mutationOld)+')':''}</td><td>${s.mutationNew?toBnDigits(bnToEnDigits(s.mutationNew))+' ('+mutationToWords(s.mutationNew)+')':''}</td><td>${s.saDag?toBnDigits(s.saDag)+' ('+numberToBanglaWords(parseNum(s.saDag))+')':''}</td><td>${s.rsDag?toBnDigits(s.rsDag)+' ('+numberToBanglaWords(parseNum(s.rsDag))+')':''}</td></tr>
+    </table>
+    <table border="1" cellspacing="0" cellpadding="4" style="margin-top:6px;">
+      <tr><td><b>জমির পরিমাণ</b></td><td><b>শ্রেণী</b></td><td><b>মূল্য</b></td></tr>
+      <tr><td>${land?toBnDigits(land)+' একর ('+acreToShotokWords(land)+')':''}</td><td>${escapeHtml(s.landClass)}</td><td>${price?toBnDigits(price)+' টাকা ('+numberToBanglaWords(price)+' টাকা মাত্র)':''}</td></tr>
+    </table>
+    <p><b>চৌহদ্দি:</b> উত্তরেঃ ${escapeHtml(s.bN)}; দক্ষিণেঃ ${escapeHtml(s.bS)}; পূর্বেঃ ${escapeHtml(s.bE)}; পশ্চিমেঃ ${escapeHtml(s.bW)}${s.extraBoundaries.length ? '; ' + s.extraBoundaries.map(b=>escapeHtml(b.label)+'ঃ '+escapeHtml(b.value)).join('; ') : ''}।</p>
+  `;
+}
+
+function buildDocHtml(){
+  const g = id => document.getElementById(id).value;
+  const schedules = state.schedules;
+  const totalLand = round6(schedules.reduce((sum,s)=>sum+parseNum(s.landAmount),0));
+  const totalPrice = round6(schedules.reduce((sum,s)=>sum+parseNum(s.price),0));
+  const first = schedules[0] || blankSchedule();
+
+  return `
+  <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40' lang="bn-BD">
+  <head><meta charset="utf-8"><meta http-equiv="Content-Language" content="bn-BD"><title>${escapeHtml(g('deedType'))}</title>
+  <style>
+    body, p, div, td, span, h1, h2 {
+      font-family:'Nikosh','Kalpurush','Nirmala UI',sans-serif;
+      mso-bidi-font-family:'Nikosh';
+      mso-ascii-font-family:'Nikosh'; mso-hansi-font-family:'Nikosh';
+      mso-ansi-language:BN; mso-fareast-language:BN; mso-bidi-language:BN;
+      font-size:12pt;
+    }
+    h1{text-align:center;font-size:16pt;}
+    h2{font-size:13pt;border-bottom:1px solid #000;padding-bottom:2px;margin-top:22px;}
+    table{width:100%;border-collapse:collapse;}
+    td{vertical-align:top;padding:4px;}
+  </style></head>
+  <body lang="bn-BD">
+    <h1>গণপ্রজাতন্ত্রী বাংলাদেশ সরকার<br/>${escapeHtml(g('deedType'))}</h1>
+    <p><b>রেজিস্ট্রেশন কার্যালয়ের নাম:</b> ${escapeHtml(g('regOffice'))}</p>
+
+    <h2>২। দলিলের সার সংক্ষেপঃ</h2>
+    <table border="1" cellspacing="0" cellpadding="4">
+      <tr><td><b>দলিলের প্রকৃতি</b></td><td><b>মৌজার নাম</b></td><td><b>ইউনিয়ন</b></td><td><b>উপজেলা</b></td><td><b>জেলা</b></td></tr>
+      <tr><td>${escapeHtml(g('deedType'))}</td><td>${escapeHtml(first.mouza)}</td><td>${escapeHtml(first.union)}</td><td>${escapeHtml(first.thana)}</td><td>${escapeHtml(first.district)}</td></tr>
+    </table>
+    <table border="1" cellspacing="0" cellpadding="4" style="margin-top:6px;">
+      <tr><td><b>মোট জমির পরিমাণ</b></td><td><b>তফসিল সংখ্যা</b></td><td><b>মোট মূল্য</b></td></tr>
+      <tr><td>${totalLand?toBnDigits(totalLand)+' একর ('+acreToShotokWords(totalLand)+')':''}</td><td>${toBnDigits(schedules.length)}</td><td>${totalPrice?toBnDigits(totalPrice)+' টাকা ('+numberToBanglaWords(totalPrice)+' টাকা মাত্র)':''}</td></tr>
+    </table>
+
+    <h2>দলিলের বিবরণ</h2>
+    <p>${escapeHtml(document.getElementById('narrativeText').value).replace(/\n/g,'<br/><br/>')}</p>
+
+    <h2>দলিল দাতা/দাত্রীগণের তথ্য</h2>
+    ${personRowsHtml(state.donors,'দাতা')}
+
+    <h2>গ্রহীতাগণের তথ্য</h2>
+    ${personRowsHtml(state.grantees,'গ্রহীতা')}
+
+    <h2>সম্পত্তির তফসিল</h2>
+    ${schedules.map((s,i)=>scheduleBlockHtml(s,i)).join('<br/>')}
+
+    <h2>সাক্ষীগণ</h2>
+    ${personRowsHtml(state.witnesses,'সাক্ষী',true)}
+
+    <h2>সনাক্তকারী</h2>
+    ${personRowsHtml(state.identifiers,'সনাক্তকারী',true)}
+
+    <h2>দলিল লেখকের তথ্য</h2>
+    <p><b>নাম:</b> ${escapeHtml(state.writer.name)}<br/>
+    <b>পিতার নাম:</b> ${escapeHtml(state.writer.husband)}<br/>
+    <b>মাতার নাম:</b> ${escapeHtml(state.writer.mother)}<br/>
+    <b>ঠিকানা:</b> ${escapeHtml(state.writer.father)}<br/>
+    <b>সনদ নং:</b> ${escapeHtml(state.writer.nid)}<br/>
+    <b>কার্যালয়:</b> ${escapeHtml(state.writer.occupation)}</p>
+
+    ${g('extra') ? `<h2>অতিরিক্ত তথ্য</h2><p>${escapeHtml(g('extra')).replace(/\n/g,'<br/>')}</p>` : ''}
+
+    <br/><br/>
+    <table><tr>
+      <td style="width:33%;">দাতা/দাত্রীগণের স্বাক্ষর</td>
+      <td style="width:33%;">গ্রহীতাগণের স্বাক্ষর</td>
+      <td style="width:33%;">দলিল লেখকের স্বাক্ষর</td>
+    </tr></table>
+  </body></html>`;
+}
+
+/* ===================== RTF EXPORT (native Word format, fixes nukta rendering) ===================== */
+function bengaliComposeNukta(str){
+  return String(str||'')
+    .replace(/\u09A1\u09BC/g, '\u09DC')   // ড + ় -> ড় (RRA)
+    .replace(/\u09A2\u09BC/g, '\u09DD')   // ঢ + ় -> ঢ় (RHA)
+    .replace(/\u09AF\u09BC/g, '\u09DF');  // য + ় -> য় (YYA)
+}
+function rtfEsc(str){
+  let out = '';
+  const s = bengaliComposeNukta(String(str||''));
+  for(const ch of s){
+    const code = ch.codePointAt(0);
+    if(ch === '\\') out += '\\\\';
+    else if(ch === '{') out += '\\{';
+    else if(ch === '}') out += '\\}';
+    else if(ch === '\n') out += '\\par\n';
+    else if(code < 128) out += ch;
+    else {
+      let c = code;
+      if(c > 32767) c -= 65536;
+      out += '\\u' + c + '?';
+    }
+  }
+  return out;
+}
+function rtfLine(label, value){
+  if(!value) return '';
+  return `\\b ${rtfEsc(label+':')}\\b0  ${rtfEsc(value)}\\par\n`;
+}
+function rtfPersonList(list, title, simple){
+  let out = '';
+  list.forEach((p,i)=>{
+    out += `\\b ${rtfEsc(title+' নং '+toBnDigits(i+1)+':')}\\b0\\par\n`;
+    if(simple){
+      out += rtfLine('নাম', p.name);
+      out += rtfLine('পিতা/স্বামীর নাম', p.fatherOrHusband);
+      out += rtfLine('মাতার নাম', p.mother);
+      out += rtfLine('ঠিকানা', [p.pVillage,p.pPost,p.pUpazila,p.pDistrict].filter(Boolean).join(', '));
+    } else {
+      out += rtfLine('নাম', p.name);
+      out += rtfLine('পিতার নাম', p.father);
+      out += rtfLine('স্বামীর নাম', p.husband||'প্রযোজ্য নহে');
+      out += rtfLine('মাতার নাম', p.mother);
+      if(p.share) out += rtfLine('অংশের/প্রাপ্য পরিমাণ', toBnDigits(p.share));
+      out += rtfLine('জন্ম তারিখ', p.dob);
+      out += rtfLine('ধর্ম', p.religion);
+      out += rtfLine('পেশা', p.occupation);
+      out += rtfLine('জাতীয়তা', p.nationality);
+      out += rtfLine('জাতীয় পরিচয়পত্র/জন্মনিবন্ধন নং', p.nid);
+      out += rtfLine('স্থায়ী ঠিকানা', personAddressStr(p,'perm'));
+      out += rtfLine('বর্তমান ঠিকানা', personAddressStr(p,'present'));
+    }
+    out += '\\par\n';
+  });
+  return out;
+}
+function rtfScheduleBlock(s, idx){
+  let out = `\\b ${rtfEsc('তফসিল নং '+toBnDigits(idx+1))}\\b0\\par\n`;
+  out += rtfLine('জেলা', s.district) + rtfLine('উপজেলা', s.thana) + rtfLine('ইউনিয়ন', s.union) + rtfLine('মৌজা', s.mouza) + rtfLine('ভূমি অফিস', s.office);
+  out += rtfLine('এস.এ জে.এল নং', s.saJl? toBnDigits(s.saJl)+' ('+numberToBanglaWords(parseNum(s.saJl))+')':'');
+  out += rtfLine('আর.এস জে.এল নং', s.rsJl? toBnDigits(s.rsJl)+' ('+numberToBanglaWords(parseNum(s.rsJl))+')':'');
+  out += rtfLine('এস.এ খতিয়ান', s.saKhatian? toBnDigits(s.saKhatian)+' ('+numberToBanglaWords(parseNum(s.saKhatian))+')':'');
+  out += rtfLine('আর.এস খতিয়ান', s.rsKhatian? toBnDigits(s.rsKhatian)+' ('+numberToBanglaWords(parseNum(s.rsKhatian))+')':'');
+  out += rtfLine('ডিপি খতিয়ান', s.dp? toBnDigits(s.dp)+' ('+numberToBanglaWords(parseNum(s.dp))+')':'');
+  out += rtfLine('নামজারি খতিয়ান (সাবেক)', s.mutationOld? toBnDigits(bnToEnDigits(s.mutationOld))+' ('+mutationToWords(s.mutationOld)+')':'');
+  out += rtfLine('নামজারি খতিয়ান (বর্তমান)', s.mutationNew? toBnDigits(bnToEnDigits(s.mutationNew))+' ('+mutationToWords(s.mutationNew)+')':'');
+  out += rtfLine('এস.এ দাগ', s.saDag? toBnDigits(s.saDag)+' ('+numberToBanglaWords(parseNum(s.saDag))+')':'');
+  out += rtfLine('আর.এস দাগ', s.rsDag? toBnDigits(s.rsDag)+' ('+numberToBanglaWords(parseNum(s.rsDag))+')':'');
+  const land = parseNum(s.landAmount);
+  out += rtfLine('জমির পরিমাণ', land? toBnDigits(land)+' একর ('+acreToShotokWords(land)+')':'');
+  out += rtfLine('শ্রেণী', s.landClass);
+  const price = parseNum(s.price);
+  out += rtfLine('মূল্য', price? toBnDigits(price)+' টাকা ('+numberToBanglaWords(price)+' টাকা মাত্র)':'');
+  let bnd = `উত্তরেঃ ${s.bN}; দক্ষিণেঃ ${s.bS}; পূর্বেঃ ${s.bE}; পশ্চিমেঃ ${s.bW}`;
+  if(s.extraBoundaries.length) bnd += '; ' + s.extraBoundaries.map(b=>b.label+'ঃ '+b.value).join('; ');
+  out += rtfLine('চৌহদ্দি', bnd);
+  return out + '\\par\n';
+}
+function buildRtfDoc(){
+  const g = id => document.getElementById(id).value;
+  const schedules = state.schedules;
+  const totalLand = round6(schedules.reduce((sum,s)=>sum+parseNum(s.landAmount),0));
+  const totalPrice = round6(schedules.reduce((sum,s)=>sum+parseNum(s.price),0));
+  const first = schedules[0] || blankSchedule();
+
+  let body = '';
+  body += `\\qc\\b\\fs32 ${rtfEsc('গণপ্রজাতন্ত্রী বাংলাদেশ সরকার')}\\par\n${rtfEsc(g('deedType'))}\\par\\b0\\fs24\\ql\\par\n`;
+  body += rtfLine('রেজিস্ট্রেশন কার্যালয়ের নাম', g('regOffice')) + '\\par\n';
+
+  body += `\\b\\fs28 ${rtfEsc('দলিলের সার সংক্ষেপ')}\\b0\\fs24\\par\n`;
+  body += rtfLine('মৌজার নাম', first.mouza) + rtfLine('ইউনিয়ন', first.union) + rtfLine('উপজেলা', first.thana) + rtfLine('জেলা', first.district);
+  body += rtfLine('মোট জমির পরিমাণ', totalLand? toBnDigits(totalLand)+' একর ('+acreToShotokWords(totalLand)+')':'');
+  body += rtfLine('তফসিল সংখ্যা', toBnDigits(schedules.length));
+  body += rtfLine('মোট মূল্য', totalPrice? toBnDigits(totalPrice)+' টাকা ('+numberToBanglaWords(totalPrice)+' টাকা মাত্র)':'') + '\\par\n';
+
+  body += `\\b\\fs28 ${rtfEsc('দলিলের বিবরণ')}\\b0\\fs24\\par\n`;
+  body += `\\qj ${rtfEsc(document.getElementById('narrativeText').value)}\\ql\\par\\par\n`;
+
+  body += `\\b\\fs28 ${rtfEsc('দলিল দাতা/দাত্রীগণের তথ্য')}\\b0\\fs24\\par\n`;
+  body += rtfPersonList(state.donors, 'দাতা', false);
+
+  body += `\\b\\fs28 ${rtfEsc('গ্রহীতাগণের তথ্য')}\\b0\\fs24\\par\n`;
+  body += rtfPersonList(state.grantees, 'গ্রহীতা', false);
+
+  body += `\\b\\fs28 ${rtfEsc('সম্পত্তির তফসিল')}\\b0\\fs24\\par\n`;
+  schedules.forEach((s,i)=>{ body += rtfScheduleBlock(s,i); });
+
+  body += `\\b\\fs28 ${rtfEsc('সাক্ষীগণ')}\\b0\\fs24\\par\n`;
+  body += rtfPersonList(state.witnesses, 'সাক্ষী', true);
+
+  body += `\\b\\fs28 ${rtfEsc('সনাক্তকারী')}\\b0\\fs24\\par\n`;
+  body += rtfPersonList(state.identifiers, 'সনাক্তকারী', true);
+
+  body += `\\b\\fs28 ${rtfEsc('দলিল লেখকের তথ্য')}\\b0\\fs24\\par\n`;
+  body += rtfLine('নাম', state.writer.name) + rtfLine('পিতার নাম', state.writer.husband) + rtfLine('মাতার নাম', state.writer.mother) + rtfLine('ঠিকানা', state.writer.father) + rtfLine('সনদ নং', state.writer.nid) + rtfLine('কার্যালয়', state.writer.occupation) + '\\par\n';
+
+  if(g('extra')){
+    body += `\\b\\fs28 ${rtfEsc('অতিরিক্ত তথ্য')}\\b0\\fs24\\par\n`;
+    body += `${rtfEsc(g('extra'))}\\par\\par\n`;
+  }
+
+  body += '\\par\\par\n';
+  body += `${rtfEsc('দাতা/দাত্রীগণের স্বাক্ষর')}\\tab\\tab\\tab${rtfEsc('গ্রহীতাগণের স্বাক্ষর')}\\tab\\tab\\tab${rtfEsc('দলিল লেখকের স্বাক্ষর')}\\par\n`;
+
+  const sz = {w:11907,h:16840}; // A4 in twips
+  return `{\\rtf1\\ansi\\ansicpg1252\\uc1\\deff0{\\fonttbl{\\f0\\fnil Nikosh;}{\\f1\\fnil Kalpurush;}{\\f2\\fnil Nirmala UI;}}\\paperw${sz.w}\\paperh${sz.h}\\margl1440\\margr1440\\margt1440\\margb1440\\f0\\fs24\n${body}\n}`;
+}
+async function exportWord(){
+  const html = buildDocHtml();
+  const firstMouza = (state.schedules[0] && state.schedules[0].mouza) || '';
+  const fname = (document.getElementById('deedType').value || 'দলিল') + '_' + firstMouza;
+  await downloadDocxFromHtml(html, fname, pageSizeTwipsMap['A4'], docx.AlignmentType.JUSTIFIED);
+}
+</script>
+</body>
+</html>
