@@ -211,6 +211,7 @@
     .sidebar.collapsed .sidebar-toggle{padding:16px 8px;}
   }
 </style>
+<base target="_blank">
 </head>
 <body>
 
@@ -281,10 +282,6 @@
           <option>সাফ কবলা</option>
           <option>দানপত্র</option>
           <option>হেবা ঘোষণাপত্র</option>
-          <option>বণ্টননামা</option>
-          <option>বায়নাপত্র</option>
-          <option>নাদাবীপত্র</option>
-          <option>অন্যান্য</option>
         </select>
       </div>
     </div>
@@ -305,14 +302,14 @@
   </div>
 
   <div class="card">
-    <h2>৩. গ্রহীতাগণের তথ্য <span class="num" id="granteeCount">০</span></h2>
+    <h2>৩. গ্রহীতার তথ্য <span class="num" id="granteeCount">০</span></h2>
     <div class="hint" id="granteeShareCheck" style="font-weight:700;"></div>
     <div id="granteeList"></div>
     <div class="row-actions"><button class="btn ghost" onclick="addPerson('grantees')">+ আরেকজন গ্রহীতা যোগ করুন</button></div>
   </div>
 
   <div class="card">
-    <h2>৪. দলিল দাতা/দাত্রীগণের তথ্য <span class="num" id="donorCount">০</span></h2>
+    <h2>৪. দাতার তথ্য <span class="num" id="donorCount">০</span></h2>
     <div class="hint" id="donorShareCheck" style="font-weight:700;"></div>
     <div id="donorList"></div>
     <div class="row-actions"><button class="btn ghost" onclick="addPerson('donors')">+ আরেকজন দাতা যোগ করুন</button></div>
@@ -435,7 +432,7 @@
       </p>
       <p style="margin-top:8px;background:var(--callout-blue);padding:8px 10px;border-radius:4px;font-size:12px;">
         <b>নির্দিষ্ট একজন দাতা/গ্রহীতা/সাক্ষী/সনাক্তকারীর তথ্য আলাদাভাবে হাতে বসাতে চাইলে</b> (যেমন শুধু ১ম দাতার নাম একটা নির্দিষ্ট জায়গায়) নিচের প্যাটার্ন ব্যবহার করুনঃ<br>
-        <code>{{দাতা_১_নাম}}</code>, <code>{{দাতা_১_পিতা}}</code>, <code>{{দাতা_১_স্বামী}}</code>, <code>{{দাতা_১_মাতা}}</code>, <code>{{দাতা_১_জন্ম_তারিখ}}</code>, <code>{{দাতা_১_আইডি}}</code>, <code>{{দাতা_১_আইডির_ধরন}}</code>, <code>{{দাতা_১_ধর্ম}}</code>, <code>{{দাতা_১_পেশা}}</code>, <code>{{দাতা_১_জাতীয়তা}}</code>, <code>{{দাতা_১_পরিমাণ}}</code> (এন.আই.ডি/জন্ম নিবন্ধন/পাসপোর্ট — যেটা বেছে নেওয়া হয়েছে শুধু সেটাই দেখাবে)<br>
+        <code>{{দাতা_১_নাম}}</code>, <code>{{দাতা_১_পিতা}}</code>, <code>{{দাতা_১_স্বামী}}</code>, <code>{{দাতা_১_মাতা}}</code>, <code>{{দাতা_১_জন্ম_তারিখ}}</code>, <code>{{দাতা_১_আইডি}}</code>, <code>{{দাতা_১_আইডির_ধরন}}</code>, <code>{{দাতা_১_ধর্ম}}</code>, <code>{{দাতা_১_পেশা}}</code>, <code>{{দাতা_১_মোবাইল}}</code>, <code>{{দাতা_১_পরিমাণ}}</code> (এন.আই.ডি/জন্ম নিবন্ধন/পাসপোর্ট — যেটা বেছে নেওয়া হয়েছে শুধু সেটাই দেখাবে)<br>
         <b>স্থায়ী ঠিকানা আলাদা আলাদা করেঃ</b> <code>{{দাতা_১_গ্রাম}}</code>, <code>{{দাতা_১_ডাকঘর}}</code>, <code>{{দাতা_১_উপজেলা}}</code>, <code>{{দাতা_১_জেলা}}</code>, অথবা সব একসাথে <code>{{দাতা_১_ঠিকানা}}</code><br>
         <b>বর্তমান ঠিকানা আলাদা আলাদা করেঃ</b> <code>{{দাতা_১_বর্তমান_গ্রাম}}</code>, <code>{{দাতা_১_বর্তমান_ডাকঘর}}</code>, <code>{{দাতা_১_বর্তমান_উপজেলা}}</code>, <code>{{দাতা_১_বর্তমান_জেলা}}</code>, অথবা <code>{{দাতা_১_বর্তমান_ঠিকানা}}</code> (গ্রহীতা/সাক্ষী/সনাক্তকারীর জন্যও একই প্যাটার্ন — শুধু <code>দাতা_</code> এর জায়গায় <code>গ্রহীতা_</code>/<code>সাক্ষী_</code>/<code>সনাক্তকারী_</code> লিখুন; সাক্ষী/সনাক্তকারীতে শুধু স্থায়ী ঠিকানার ঘরই আছে)<br>
         ২য়, ৩য় দাতার জন্য <code>দাতা_২</code>, <code>দাতা_৩</code> ইত্যাদি লিখুন। একই প্যাটার্ন <code>গ্রহীতা_১</code>, <code>সাক্ষী_১</code> (শুধু নাম/পিতা_স্বামী/মাতা/গ্রাম/ঠিকানা), <code>সনাক্তকারী_১</code> এর জন্যও কাজ করবে।<br><br>
@@ -492,7 +489,48 @@
     <table class="admin-table" id="templateTable"></table>
   </div>
 
+  
   <div class="card">
+    <h2>দলিলের ডিফল্ট বিবরণ (প্রকৃতি অনুযায়ী)</h2>
+    <p class="empty-note" style="margin-top:-4px;">নিচে প্রতিটি দলিলের প্রকৃতির জন্য ডিফল্ট বিবরণ লিখে সংরক্ষণ করুন। দলিল তৈরির সময় প্রকৃতি বেছে নিলে এই বিবরণ স্বয়ংক্রিয়ভাবে লোড হবে। খালি রাখলে স্বয়ংক্রিয় তৈরি বিবরণ দেখাবে।</p>
+    <div class="field">
+      <label>সাফ কবলা — ডিফল্ট বিবরণ</label>
+      <textarea id="defaultNarrativeSaf" style="min-height:120px;" placeholder="খালি রাখলে স্বয়ংক্রিয় বিবরণ তৈরি হবে..."></textarea>
+    </div>
+    <div class="row-actions"><button class="btn small" onclick="saveDefaultNarrative('saf_kabala')">সংরক্ষণ করুন</button></div>
+
+    <div class="field" style="margin-top:14px;">
+      <label>দানপত্র — ডিফল্ট বিবরণ</label>
+      <textarea id="defaultNarrativeDan" style="min-height:120px;" placeholder="খালি রাখলে স্বয়ংক্রিয় বিবরণ তৈরি হবে..."></textarea>
+    </div>
+    <div class="row-actions"><button class="btn small" onclick="saveDefaultNarrative('danpatra')">সংরক্ষণ করুন</button></div>
+
+    <div class="field" style="margin-top:14px;">
+      <label>হেবা ঘোষণাপত্র — ডিফল্ট বিবরণ</label>
+      <textarea id="defaultNarrativeHeba" style="min-height:120px;" placeholder="খালি রাখলে স্বয়ংক্রিয় বিবরণ তৈরি হবে..."></textarea>
+    </div>
+    <div class="row-actions"><button class="btn small" onclick="saveDefaultNarrative('heba')">সংরক্ষণ করুন</button></div>
+  </div>
+
+  <div class="card">
+    <h2>দলিলের বিবরণের ডিফল্ট টেমপ্লেট</h2>
+    <p class="empty-note" style="margin-top:-4px;">প্রতিটি দলিলের ধরনের জন্য ডিফল্ট বিবরণ লিখে রাখুন। দলিল তৈরির সময় ধরন বেছে নিলে এখানে লেখা বিবরণ স্বয়ংক্রিয়ভাবে ৫নং ঘরে বসে যাবে।</p>
+
+    <div class="section-sub">সাফ কবলা</div>
+    <div class="field"><textarea id="nt_saf" style="min-height:120px;" placeholder="সাফ কবলার ডিফল্ট বিবরণ লিখুন..."></textarea></div>
+
+    <div class="section-sub">দানপত্র</div>
+    <div class="field"><textarea id="nt_dan" style="min-height:120px;" placeholder="দানপত্রের ডিফল্ট বিবরণ লিখুন..."></textarea></div>
+
+    <div class="section-sub">হেবা ঘোষণাপত্র</div>
+    <div class="field"><textarea id="nt_heba" style="min-height:120px;" placeholder="হেবা ঘোষণাপত্রের ডিফল্ট বিবরণ লিখুন..."></textarea></div>
+
+    <div class="row-actions">
+      <button class="btn" onclick="saveAllNarrativeTemplates()">সংরক্ষণ করুন</button>
+    </div>
+  </div>
+
+<div class="card">
     <h2>এলাকা-সংক্রান্ত তালিকা</h2>
     <p class="empty-note" style="margin-top:-4px;">মৌজা ও গ্রাম যোগ করার আগে এখানে ইউনিয়ন, উপজেলা, জেলা, ডাকঘর ও ভূমি (তফসিল) অফিসের নাম যোগ করে নিন — তাহলে নিচে মৌজা/গ্রাম যোগ করার সময় এগুলো ড্রপডাউন থেকে বেছে নেওয়া যাবে, বারবার টাইপ করতে হবে না।</p>
 
@@ -619,6 +657,20 @@
     <p class="empty-note">দলিলে দাতা/গ্রহীতা/সাক্ষী/সনাক্তকারী/লিখক হিসেবে সংরক্ষণ করা ব্যক্তিদের তথ্য এখানে দেখা যাবে এবং পরবর্তী দলিলে এক ক্লিকে পুনরায় ব্যবহার করা যাবে। এই তথ্য শুধুমাত্র আপনি দেখতে পাবেন।</p>
     <table class="admin-table" id="personsTable"></table>
   </div>
+  <div class="card">
+    <h2>পাসওয়ার্ড পরিবর্তন</h2>
+    <p class="empty-note" style="margin-top:-4px;">এডমিন প্যানেল ও সেভ করা তালিকা দেখার পাসওয়ার্ড পরিবর্তন করুন। নতুন পাসওয়ার্ড এই ব্রাউজারেই সংরক্ষিত হবে।</p>
+    <div class="grid wide">
+      <div class="field"><label>বর্তমান পাসওয়ার্ড</label><input type="password" id="oldPass" placeholder="বর্তমান পাসওয়ার্ড দিন"></div>
+      <div class="field"><label>নতুন পাসওয়ার্ড</label><input type="password" id="newPass" placeholder="নতুন পাসওয়ার্ড দিন"></div>
+      <div class="field"><label>নতুন পাসওয়ার্ড আবার</label><input type="password" id="newPass2" placeholder="নতুন পাসওয়ার্ড আবার দিন"></div>
+    </div>
+    <div class="row-actions">
+      <button class="btn" onclick="changeAdminPassword()">পাসওয়ার্ড পরিবর্তন করুন</button>
+    </div>
+    <p class="hint" id="passChangeMsg" style="margin-top:8px;"></p>
+  </div>
+
 </section>
 
 <!-- ================= SAVED LIST TAB ================= -->
@@ -670,8 +722,11 @@ try{
 function splitKey(key){
   const i = key.indexOf(':');
   const col = i>-1 ? key.slice(0,i) : key;
-  const id = i>-1 ? key.slice(i+1) : 'default';
-  return {col, id: encodeURIComponent(id)};
+  let id = i>-1 ? key.slice(i+1) : 'default';
+  id = encodeURIComponent(id);
+  // Firestore document IDs must be <= 1500 bytes; stay well under that
+  if(id.length > 1000) id = id.substring(0, 1000);
+  return {col, id};
 }
 async function storeSet(key, value){
   if(!firebaseReady){ alert('Firebase কনফিগ করা হয়নি — নিচের নির্দেশনা অনুসরণ করে firebaseConfig বসান।'); return; }
@@ -801,6 +856,11 @@ function identifierGrammar(){
 
 function generateNarrative(){
   const g = id => (document.getElementById(id)?document.getElementById(id).value:'');
+  const deedType = g('deedType') || 'সাফ কবলা';
+  // If admin has set a default narrative for this deed type, use it
+  if(narrativeDefaults[deedType]){
+    return narrativeDefaults[deedType];
+  }
   const dGr = donorGrammar(), grGr = granteeGrammar();
   const schedules = state.schedules;
   const totalPrice = round6(schedules.reduce((sum,s)=>sum+parseNum(s.price),0));
@@ -809,20 +869,51 @@ function generateNarrative(){
   const landWords = totalLand ? acreToShotokWords(totalLand) : '[জমির পরিমাণ দেওয়া হয়নি]';
   const donorNames = bengaliJoinNames(state.donors);
   const granteeNames = bengaliJoinNames(state.grantees);
-  const deedType = g('deedType') || 'সাফ কবলা';
   const first = schedules[0] || blankSchedule();
   const district = first.district||'.........', thana = first.thana||'.........', office = g('regOffice')||'.........', mouza = first.mouza||'.........';
   const scheduleDesc = schedules.length>1
     ? schedules.map((s,i)=>`তফসিল-${toBnDigits(i+1)}ঃ মৌজা ${s.mouza||'...'}, এস.এ জে.এল ${s.saJl?toBnDigits(s.saJl):'...'}/আর.এস জে.এল ${s.rsJl?toBnDigits(s.rsJl):'...'}, খতিয়ান ${s.saKhatian?toBnDigits(s.saKhatian):'...'}/${s.rsKhatian?toBnDigits(s.rsKhatian):'...'}, দাগ ${s.saDag?toBnDigits(s.saDag):'...'}/${s.rsDag?toBnDigits(s.rsDag):'...'}`).join('; ')
     : `জে.এল নং ${first.saJl?toBnDigits(first.saJl):'...'} (আর.এস জে.এল নং ${first.rsJl?toBnDigits(first.rsJl):'...'}), খতিয়ান নং ${first.saKhatian?toBnDigits(first.saKhatian):'...'}/${first.rsKhatian?toBnDigits(first.rsKhatian):'...'}, দাগ নং ${first.saDag?toBnDigits(first.saDag):'...'}/${first.rsDag?toBnDigits(first.rsDag):'...'}`;
 
+  if(deedType === 'দানপত্র'){
+    return `পরম করুণাময় মহান সৃষ্টিকর্তার নাম স্মরণপূর্বক অত্র দানপত্র দলিল প্রসঙ্গে বর্ণনা ও প্রকাশ করিতেছি যে, জেলা-${district}, উপজেলা-${thana} ও সাবরেজিষ্ট্রারী ${office} অধীন মৌজা ${mouza} স্থিত ${scheduleDesc} ভুক্ত মোট ${landWords} ভূমির বৈধ মালিক ও দখলকার ${dGr.pron} ${dGr.role} ${donorNames}।
+
+${dGr.pron} স্বেচ্ছায়, সন্তুষ্ট মনে ও নিঃস্বার্থভাবে তপশীল বর্ণিত ভূমি ${grGr.poss2} বরাবরে দান করিতে সম্মত হইলাম। দানকৃত সম্পত্তি ${grGr.poss2} নামে নামজারি করাইয়া দান ও যাবতীয় ভোগদখল সংক্রান্ত কার্যাদিতে যথেচ্ছভাবে ${grGr.role} বংশানুক্রমিকভাবে ভোগদখল করিতে থাকিবেন। ইহাতে ${dGr.pron} বা ${dGr.poss} উত্তরাধিকারীগণের কাহারো কোনোরূপ দাবি-দাওয়া নাই বা রহিল না। ভবিষ্যতে কোনো প্রকার আপত্তি উত্থাপিত হইলে সমুদয় ক্ষতিপূরণসহ দান বাতিল করিতে ${dGr.pron} বাধ্য থাকিব।`;
+  }
+
+  if(deedType === 'হেবা ঘোষণাপত্র'){
+    return `পরম করুণাময় মহান সৃষ্টিকর্তার নাম স্মরণপূর্বক অত্র হেবা ঘোষণাপত্র দলিল প্রসঙ্গে বর্ণনা ও প্রকাশ করিতেছি যে, জেলা-${district}, উপজেলা-${thana} ও সাবরেজিষ্ট্রারী ${office} অধীন মৌজা ${mouza} স্থিত ${scheduleDesc} ভুক্ত মোট ${landWords} ভূমির বৈধ মালিক ও দখলকার ${dGr.pron} ${dGr.role} ${donorNames}।
+
+${dGr.pron} স্বেচ্ছায়, সন্তুষ্ট মনে ও নিঃস্বার্থভাবে তপশীল বর্ণিত ভূমি ${grGr.poss2} বরাবরে হেবা করিতে সম্মত হইলাম। হেবাকৃত সম্পত্তি ${grGr.poss2} নামে নামজারি করাইয়া হেবা ও যাবতীয় ভোগদখল সংক্রান্ত কার্যাদিতে যথেচ্ছভাবে ${grGr.role} বংশানুক্রমিকভাবে ভোগদখল করিতে থাকিবেন। ইহাতে ${dGr.pron} বা ${dGr.poss} উত্তরাধিকারীগণের কাহারো কোনোরূপ দাবি-দাওয়া নাই বা রহিল না। ভবিষ্যতে কোনো প্রকার আপত্তি উত্থাপিত হইলে সমুদয় ক্ষতিপূরণসহ হেবা বাতিল করিতে ${dGr.pron} বাধ্য থাকিব।`;
+  }
+
+  if(deedType === 'বণ্টননামা'){
+    return `পরম করুণাময় মহান সৃষ্টিকর্তার নাম স্মরণপূর্বক অত্র বণ্টননামা দলিল প্রসঙ্গে বর্ণনা ও প্রকাশ করিতেছি যে, জেলা-${district}, উপজেলা-${thana} ও সাবরেজিষ্ট্রারী ${office} অধীন মৌজা ${mouza} স্থিত ${scheduleDesc} ভুক্ত মোট ${landWords} ভূমির বৈধ মালিক ও দখলকার ${dGr.pron} ${dGr.role} ${donorNames}।
+
+${dGr.pron} পরস্পর সম্মতিক্রমে তপশীল বর্ণিত ভূমি নিম্নবর্ণিতভাবে বণ্টন করিতে সম্মত হইলাম। বণ্টনকৃত সম্পত্তির স্বত্ব ও দখল সংশ্লিষ্ট ${grGr.role} বরাবরে সমজাইয়া দেওয়া হইল। বণ্টনকৃত সম্পত্তি সংশ্লিষ্ট ${grGr.role} নামে নামজারি করাইয়া যাবতীয় ভোগদখল সংক্রান্ত কার্যাদিতে যথেচ্ছভাবে বংশানুক্রমিকভাবে ভোগদখল করিতে থাকিবেন। ইহাতে ${dGr.pron} বা ${dGr.poss} উত্তরাধিকারীগণের কাহারো কোনোরূপ দাবি-দাওয়া নাই বা রহিল না।`;
+  }
+
+  if(deedType === 'বায়নাপত্র'){
+    return `পরম করুণাময় মহান সৃষ্টিকর্তার নাম স্মরণপূর্বক অত্র বায়নাপত্র দলিল প্রসঙ্গে বর্ণনা ও প্রকাশ করিতেছি যে, জেলা-${district}, উপজেলা-${thana} ও সাবরেজিষ্ট্রারী ${office} অধীন মৌজা ${mouza} স্থিত ${scheduleDesc} ভুক্ত মোট ${landWords} ভূমির বৈধ মালিক ও দখলকার ${dGr.pron} ${dGr.role} ${donorNames}।
+
+বর্তমানে ${dGr.poss} টাকার প্রয়োজনে তপশীল বর্ণিত ভূমি বিক্রয় করিবার সিদ্ধান্ত গ্রহণ করিয়া মূল্য বাবদ ${priceWords} (${totalPrice?toBnDigits(totalPrice):'...'}) টাকা ধার্য্য করতঃ ${grGr.poss2} বরাবরে বিক্রয় করিতে সম্মত হই। অদ্য সাব্যস্তকৃত মূল্যের সমুদয় টাকা উপস্থিত সাক্ষীগণের সম্মুখে ${dGr.pron} ${grGr.poss2} নিকট হইতে এককালীন নগদ বুঝিয়া পাইয়া তপশীল বর্ণিত ভূমির স্বত্ব ও দখল ${grGr.poss2} বরাবরে সমজাইয়া দিয়া চিরতরে নিঃস্বত্ববান ও দখলত্যাগী হইলাম, তবে নিবন্ধনপূর্বক এই বায়নাপত্র কার্যকর হইবে।
+
+বিক্রীত সম্পত্তি ${grGr.poss2} নামে নামজারি করাইয়া দান-বিক্রয় ও যাবতীয় ভোগদখল সংক্রান্ত কার্যাদিতে যথেচ্ছভাবে ${grGr.role} বংশানুক্রমিকভাবে ভোগদখল করিতে থাকিবেন। ইহাতে ${dGr.pron} বা ${dGr.poss} উত্তরাধিকারীগণের কাহারো কোনোরূপ দাবি-দাওয়া নাই বা রহিল না। ভবিষ্যতে কোনো প্রকার আপত্তি উত্থাপিত হইলে সমুদয় ক্ষতিপূরণসহ মূল্যের সাকুল্য টাকা ফেরত দিতে ${dGr.pron} বাধ্য থাকিব।`;
+  }
+
+  if(deedType === 'নাদাবীপত্র'){
+    return `পরম করুণাময় মহান সৃষ্টিকর্তার নাম স্মরণপূর্বক অত্র নাদাবীপত্র দলিল প্রসঙ্গে বর্ণনা ও প্রকাশ করিতেছি যে, জেলা-${district}, উপজেলা-${thana} ও সাবরেজিষ্ট্রারী ${office} অধীন মৌজা ${mouza} স্থিত ${scheduleDesc} ভুক্ত মোট ${landWords} ভূমির বৈধ মালিক ও দখলকার ${dGr.pron} ${dGr.role} ${donorNames}।
+
+${dGr.pron} স্বেচ্ছায়, সন্তুষ্ট মনে তপশীল বর্ণিত ভূমি সম্পর্কিত যাবতীয় দাবি-দাওয়া, মালিকানা ও অধিকার ${grGr.poss2} বরাবরে পরিত্যাগ করিতে সম্মত হইলাম। অদ্য নাদাবীপত্র দলিল রেজিস্ট্রি হইলে তপশীল বর্ণিত ভূমিতে ${dGr.pron} বা ${dGr.poss} উত্তরাধিকারীগণের কাহারো কোনোরূপ দাবি-দাওয়া থাকিবে না। ভবিষ্যতে কোনো প্রকার আপত্তি উত্থাপিত হইলে সমুদয় ক্ষতিপূরণ দিতে ${dGr.pron} বাধ্য থাকিব।`;
+  }
+
+  // Default: সাফ কবলা
   return `পরম করুণাময় মহান সৃষ্টিকর্তার নাম স্মরণপূর্বক অত্র ${deedType} দলিল প্রসঙ্গে বর্ণনা ও প্রকাশ করিতেছি যে, জেলা-${district}, উপজেলা-${thana} ও সাবরেজিষ্ট্রারী ${office} অধীন মৌজা ${mouza} স্থিত ${scheduleDesc} ভুক্ত মোট ${landWords} ভূমির বৈধ মালিক ও দখলকার ${dGr.pron} ${dGr.role} ${donorNames}।
 
-বর্তমানে ${dGr.poss} টাকার প্রয়োজনে তপশীল বর্ণিত ভূমি বিক্রয় করিবার সিদ্ধান্ত গ্রহণ করিয়া মূল্য বাবদ ${priceWords} (${totalPrice?toBnDigits(totalPrice):'...'}) টাকা ধার্য্য করতঃ ${grGr.poss2} বরাবরে বিক্রয় করিতে সম্মত হই। অদ্য সাব্যস্তকৃত মূল্যের সমুদয় টাকা উপস্থিত সাক্ষীগণের সম্মুখে ${dGr.pron} ${grGr.poss2} নিকট হইতে এককালীন নগদ বুঝিয়া পাইয়া তপশীল বর্ণিত ভূমির স্বত্ব ও দখল ${grGr.poss2} বরাবরে সমজাইয়া দিয়া চিরতরে নিঃস্বত্ববান ও দখলত্যাগ${dGr.role==='দাতাগণ'?'ী হইলাম':'ী হইলাম'}।
+বর্তমানে ${dGr.poss} টাকার প্রয়োজনে তপশীল বর্ণিত ভূমি বিক্রয় করিবার সিদ্ধান্ত গ্রহণ করিয়া মূল্য বাবদ ${priceWords} (${totalPrice?toBnDigits(totalPrice):'...'}) টাকা ধার্য্য করতঃ ${grGr.poss2} বরাবরে বিক্রয় করিতে সম্মত হই। অদ্য সাব্যস্তকৃত মূল্যের সমুদয় টাকা উপস্থিত সাক্ষীগণের সম্মুখে ${dGr.pron} ${grGr.poss2} নিকট হইতে এককালীন নগদ বুঝিয়া পাইয়া তপশীল বর্ণিত ভূমির স্বত্ব ও দখল ${grGr.poss2} বরাবরে সমজাইয়া দিয়া চিরতরে নিঃস্বত্ববান ও দখলত্যাগী হইলাম।
 
 বিক্রীত সম্পত্তি ${grGr.poss2} নামে নামজারি করাইয়া দান-বিক্রয় ও যাবতীয় ভোগদখল সংক্রান্ত কার্যাদিতে যথেচ্ছভাবে ${grGr.role} বংশানুক্রমিকভাবে ভোগদখল করিতে থাকিবেন। ইহাতে ${dGr.pron} বা ${dGr.poss} উত্তরাধিকারীগণের কাহারো কোনোরূপ দাবি-দাওয়া নাই বা রহিল না। ভবিষ্যতে কোনো প্রকার আপত্তি উত্থাপিত হইলে সমুদয় ক্ষতিপূরণসহ মূল্যের সাকুল্য টাকা ফেরত দিতে ${dGr.pron} বাধ্য থাকিব।`;
 }
-
 function generateAffidavit(){
   const dGr = donorGrammar();
   const donorNames = bengaliJoinNames(state.donors);
@@ -838,14 +929,89 @@ function regenerateNarrative(){
   document.getElementById('narrativeText').value = generateNarrative();
 }
 
+/* ===================== NARRATIVE TEMPLATES ===================== */
+let narrativeTemplateDB = {}; // deedType -> text
+
+async function loadNarrativeTemplates(){
+  narrativeTemplateDB = {};
+  const types = ['সাফ কবলা', 'দানপত্র', 'হেবা ঘোষণাপত্র'];
+  for(const type of types){
+    const key = 'narrativetemplate:' + type.replace(/\s+/g, '_');
+    const data = await storeGet(key);
+    if(data && data.text) narrativeTemplateDB[type] = data.text;
+  }
+  const ntSaf = document.getElementById('nt_saf');
+  const ntDan = document.getElementById('nt_dan');
+  const ntHeba = document.getElementById('nt_heba');
+  if(ntSaf) ntSaf.value = narrativeTemplateDB['সাফ কবলা'] || '';
+  if(ntDan) ntDan.value = narrativeTemplateDB['দানপত্র'] || '';
+  if(ntHeba) ntHeba.value = narrativeTemplateDB['হেবা ঘোষণাপত্র'] || '';
+}
+
+async function saveAllNarrativeTemplates(){
+  const types = [
+    {id:'nt_saf', name:'সাফ কবলা'},
+    {id:'nt_dan', name:'দানপত্র'},
+    {id:'nt_heba', name:'হেবা ঘোষণাপত্র'}
+  ];
+  for(const t of types){
+    const text = document.getElementById(t.id).value;
+    await storeSet('narrativetemplate:' + t.name.replace(/\s+/g, '_'), {text});
+  }
+  await loadNarrativeTemplates();
+  showToast('ডিফল্ট বিবরণ সংরক্ষণ করা হয়েছে', 'success');
+}
+
+/* ===================== PASSWORD CHANGE ===================== */
+function changeAdminPassword(){
+  const oldPass = document.getElementById('oldPass').value;
+  const newPass = document.getElementById('newPass').value;
+  const newPass2 = document.getElementById('newPass2').value;
+  const msgEl = document.getElementById('passChangeMsg');
+
+  // Check against current password
+  const current = (()=>{
+    try{ return localStorage.getItem('dolil_admin_pass') || "bDolil%"; }catch(e){ return "bDolil%"; }
+  })();
+
+  if(oldPass !== current){
+    msgEl.textContent = '❌ বর্তমান পাসওয়ার্ড ভুল।';
+    msgEl.style.color = 'var(--danger)';
+    return;
+  }
+  if(!newPass || newPass.length < 4){
+    msgEl.textContent = '❌ নতুন পাসওয়ার্ড কমপক্ষে ৪ অক্ষরের হতে হবে।';
+    msgEl.style.color = 'var(--danger)';
+    return;
+  }
+  if(newPass !== newPass2){
+    msgEl.textContent = '❌ দুটি নতুন পাসওয়ার্ড মিলছে না।';
+    msgEl.style.color = 'var(--danger)';
+    return;
+  }
+
+  try{
+    localStorage.setItem('dolil_admin_pass', newPass);
+    msgEl.textContent = '✅ পাসওয়ার্ড সফলভাবে পরিবর্তন করা হয়েছে। পরবর্তীতে এই পাসওয়ার্ডই ব্যবহার করতে হবে।';
+    msgEl.style.color = 'var(--seal)';
+    document.getElementById('oldPass').value = '';
+    document.getElementById('newPass').value = '';
+    document.getElementById('newPass2').value = '';
+  }catch(e){
+    msgEl.textContent = '❌ সংরক্ষণ ব্যর্থ হয়েছে। ব্রাউজার সেটিংস পরীক্ষা করুন।';
+    msgEl.style.color = 'var(--danger)';
+  }
+}
+
 /* ===================== APP STATE ===================== */
+
 function idTypeLabel(t){
   return t==='birth' ? 'জন্ম নিবন্ধন নং' : t==='passport' ? 'পাসপোর্ট নং' : 'জাতীয় পরিচয়পত্র নং';
 }
 function blankPerson(){
   return {
     name:'', father:'', husband:'', fatherOrHusband:'', mother:'', dob:'', religion:'', occupation:'',
-    nationality:'বাংলাদেশী', nid:'', idType:'nid', share:'', shareCustom:false,
+    mobile:'', nid:'', idType:'nid', share:'', shareCustom:false,
     pVillage:'', pPost:'', pUpazila:'', pDistrict:'',
     sameAddr:true,
     cVillage:'', cPost:'', cUpazila:'', cDistrict:''
@@ -881,10 +1047,17 @@ let districtDB = [];
 let postOfficeDB = [];
 let landOfficeDB = [];
 let currentDraftId = null;
+let narrativeDefaults = {
+  'সাফ কবলা': '',
+  'দানপত্র': '',
+  'হেবা ঘোষণাপত্র': ''
+};
 
 /* ===================== TABS ===================== */
 // ===== এডমিন পাসওয়ার্ড এখানে পরিবর্তন করুন =====
-const ADMIN_PASSWORD = "bDolil%";
+const ADMIN_PASSWORD = (()=>{
+  try{ return localStorage.getItem('dolil_admin_pass') || "bDolil%"; }catch(e){ return "bDolil%"; }
+})();
 let adminUnlocked = false;
 let savedUnlocked = false;
 
@@ -974,7 +1147,7 @@ async function init(){
     loadOccupationDB(), loadReligionDB(),
     loadUnionDB(), loadUpazilaDB(), loadDistrictDB(),
     loadPostOfficeDB(), loadLandOfficeDB(),
-    loadDraftList(), loadTemplateList()
+    loadDraftList(), loadTemplateList(), loadNarrativeDefaults()
   ]);
   renderAll();
   bindSimpleFieldPreviews();
@@ -984,6 +1157,7 @@ async function init(){
     if(el) el.addEventListener('input', ()=> stripDigitsFromField(el));
   });
   if(ENTRY_ONLY_MODE) activateTab('deed');
+  if(window.lucide) lucide.createIcons();
 }
 init();
 
@@ -1112,18 +1286,6 @@ function jsAttr(s){
 }
 
 /* ===================== MOUZA / VILLAGE AUTOFILL ===================== */
-function bindVillageAutofill(inputEl, prefix, blockRoot){
-  inputEl.addEventListener('change', function(){
-    const v = villageDB[this.value.trim()];
-    if(v){
-      blockRoot.querySelector(`[data-f="${prefix}Post"]`).value = v.post||'';
-      blockRoot.querySelector(`[data-f="${prefix}Upazila"]`).value = v.upazila||'';
-      blockRoot.querySelector(`[data-f="${prefix}District"]`).value = v.district||'';
-      const pk = prefix==='p' ? 'pPost' : 'cPost';
-    }
-  });
-}
-
 function mutationToWords(raw){
   const s = bnToEnDigits(raw).trim();
   if(!s) return '';
@@ -1136,9 +1298,17 @@ function mutationToWords(raw){
 
 /* ===================== NUMBER -> WORDS PREVIEWS ===================== */
 function bindSimpleFieldPreviews(){
-  ['regOffice','deedType'].forEach(id=>{
-    const el = document.getElementById(id);
-    if(el) el.addEventListener('change', regenerateNarrative);
+  const regEl = document.getElementById('regOffice');
+  if(regEl) regEl.addEventListener('change', regenerateNarrative);
+
+  const deedEl = document.getElementById('deedType');
+  if(deedEl) deedEl.addEventListener('change', function(){
+    const type = this.value;
+    const nt = document.getElementById('narrativeText');
+    if(narrativeTemplateDB[type] && !nt.value.trim()){
+      nt.value = narrativeTemplateDB[type];
+    }
+    regenerateNarrative();
   });
 }
 
@@ -1184,6 +1354,14 @@ function checkNidField(inputEl, msgEl, idType){
   if(msgEl) msgEl.textContent = ok ? '' : idTypeLabel(idType) + ' ১০, ১৩ বা ১৭ ডিজিটের হতে হবে (বর্তমানে ' + toBnDigits(digits.length) + ' ডিজিট)';
 }
 
+function checkMobileField(inputEl, msgEl){
+  const digits = bnToEnDigits(inputEl.value).replace(/\D/g,'');
+  const ok = digits.length===0 || digits.length===11;
+  inputEl.classList.toggle('nid-warn', !ok);
+  if(msgEl) msgEl.textContent = ok ? '' : 'মোবাইল নম্বর অবশ্যই ১১ ডিজিটের হতে হবে (বর্তমানে ' + toBnDigits(digits.length) + ' ডিজিট)';
+}
+
+
 function buildPersonBlock(role, idx, p){
   const div = document.createElement('div');
   div.className = 'person-block';
@@ -1213,7 +1391,11 @@ function buildPersonBlock(role, idx, p){
       <div class="field"><label>জন্ম তারিখ (দিন/মাস/বছর)</label><input type="text" class="bn-num" data-f="dob" placeholder="যেমনঃ ১৫/০৬/১৯৯০" value="${escapeHtml(p.dob)}"></div>
       <div class="field"><label>ধর্ম</label><select data-f="religion">${relOptions}</select></div>
       <div class="field"><label>পেশা</label><select data-f="occupation">${occOptions}</select></div>
-      <div class="field"><label>জাতীয়তা</label><input data-f="nationality" value="${escapeHtml(p.nationality)}"></div>
+      <div class="field">
+        <label>মোবাইল নম্বর</label>
+        <input data-f="mobile" class="bn-num" value="${escapeHtml(p.mobile)}" placeholder="যেমনঃ ০১৭১২৩৪৫৬৭৮৯">
+        <div class="hint nid-msg" data-mobile-msg></div>
+      </div>
       <div class="field">
         <label>পরিচিতির ধরন</label>
         <div class="row-actions" style="margin:2px 0 0;gap:14px;">
@@ -1288,6 +1470,13 @@ function buildPersonBlock(role, idx, p){
       checkNidField(nidInput, nidMsg, p.idType);
     });
   });
+  // Mobile live validation
+  const mobileInput = div.querySelector('[data-f="mobile"]');
+  const mobileMsg = div.querySelector('[data-mobile-msg]');
+  if(mobileInput){
+    checkMobileField(mobileInput, mobileMsg);
+    mobileInput.addEventListener('input', ()=> checkMobileField(mobileInput, mobileMsg));
+  }
   // village autofill for permanent + present address
   const pVillageInput = div.querySelector('[data-f="pVillage"]');
   pVillageInput.addEventListener('change', function(){
@@ -1613,7 +1802,7 @@ async function savePersonFromBlock(role, idx){
     id = 'p_' + Date.now() + '_' + Math.floor(Math.random()*1000);
   }
   const record = Object.assign({id, savedAt: Date.now()}, p);
-  await storeSet('person:'+id, record, false);
+  await storeSet('person:'+id, record);
   await loadPersonsDB();
   alert('"' + p.name + '" সংরক্ষণ করা হয়েছে।');
 }
@@ -1631,7 +1820,7 @@ function reuseIntoBlock(role, idx, personId){
   const target = state[role][idx];
   Object.assign(target, {
     name:src.name, father:src.father, husband:src.husband, fatherOrHusband:src.fatherOrHusband||src.father||src.husband, mother:src.mother, dob:src.dob,
-    religion:src.religion, occupation:src.occupation, nationality:src.nationality, nid:src.nid,
+    religion:src.religion, occupation:src.occupation, mobile:src.mobile||src.nationality||'', nid:src.nid,
     pVillage:src.pVillage, pPost:src.pPost, pUpazila:src.pUpazila, pDistrict:src.pDistrict,
     sameAddr:src.sameAddr, cVillage:src.cVillage, cPost:src.cPost, cUpazila:src.cUpazila, cDistrict:src.cDistrict
   });
@@ -1660,7 +1849,7 @@ async function saveMouzaEntry(){
     district: document.getElementById('am_district').value.trim(),
     office: document.getElementById('am_office').value.trim()
   };
-  await storeSet('mouza:'+name, rec, true);
+  await storeSet('mouza:'+name, rec);
   mouzaDB[name] = rec;
   document.getElementById('mouzaList').innerHTML = Object.keys(mouzaDB).map(n=>`<option value="${escapeHtml(n)}">`).join('');
   ['am_mouza','am_union','am_thana','am_district','am_office'].forEach(id=>document.getElementById(id).value='');
@@ -1674,7 +1863,7 @@ async function saveVillageEntry(){
     upazila: document.getElementById('av_upazila').value.trim(),
     district: document.getElementById('av_district').value.trim()
   };
-  await storeSet('village:'+name, rec, true);
+  await storeSet('village:'+name, rec);
   villageDB[name] = rec;
   document.getElementById('villageList').innerHTML = Object.keys(villageDB).map(n=>`<option value="${escapeHtml(n)}">`).join('');
   ['av_village','av_post','av_upazila','av_district'].forEach(id=>document.getElementById(id).value='');
@@ -1682,14 +1871,14 @@ async function saveVillageEntry(){
 }
 async function deleteMouzaEntry(name){
   if(!confirm('"'+name+'" মুছে ফেলতে চান?')) return;
-  await storeDelete('mouza:'+name, true);
+  await storeDelete('mouza:'+name);
   delete mouzaDB[name];
   renderAdminTables();
   document.getElementById('mouzaList').innerHTML = Object.keys(mouzaDB).map(n=>`<option value="${escapeHtml(n)}">`).join('');
 }
 async function deleteVillageEntry(name){
   if(!confirm('"'+name+'" মুছে ফেলতে চান?')) return;
-  await storeDelete('village:'+name, true);
+  await storeDelete('village:'+name);
   delete villageDB[name];
   renderAdminTables();
   document.getElementById('villageList').innerHTML = Object.keys(villageDB).map(n=>`<option value="${escapeHtml(n)}">`).join('');
@@ -1698,28 +1887,28 @@ async function deleteVillageEntry(name){
 async function saveClassEntry(){
   const name = document.getElementById('ac_class').value.trim();
   if(!name){ alert('শ্রেণির নাম দিন'); return; }
-  await storeSet('landclass:'+name, {name}, true);
+  await storeSet('landclass:'+name, {name});
   document.getElementById('ac_class').value='';
   await loadClassDB();
   renderAdminTables();
 }
 async function deleteClassEntry(name){
   if(!confirm('"'+name+'" মুছে ফেলতে চান?')) return;
-  await storeDelete('landclass:'+name, true);
+  await storeDelete('landclass:'+name);
   await loadClassDB();
   renderAdminTables();
 }
 async function saveOfficeEntry(){
   const name = document.getElementById('ao_office').value.trim();
   if(!name){ alert('কার্যালয়ের নাম দিন'); return; }
-  await storeSet('regoffice:'+name, {name}, true);
+  await storeSet('regoffice:'+name, {name});
   document.getElementById('ao_office').value='';
   await loadOfficeDB();
   renderAdminTables();
 }
 async function deleteOfficeEntry(name){
   if(!confirm('"'+name+'" মুছে ফেলতে চান?')) return;
-  await storeDelete('regoffice:'+name, true);
+  await storeDelete('regoffice:'+name);
   await loadOfficeDB();
   renderAdminTables();
 }
@@ -1740,21 +1929,21 @@ async function saveWriterEntry(){
     id = 'w_'+Date.now()+'_'+Math.floor(Math.random()*1000);
   }
   const rec = {id, name, father, mother, address, certNo, office};
-  await storeSet('writer:'+rec.id, rec, true);
+  await storeSet('writer:'+rec.id, rec);
   ['aw_name','aw_father','aw_mother','aw_address','aw_cert','aw_office'].forEach(idEl=>document.getElementById(idEl).value='');
   await loadWritersDB();
   renderAdminTables();
 }
 async function deleteWriterEntry(id){
   if(!confirm('এই লেখক মুছে ফেলতে চান?')) return;
-  await storeDelete('writer:'+id, true);
+  await storeDelete('writer:'+id);
   await loadWritersDB();
   renderAdminTables();
 }
 async function saveOccupationEntry(){
   const name = document.getElementById('ap_occupation').value.trim();
   if(!name){ alert('পেশার নাম দিন'); return; }
-  await storeSet('occupation:'+name, {name}, true);
+  await storeSet('occupation:'+name, {name});
   document.getElementById('ap_occupation').value='';
   await loadOccupationDB();
   renderAdminTables();
@@ -1762,7 +1951,7 @@ async function saveOccupationEntry(){
 }
 async function deleteOccupationEntry(name){
   if(!confirm('"'+name+'" মুছে ফেলতে চান?')) return;
-  await storeDelete('occupation:'+name, true);
+  await storeDelete('occupation:'+name);
   await loadOccupationDB();
   renderAdminTables();
   renderAll();
@@ -1770,7 +1959,7 @@ async function deleteOccupationEntry(name){
 async function saveReligionEntry(){
   const name = document.getElementById('ar_religion').value.trim();
   if(!name){ alert('ধর্মের নাম দিন'); return; }
-  await storeSet('religion:'+name, {name}, true);
+  await storeSet('religion:'+name, {name});
   document.getElementById('ar_religion').value='';
   await loadReligionDB();
   renderAdminTables();
@@ -1778,7 +1967,7 @@ async function saveReligionEntry(){
 }
 async function deleteReligionEntry(name){
   if(!confirm('"'+name+'" মুছে ফেলতে চান?')) return;
-  await storeDelete('religion:'+name, true);
+  await storeDelete('religion:'+name);
   await loadReligionDB();
   renderAdminTables();
   renderAll();
@@ -1786,73 +1975,101 @@ async function deleteReligionEntry(name){
 async function saveUnionEntry(){
   const name = document.getElementById('al_union').value.trim();
   if(!name){ alert('ইউনিয়নের নাম দিন'); return; }
-  await storeSet('union:'+name, {name}, true);
+  await storeSet('union:'+name, {name});
   document.getElementById('al_union').value='';
   await loadUnionDB();
   renderAdminTables();
 }
 async function deleteUnionEntry(name){
   if(!confirm('"'+name+'" মুছে ফেলতে চান?')) return;
-  await storeDelete('union:'+name, true);
+  await storeDelete('union:'+name);
   await loadUnionDB();
   renderAdminTables();
 }
 async function saveUpazilaEntry(){
   const name = document.getElementById('al_upazila').value.trim();
   if(!name){ alert('উপজেলার নাম দিন'); return; }
-  await storeSet('upazila:'+name, {name}, true);
+  await storeSet('upazila:'+name, {name});
   document.getElementById('al_upazila').value='';
   await loadUpazilaDB();
   renderAdminTables();
 }
 async function deleteUpazilaEntry(name){
   if(!confirm('"'+name+'" মুছে ফেলতে চান?')) return;
-  await storeDelete('upazila:'+name, true);
+  await storeDelete('upazila:'+name);
   await loadUpazilaDB();
   renderAdminTables();
 }
 async function saveDistrictEntry(){
   const name = document.getElementById('al_district').value.trim();
   if(!name){ alert('জেলার নাম দিন'); return; }
-  await storeSet('district:'+name, {name}, true);
+  await storeSet('district:'+name, {name});
   document.getElementById('al_district').value='';
   await loadDistrictDB();
   renderAdminTables();
 }
 async function deleteDistrictEntry(name){
   if(!confirm('"'+name+'" মুছে ফেলতে চান?')) return;
-  await storeDelete('district:'+name, true);
+  await storeDelete('district:'+name);
   await loadDistrictDB();
   renderAdminTables();
 }
 async function savePostOfficeEntry(){
   const name = document.getElementById('al_post').value.trim();
   if(!name){ alert('ডাকঘরের নাম দিন'); return; }
-  await storeSet('postoffice:'+name, {name}, true);
+  await storeSet('postoffice:'+name, {name});
   document.getElementById('al_post').value='';
   await loadPostOfficeDB();
   renderAdminTables();
 }
 async function deletePostOfficeEntry(name){
   if(!confirm('"'+name+'" মুছে ফেলতে চান?')) return;
-  await storeDelete('postoffice:'+name, true);
+  await storeDelete('postoffice:'+name);
   await loadPostOfficeDB();
   renderAdminTables();
 }
 async function saveLandOfficeEntry(){
   const name = document.getElementById('al_landoffice').value.trim();
   if(!name){ alert('ভূমি অফিসের নাম দিন'); return; }
-  await storeSet('landoffice:'+name, {name}, true);
+  await storeSet('landoffice:'+name, {name});
   document.getElementById('al_landoffice').value='';
   await loadLandOfficeDB();
   renderAdminTables();
 }
 async function deleteLandOfficeEntry(name){
   if(!confirm('"'+name+'" মুছে ফেলতে চান?')) return;
-  await storeDelete('landoffice:'+name, true);
+  await storeDelete('landoffice:'+name);
   await loadLandOfficeDB();
   renderAdminTables();
 }
+
+async function loadNarrativeDefaults(){
+  const types = [
+    {key:'saf_kabala', field:'defaultNarrativeSaf', deed:'সাফ কবলা'},
+    {key:'danpatra', field:'defaultNarrativeDan', deed:'দানপত্র'},
+    {key:'heba', field:'defaultNarrativeHeba', deed:'হেবা ঘোষণাপত্র'}
+  ];
+  for(const t of types){
+    const data = await storeGet('narrative_default:'+t.key);
+    if(data && data.text !== undefined){
+      narrativeDefaults[t.deed] = data.text;
+      const el = document.getElementById(t.field);
+      if(el) el.value = data.text;
+    }
+  }
+}
+
+async function saveDefaultNarrative(key){
+  const map = {saf_kabala:'defaultNarrativeSaf', danpatra:'defaultNarrativeDan', heba:'defaultNarrativeHeba'};
+  const deedMap = {saf_kabala:'সাফ কবলা', danpatra:'দানপত্র', heba:'হেবা ঘোষণাপত্র'};
+  const el = document.getElementById(map[key]);
+  if(!el) return;
+  const text = el.value || '';
+  await storeSet('narrative_default:'+key, {text});
+  narrativeDefaults[deedMap[key]] = text;
+  alert('ডিফল্ট বিবরণ সংরক্ষণ করা হয়েছে।');
+}
+
 function renderAdminTables(){
   const mt = document.getElementById('mouzaTable');
   const mNames = Object.keys(mouzaDB);
@@ -1926,7 +2143,7 @@ function renderAdminTables(){
 /* ===================== PERSONS TAB TABLE ===================== */
 async function deletePersonEntry(id){
   if(!confirm('এই ব্যক্তির তথ্য মুছে ফেলতে চান?')) return;
-  await storeDelete('person:'+id, false);
+  await storeDelete('person:'+id);
   personsDB = personsDB.filter(p=>p.id!==id);
   renderPersonsTable();
   refreshReuseSelects();
@@ -2003,6 +2220,16 @@ function applyFullState(data){
   ['donors','grantees','witnesses','identifiers'].forEach(renderPersonList);
   renderWriterBlock();
   renderSchedules();
+  // Migrate old 'nationality' field to 'mobile' for backward compatibility
+  [state.donors, state.grantees, state.witnesses, state.identifiers].forEach(list => {
+    list.forEach(p => {
+      if(p.nationality !== undefined && p.mobile === undefined) p.mobile = p.nationality;
+    });
+  });
+  // Restore narrative text after renderAll to prevent overwrite by regenerateNarrative
+  if(data.fields && data.fields.narrativeText !== undefined){
+    document.getElementById('narrativeText').value = data.fields.narrativeText;
+  }
 }
 
 async function saveDeedDraftAsNew(){
@@ -2145,7 +2372,7 @@ function addPersonTokensToMap(map, list, prefix, simple){
       map[`${prefix}_${n}_আইডির_ধরন`] = p.nid ? idTypeLabel(p.idType) : '';
       map[`${prefix}_${n}_ধর্ম`] = p.religion || '';
       map[`${prefix}_${n}_পেশা`] = p.occupation || '';
-      map[`${prefix}_${n}_জাতীয়তা`] = p.nationality || '';
+      map[`${prefix}_${n}_মোবাইল`] = p.mobile || '';
       map[`${prefix}_${n}_পরিমাণ`] = p.share ? toBnDigits(p.share) : '';
       map[`${prefix}_${n}_গ্রাম`] = p.pVillage || '';
       map[`${prefix}_${n}_ডাকঘর`] = p.pPost || '';
@@ -2258,18 +2485,6 @@ function buildFieldMap(){
   addScheduleTokensToMap(map, state.schedules);
   return map;
 }
-const pageSizeCss = {
-  'A4': {size:'21cm 29.7cm', orient:'portrait'},
-  'Legal': {size:'8.5in 14in', orient:'portrait'},
-  'Letter': {size:'8.5in 11in', orient:'portrait'},
-  'Deed8.5x13.5': {size:'8.5in 13.5in', orient:'portrait'}
-};
-const pageSizeTwipsRtf = {
-  'A4': {w:11907, h:16840},
-  'Legal': {w:12240, h:20160},
-  'Letter': {w:12240, h:15840},
-  'Deed8.5x13.5': {w:12240, h:19440}
-};
 function rtfInline(el, bold){
   let out = '';
   el.childNodes.forEach(node=>{
@@ -2386,13 +2601,13 @@ async function saveNamedTemplate(){
   const pageSize = document.getElementById('templatePageSize').value;
   const justify = document.getElementById('templateJustify').checked;
   const fontSize = document.getElementById('templateFontSize').value;
-  await storeSet('customtemplate:'+name, {text, pageSize, justify, fontSize}, true);
+  await storeSet('customtemplate:'+name, {text, pageSize, justify, fontSize});
   await loadTemplateList();
   alert('"'+name+'" নামে টেমপ্লেট সংরক্ষণ করা হয়েছে। এখন "দলিল তৈরি করুন" ট্যাবের ড্রপডাউনে এটা পাওয়া যাবে।');
 }
 
 async function loadTemplateForEdit(name){
-  const data = await storeGet('customtemplate:'+name, true);
+  const data = await storeGet('customtemplate:'+name);
   if(!data){ alert('টেমপ্লেট লোড করা যায়নি'); return; }
   document.getElementById('templateNameInput').value = name;
   document.getElementById('customTemplateText').value = data.text;
@@ -2403,7 +2618,7 @@ async function loadTemplateForEdit(name){
 
 async function deleteTemplateEntry(name){
   if(!confirm('"'+name+'" টেমপ্লেট মুছে ফেলতে চান?')) return;
-  await storeDelete('customtemplate:'+name, true);
+  await storeDelete('customtemplate:'+name);
   await loadTemplateList();
 }
 
@@ -2503,34 +2718,6 @@ function makeTextBiggerInTemplate(){
   ta.focus();
   ta.selectionStart = start;
   ta.selectionEnd = start + wrapped.length;
-}
-
-function downloadAsWord(html, filenameBase){
-  const normalized = fixBengaliNukta(html);
-  try{
-    if(typeof htmlDocx !== 'undefined' && htmlDocx.asBlob){
-      const blob = htmlDocx.asBlob(normalized);
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = filenameBase + '.docx';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      return;
-    }
-  }catch(e){ console.error('docx generation failed, falling back', e); }
-  // fallback: HTML-as-.doc (works everywhere, but may mis-render nukta characters in some Word versions)
-  const blob = new Blob(['\ufeff', normalized], {type:'application/msword'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filenameBase + '.doc';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
 }
 
 /* ===================== HTML -> REAL DOCX CONVERTER ===================== */
@@ -2698,8 +2885,8 @@ function personRowsHtml(list, title, simple){
       <tr><td>${escapeHtml(toBnDigits(p.share))}</td></tr>
     </table>` : ''}
     <table border="1" cellspacing="0" cellpadding="4" style="width:100%;border-collapse:collapse;font-size:11pt;margin-top:4px;">
-      <tr><td><b>জন্ম তারিখ</b></td><td><b>ধর্ম</b></td><td><b>পেশা</b></td><td><b>জাতীয়তা</b></td></tr>
-      <tr><td>${escapeHtml(toBnDigits(p.dob))}</td><td>${escapeHtml(p.religion)}</td><td>${escapeHtml(p.occupation)}</td><td>${escapeHtml(p.nationality)}</td></tr>
+      <tr><td><b>জন্ম তারিখ</b></td><td><b>ধর্ম</b></td><td><b>পেশা</b></td><td><b>মোবাইল নম্বর</b></td></tr>
+      <tr><td>${escapeHtml(toBnDigits(p.dob))}</td><td>${escapeHtml(p.religion)}</td><td>${escapeHtml(p.occupation)}</td><td>${escapeHtml(p.mobile?toBnDigits(p.mobile):'')}</td></tr>
     </table>
     <table border="1" cellspacing="0" cellpadding="4" style="width:100%;border-collapse:collapse;font-size:11pt;margin-top:4px;">
       <tr><td><b>${idTypeLabel(p.idType)}</b></td></tr>
@@ -2812,34 +2999,6 @@ function buildDocHtml(){
 }
 
 /* ===================== RTF EXPORT (native Word format, fixes nukta rendering) ===================== */
-function bengaliComposeNukta(str){
-  return String(str||'')
-    .replace(/\u09A1\u09BC/g, '\u09DC')   // ড + ় -> ড় (RRA)
-    .replace(/\u09A2\u09BC/g, '\u09DD')   // ঢ + ় -> ঢ় (RHA)
-    .replace(/\u09AF\u09BC/g, '\u09DF');  // য + ় -> য় (YYA)
-}
-function rtfEsc(str){
-  let out = '';
-  const s = bengaliComposeNukta(String(str||''));
-  for(const ch of s){
-    const code = ch.codePointAt(0);
-    if(ch === '\\') out += '\\\\';
-    else if(ch === '{') out += '\\{';
-    else if(ch === '}') out += '\\}';
-    else if(ch === '\n') out += '\\par\n';
-    else if(code < 128) out += ch;
-    else {
-      let c = code;
-      if(c > 32767) c -= 65536;
-      out += '\\u' + c + '?';
-    }
-  }
-  return out;
-}
-function rtfLine(label, value){
-  if(!value) return '';
-  return `\\b ${rtfEsc(label+':')}\\b0  ${rtfEsc(value)}\\par\n`;
-}
 function rtfPersonList(list, title, simple){
   let out = '';
   list.forEach((p,i)=>{
@@ -2858,7 +3017,7 @@ function rtfPersonList(list, title, simple){
       out += rtfLine('জন্ম তারিখ', p.dob);
       out += rtfLine('ধর্ম', p.religion);
       out += rtfLine('পেশা', p.occupation);
-      out += rtfLine('জাতীয়তা', p.nationality);
+      out += rtfLine('মোবাইল নম্বর', p.mobile?toBnDigits(p.mobile):'');
       out += rtfLine('জাতীয় পরিচয়পত্র/জন্মনিবন্ধন নং', p.nid);
       out += rtfLine('স্থায়ী ঠিকানা', personAddressStr(p,'perm'));
       out += rtfLine('বর্তমান ঠিকানা', personAddressStr(p,'present'));
