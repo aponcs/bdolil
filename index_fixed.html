@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
@@ -209,6 +209,33 @@
     .sidebar .tab-btn .label, .sidebar-brand{display:none;}
     .sidebar.collapsed{width:0;border-right:none;}
     .sidebar.collapsed .sidebar-toggle{padding:16px 8px;}
+  }
+  .toast-item{
+    background:var(--paper-2);
+    color:var(--ink);
+    border-left:4px solid var(--danger);
+    padding:12px 18px;
+    border-radius:4px;
+    box-shadow:0 4px 12px rgba(0,0,0,.15);
+    font-family:'Hind Siliguri',sans-serif;
+    font-size:14px;
+    min-width:260px;
+    max-width:340px;
+    animation:toastSlide .35s ease;
+    pointer-events:auto;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:8px;
+  }
+  .toast-item.success{border-left-color:var(--seal);}
+  .toast-item .toast-icon{font-size:18px;}
+  @keyframes toastSlide{
+    from{transform:translateX(120%);opacity:0;}
+    to{transform:translateX(0);opacity:1;}
+  }
+  @keyframes toastFade{
+    to{transform:translateX(120%);opacity:0;}
   }
 </style>
 <base target="_blank">
@@ -429,6 +456,16 @@
         <b>একের বেশি দাতা/গ্রহীতা/সাক্ষী/সনাক্তকারী/তফসিল থাকলে:</b> আলাদা আলাদা টোকেন লাগবে না — শুধু <code>{{দাতাগণ}}</code>, <code>{{গ্রহীতাগণ}}</code>, <code>{{সাক্ষীগণ}}</code>, <code>{{সনাক্তকারীগণ}}</code> বা <code>{{তফসিলসমূহ}}</code> একবার বসালেই যতজন/যতটি এন্ট্রি থাকবে, সবগুলো ১, ২, ৩ নম্বর দিয়ে একের পর এক আসবে। যেমন দুইজন দাতা থাকলে <code>{{দাতাগণ}}</code> এর জায়গায় আসবেঃ<br>
         "১. নাম: ..., পিতার নাম: ..., ...<br>
         ২. নাম: ..., পিতার নাম: ..., ..."
+      </p>
+      <p style="margin-top:8px;background:var(--callout-yellow);padding:8px 10px;border-radius:4px;font-size:12px;">
+        <b>টেবিল ফরম্যাটিং টিপস:</b><br>
+        • <b>বর্ডার ছাড়া টেবিল:</b> <code>&lt;table border="0"&gt;</code> ব্যবহার করুন<br>
+        • <b>শুধু কুলন (outer border):</b> <code>&lt;table border="1" style="box-only"&gt;</code> ব্যবহার করুন — ভেতরের দাগ থাকবে না<br>
+        • <b>সেল সেন্টার করতে:</b> <code>&lt;td align="center"&gt;</code> বা <code>&lt;td style="text-align:center"&gt;</code><br>
+        • <b>কলামের প্রস্থ:</b> <code>&lt;td style="width:20%"&gt;</code> — শতাংশে দিন<br>
+        • <b>ফাকা লাইন কমাতে:</b> টেবিলের ভেতরে <code>&lt;br/&gt;</code> এর বদলে একই সেলে লিখুন<br>
+        • <b>উদাহরণ (ক্রমিক/বহি/দলিল এক কলামে):</b><br>
+        <code>&lt;table border="0"&gt;&lt;tr&gt;&lt;td align="center"&gt;ক্রমিক নং: {{ক্রমিক_নং}}&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td align="center"&gt;বহি নং: {{বহি_নং}}&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</code>
       </p>
       <p style="margin-top:8px;background:var(--callout-blue);padding:8px 10px;border-radius:4px;font-size:12px;">
         <b>নির্দিষ্ট একজন দাতা/গ্রহীতা/সাক্ষী/সনাক্তকারীর তথ্য আলাদাভাবে হাতে বসাতে চাইলে</b> (যেমন শুধু ১ম দাতার নাম একটা নির্দিষ্ট জায়গায়) নিচের প্যাটার্ন ব্যবহার করুনঃ<br>
@@ -688,6 +725,9 @@
   </div>
 </div>
 
+<!-- ===== TOAST NOTIFICATION ===== -->
+<div id="toastBox" style="position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:10px;pointer-events:none;"></div>
+
 <datalist id="mouzaList"></datalist>
 <datalist id="villageList"></datalist>
 
@@ -729,11 +769,11 @@ function splitKey(key){
   return {col, id};
 }
 async function storeSet(key, value){
-  if(!firebaseReady){ alert('Firebase কনফিগ করা হয়নি — নিচের নির্দেশনা অনুসরণ করে firebaseConfig বসান।'); return; }
+  if(!firebaseReady){ showToast('Firebase কনফিগ করা হয়নি', 'error'); return; }
   try{
     const {col,id} = splitKey(key);
     await db.collection(col).doc(id).set({ value: JSON.stringify(value) });
-  }catch(e){ console.error('storage set failed', e); alert('সংরক্ষণ ব্যর্থ হয়েছে, ইন্টারনেট সংযোগ বা Firestore নিয়ম পরীক্ষা করুন।'); }
+  }catch(e){ console.error('storage set failed', e); showToast('সংরক্ষণ ব্যর্থ হয়েছে', 'error'); }
 }
 async function storeGet(key){
   if(!firebaseReady) return null;
@@ -962,6 +1002,17 @@ async function saveAllNarrativeTemplates(){
   showToast('ডিফল্ট বিবরণ সংরক্ষণ করা হয়েছে', 'success');
 }
 
+/* ===================== TOAST NOTIFICATION ===================== */
+function showToast(msg, type){
+  const box = document.getElementById('toastBox');
+  if(!box) return;
+  const div = document.createElement('div');
+  div.className = 'toast-item ' + (type||'');
+  div.innerHTML = '<span class="toast-icon">' + (type==='success'?'✅':'❌') + '</span><span>' + escapeHtml(msg) + '</span>';
+  box.appendChild(div);
+  setTimeout(()=>{ div.style.animation='toastFade .4s ease forwards'; setTimeout(()=>div.remove(),400); }, 4000);
+}
+
 /* ===================== PASSWORD CHANGE ===================== */
 function changeAdminPassword(){
   const oldPass = document.getElementById('oldPass').value;
@@ -1073,13 +1124,13 @@ function activateTab(tab){
   if(tab === 'area' && !adminUnlocked){
     const pass = prompt('এডমিন প্যানেলে ঢুকতে পাসওয়ার্ড দিন:');
     if(pass === null) return; // cancelled
-    if(pass !== ADMIN_PASSWORD){ alert('পাসওয়ার্ড ভুল হয়েছে।'); return; }
+    if(pass !== ADMIN_PASSWORD){ showToast('পাসওয়ার্ড ভুল', 'error'); return; }
     adminUnlocked = true;
   }
   if(tab === 'saved' && !savedUnlocked){
     const pass = prompt('সেভ করা তালিকা দেখতে পাসওয়ার্ড দিন:');
     if(pass === null) return;
-    if(pass !== ADMIN_PASSWORD){ alert('পাসওয়ার্ড ভুল হয়েছে।'); return; }
+    if(pass !== ADMIN_PASSWORD){ showToast('পাসওয়ার্ড ভুল', 'error'); return; }
     savedUnlocked = true;
   }
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab));
@@ -1787,7 +1838,7 @@ function removePerson(role, idx){
 /* ===================== SAVE / REUSE PERSONS ===================== */
 async function savePersonFromBlock(role, idx){
   const p = (role==='writer') ? state.writer : state[role][idx];
-  if(!p.name || !p.name.trim()){ alert('সংরক্ষণ করতে হলে নাম আবশ্যক'); return; }
+  if(!p.name || !p.name.trim()){ showToast('সংরক্ষণ করতে হলে নাম আবশ্যক', 'error'); return; }
   const nameKey = p.name.trim().toLowerCase();
   const relKey = (p.father||p.husband||p.fatherOrHusband||'').trim().toLowerCase();
   const existing = personsDB.find(pp =>
@@ -1804,7 +1855,7 @@ async function savePersonFromBlock(role, idx){
   const record = Object.assign({id, savedAt: Date.now()}, p);
   await storeSet('person:'+id, record);
   await loadPersonsDB();
-  alert('"' + p.name + '" সংরক্ষণ করা হয়েছে।');
+  showToast('"' + p.name + '" সংরক্ষণ করা হয়েছে', 'success');
 }
 
 function refreshReuseSelects(){
@@ -1842,7 +1893,7 @@ function reuseIntoWriter(writerId){
 /* ===================== ADMIN: MOUZA / VILLAGE ===================== */
 async function saveMouzaEntry(){
   const name = document.getElementById('am_mouza').value.trim();
-  if(!name){ alert('মৌজার নাম দিন'); return; }
+  if(!name){ showToast('মৌজার নাম দিন', 'error'); return; }
   const rec = {
     union: document.getElementById('am_union').value.trim(),
     thana: document.getElementById('am_thana').value.trim(),
@@ -1857,7 +1908,7 @@ async function saveMouzaEntry(){
 }
 async function saveVillageEntry(){
   const name = document.getElementById('av_village').value.trim();
-  if(!name){ alert('গ্রামের নাম দিন'); return; }
+  if(!name){ showToast('গ্রামের নাম দিন', 'error'); return; }
   const rec = {
     post: document.getElementById('av_post').value.trim(),
     upazila: document.getElementById('av_upazila').value.trim(),
@@ -1886,7 +1937,7 @@ async function deleteVillageEntry(name){
 
 async function saveClassEntry(){
   const name = document.getElementById('ac_class').value.trim();
-  if(!name){ alert('শ্রেণির নাম দিন'); return; }
+  if(!name){ showToast('শ্রেণির নাম দিন', 'error'); return; }
   await storeSet('landclass:'+name, {name});
   document.getElementById('ac_class').value='';
   await loadClassDB();
@@ -1900,7 +1951,7 @@ async function deleteClassEntry(name){
 }
 async function saveOfficeEntry(){
   const name = document.getElementById('ao_office').value.trim();
-  if(!name){ alert('কার্যালয়ের নাম দিন'); return; }
+  if(!name){ showToast('কার্যালয়ের নাম দিন', 'error'); return; }
   await storeSet('regoffice:'+name, {name});
   document.getElementById('ao_office').value='';
   await loadOfficeDB();
@@ -1914,7 +1965,7 @@ async function deleteOfficeEntry(name){
 }
 async function saveWriterEntry(){
   const name = document.getElementById('aw_name').value.trim();
-  if(!name){ alert('লেখকের নাম দিন'); return; }
+  if(!name){ showToast('লেখকের নাম দিন', 'error'); return; }
   const father = document.getElementById('aw_father').value.trim();
   const mother = document.getElementById('aw_mother').value.trim();
   const address = document.getElementById('aw_address').value.trim();
@@ -1942,7 +1993,7 @@ async function deleteWriterEntry(id){
 }
 async function saveOccupationEntry(){
   const name = document.getElementById('ap_occupation').value.trim();
-  if(!name){ alert('পেশার নাম দিন'); return; }
+  if(!name){ showToast('পেশার নাম দিন', 'error'); return; }
   await storeSet('occupation:'+name, {name});
   document.getElementById('ap_occupation').value='';
   await loadOccupationDB();
@@ -1958,7 +2009,7 @@ async function deleteOccupationEntry(name){
 }
 async function saveReligionEntry(){
   const name = document.getElementById('ar_religion').value.trim();
-  if(!name){ alert('ধর্মের নাম দিন'); return; }
+  if(!name){ showToast('ধর্মের নাম দিন', 'error'); return; }
   await storeSet('religion:'+name, {name});
   document.getElementById('ar_religion').value='';
   await loadReligionDB();
@@ -1974,7 +2025,7 @@ async function deleteReligionEntry(name){
 }
 async function saveUnionEntry(){
   const name = document.getElementById('al_union').value.trim();
-  if(!name){ alert('ইউনিয়নের নাম দিন'); return; }
+  if(!name){ showToast('ইউনিয়নের নাম দিন', 'error'); return; }
   await storeSet('union:'+name, {name});
   document.getElementById('al_union').value='';
   await loadUnionDB();
@@ -1988,7 +2039,7 @@ async function deleteUnionEntry(name){
 }
 async function saveUpazilaEntry(){
   const name = document.getElementById('al_upazila').value.trim();
-  if(!name){ alert('উপজেলার নাম দিন'); return; }
+  if(!name){ showToast('উপজেলার নাম দিন', 'error'); return; }
   await storeSet('upazila:'+name, {name});
   document.getElementById('al_upazila').value='';
   await loadUpazilaDB();
@@ -2002,7 +2053,7 @@ async function deleteUpazilaEntry(name){
 }
 async function saveDistrictEntry(){
   const name = document.getElementById('al_district').value.trim();
-  if(!name){ alert('জেলার নাম দিন'); return; }
+  if(!name){ showToast('জেলার নাম দিন', 'error'); return; }
   await storeSet('district:'+name, {name});
   document.getElementById('al_district').value='';
   await loadDistrictDB();
@@ -2016,7 +2067,7 @@ async function deleteDistrictEntry(name){
 }
 async function savePostOfficeEntry(){
   const name = document.getElementById('al_post').value.trim();
-  if(!name){ alert('ডাকঘরের নাম দিন'); return; }
+  if(!name){ showToast('ডাকঘরের নাম দিন', 'error'); return; }
   await storeSet('postoffice:'+name, {name});
   document.getElementById('al_post').value='';
   await loadPostOfficeDB();
@@ -2030,7 +2081,7 @@ async function deletePostOfficeEntry(name){
 }
 async function saveLandOfficeEntry(){
   const name = document.getElementById('al_landoffice').value.trim();
-  if(!name){ alert('ভূমি অফিসের নাম দিন'); return; }
+  if(!name){ showToast('ভূমি অফিসের নাম দিন', 'error'); return; }
   await storeSet('landoffice:'+name, {name});
   document.getElementById('al_landoffice').value='';
   await loadLandOfficeDB();
@@ -2067,7 +2118,7 @@ async function saveDefaultNarrative(key){
   const text = el.value || '';
   await storeSet('narrative_default:'+key, {text});
   narrativeDefaults[deedMap[key]] = text;
-  alert('ডিফল্ট বিবরণ সংরক্ষণ করা হয়েছে।');
+  showToast('ডিফল্ট বিবরণ সংরক্ষণ করা হয়েছে', 'success');
 }
 
 function renderAdminTables(){
@@ -2173,7 +2224,7 @@ async function renderSavedListTable(){
 }
 async function loadDraftByKeyAndGo(key){
   const data = await storeGet(key);
-  if(!data){ alert('খসড়া লোড করা যায়নি'); return; }
+  if(!data){ showToast('খসড়া লোড করা যায়নি', 'error'); return; }
   applyFullState(data);
   currentDraftId = key.replace('deeddraft:','');
   regenerateNarrative();
@@ -2246,12 +2297,12 @@ async function saveDeedDraftAsNew(){
   await loadDraftList();
   refreshDashboard();
   document.getElementById('draftSelect').value = 'deeddraft:'+id;
-  alert('"'+name+'" নতুন খসড়া হিসেবে সংরক্ষণ করা হয়েছে। এরপর থেকে "পুনরায় খসড়া সংরক্ষণ করুন" চাপলে এই একই খসড়া হালনাগাদ হবে।');
+  showToast('"'+name+'" নতুন খসড়া সংরক্ষণ করা হয়েছে', 'success');
 }
 
 async function resaveDeedDraft(){
   if(!currentDraftId){
-    alert('এখনো কোনো খসড়া "নতুন করে সংরক্ষণ" করা হয়নি বা লোড করা হয়নি। প্রথমে "নতুন করে খসড়া সংরক্ষণ করুন" বাটনে চাপুন, অথবা "সেভ করা তালিকা" থেকে একটি পুরনো খসড়া লোড করুন।');
+    showToast('কোনো খসড়া লোড করা হয়নি', 'error');
     return;
   }
   const old = await storeGet('deeddraft:'+currentDraftId);
@@ -2262,7 +2313,7 @@ async function resaveDeedDraft(){
   await loadDraftList();
   refreshDashboard();
   document.getElementById('draftSelect').value = 'deeddraft:'+currentDraftId;
-  alert('"'+data.savedName+'" খসড়া পুনরায় সংরক্ষণ (হালনাগাদ) করা হয়েছে।');
+  showToast('"'+data.savedName+'" খসড়া হালনাগাদ করা হয়েছে', 'success');
 }
 
 async function loadDraftList(){
@@ -2276,18 +2327,18 @@ async function loadDraftList(){
 
 async function loadSelectedDraft(){
   const sel = document.getElementById('draftSelect');
-  if(!sel.value){ alert('একটি খসড়া নির্বাচন করুন'); return; }
+  if(!sel.value){ showToast('একটি খসড়া নির্বাচন করুন', 'error'); return; }
   const data = await storeGet(sel.value);
-  if(!data){ alert('খসড়া লোড করা যায়নি'); return; }
+  if(!data){ showToast('খসড়া লোড করা যায়নি', 'error'); return; }
   applyFullState(data);
   currentDraftId = sel.value.replace('deeddraft:','');
   regenerateNarrative();
-  alert('খসড়া লোড হয়েছে। এখন প্রয়োজনীয় তথ্য পরিবর্তন করে "পুনরায় খসড়া সংরক্ষণ করুন" বা Word ডাউনলোড করতে পারেন।');
+  showToast('খসড়া লোড হয়েছে', 'success');
 }
 
 async function deleteSelectedDraft(){
   const sel = document.getElementById('draftSelect');
-  if(!sel.value){ alert('একটি খসড়া নির্বাচন করুন'); return; }
+  if(!sel.value){ showToast('একটি খসড়া নির্বাচন করুন', 'error'); return; }
   if(!confirm('এই খসড়া মুছে ফেলতে চান?')) return;
   await storeDelete(sel.value);
   await loadDraftList();
@@ -2373,6 +2424,7 @@ function addPersonTokensToMap(map, list, prefix, simple){
       map[`${prefix}_${n}_ধর্ম`] = p.religion || '';
       map[`${prefix}_${n}_পেশা`] = p.occupation || '';
       map[`${prefix}_${n}_মোবাইল`] = p.mobile || '';
+      map[`${prefix}_${n}_জাতীয়তা`] = p.nationality || p.mobile || '';
       map[`${prefix}_${n}_পরিমাণ`] = p.share ? toBnDigits(p.share) : '';
       map[`${prefix}_${n}_গ্রাম`] = p.pVillage || '';
       map[`${prefix}_${n}_ডাকঘর`] = p.pPost || '';
@@ -2550,9 +2602,9 @@ function htmlFragmentToRtf(htmlFragment, defaultJustify){
 }
 async function exportCustomWord(){
   const sel = document.getElementById('templateSelectForExport');
-  if(!sel || !sel.value){ alert('প্রথমে একটা টেমপ্লেট নির্বাচন করুন। কোনো টেমপ্লেট না থাকলে "এডমিন" ট্যাবে গিয়ে একটা তৈরি করুন।'); return; }
+  if(!sel || !sel.value){ showToast('টেমপ্লেট নির্বাচন করুন', 'error'); return; }
   const data = await storeGet('customtemplate:'+sel.value, true);
-  if(!data || !data.text){ alert('টেমপ্লেট লোড করা যায়নি'); return; }
+  if(!data || !data.text){ showToast('টেমপ্লেট লোড করা যায়নি', 'error'); return; }
   const map = buildFieldMap();
   let filled = data.text.replace(/\{\{#([^}]+?)\}\}([\s\S]*?)\{\{\/\1\}\}\n?/g, (match, key, inner)=>{
     const trimmedKey = key.trim();
@@ -2595,20 +2647,20 @@ async function loadTemplateList(){
 
 async function saveNamedTemplate(){
   const name = document.getElementById('templateNameInput').value.trim();
-  if(!name){ alert('টেমপ্লেটের একটা নাম দিন'); return; }
+  if(!name){ showToast('টেমপ্লেটের নাম দিন', 'error'); return; }
   const text = document.getElementById('customTemplateText').value;
-  if(!text.trim()){ alert('টেমপ্লেটের লেখা খালি রাখা যাবে না'); return; }
+  if(!text.trim()){ showToast('টেমপ্লেটের লেখা খালি রাখা যাবে না', 'error'); return; }
   const pageSize = document.getElementById('templatePageSize').value;
   const justify = document.getElementById('templateJustify').checked;
   const fontSize = document.getElementById('templateFontSize').value;
   await storeSet('customtemplate:'+name, {text, pageSize, justify, fontSize});
   await loadTemplateList();
-  alert('"'+name+'" নামে টেমপ্লেট সংরক্ষণ করা হয়েছে। এখন "দলিল তৈরি করুন" ট্যাবের ড্রপডাউনে এটা পাওয়া যাবে।');
+  showToast('"'+name+'" টেমপ্লেট সংরক্ষণ করা হয়েছে', 'success');
 }
 
 async function loadTemplateForEdit(name){
   const data = await storeGet('customtemplate:'+name);
-  if(!data){ alert('টেমপ্লেট লোড করা যায়নি'); return; }
+  if(!data){ showToast('টেমপ্লেট লোড করা যায়নি', 'error'); return; }
   document.getElementById('templateNameInput').value = name;
   document.getElementById('customTemplateText').value = data.text;
   document.getElementById('templatePageSize').value = data.pageSize || 'A4';
@@ -2659,7 +2711,7 @@ function centerSelectionInTemplate(){
   const ta = document.getElementById('customTemplateText');
   const start = ta.selectionStart, end = ta.selectionEnd;
   const selected = ta.value.slice(start, end);
-  if(!selected){ alert('আগে যে লেখা বা টেবিলের অংশ সেন্টারে আনতে চান তা মাউস দিয়ে সিলেক্ট (হাইলাইট) করুন, তারপর এই বাটনে চাপুন।'); return; }
+  if(!selected){ showToast('আগে লেখা সিলেক্ট করুন', 'error'); return; }
   const wrapped = `<div style="text-align:center;">${selected}</div>`;
   ta.value = ta.value.slice(0,start) + wrapped + ta.value.slice(end);
   ta.focus();
@@ -2694,7 +2746,7 @@ function makeSelectionBiggerInTemplate(){
   const ta = document.getElementById('customTemplateText');
   const start = ta.selectionStart, end = ta.selectionEnd;
   const selected = ta.value.slice(start, end);
-  if(!selected){ alert('আগে যে লেখা বড় করতে চান তা মাউস দিয়ে সিলেক্ট (হাইলাইট) করুন, তারপর এই বাটনে চাপুন।'); return; }
+  if(!selected){ showToast('আগে লেখা সিলেক্ট করুন', 'error'); return; }
   const sizeStr = prompt('কত পয়েন্ট (pt) সাইজ চান? (সাধারণ লেখা ১২pt, শিরোনামের জন্য ১৬-২০pt ভালো)', '18');
   if(!sizeStr) return;
   const size = parseInt(bnToEnDigits(sizeStr)) || 18;
@@ -2709,7 +2761,7 @@ function makeTextBiggerInTemplate(){
   const ta = document.getElementById('customTemplateText');
   const start = ta.selectionStart, end = ta.selectionEnd;
   const selected = ta.value.slice(start, end);
-  if(!selected){ alert('আগে যে লেখা বড় করতে চান তা মাউস দিয়ে সিলেক্ট (হাইলাইট) করুন, তারপর এই বাটনে চাপুন।'); return; }
+  if(!selected){ showToast('আগে লেখা সিলেক্ট করুন', 'error'); return; }
   const sizeStr = prompt('কত সাইজ (পয়েন্ট) করতে চান? সাধারণ লেখা ১২ পয়েন্ট।', '18');
   if(!sizeStr) return;
   const size = parseInt(bnToEnDigits(sizeStr)) || 18;
@@ -2775,18 +2827,70 @@ function htmlToDocxBlocks(container, defaultAlign, defaultSize){
     const tag = node.tagName.toLowerCase();
     if(tag === 'table'){
       const rows = [];
+      const borderAttr = node.getAttribute('border');
+      const styleAttr = (node.getAttribute && node.getAttribute('style')) || '';
+      const hasBorder = borderAttr === '1' || borderAttr === '2';
+      const boxOnly = /box-only/.test(styleAttr);
+
+      // Build border object safely
+      let tblBorders = undefined;
+      if(!hasBorder && borderAttr !== '1' && borderAttr !== '2'){
+        // border="0" or no border = completely borderless
+        tblBorders = {
+          top: {style: "none", size: 0, color: "FFFFFF"},
+          bottom: {style: "none", size: 0, color: "FFFFFF"},
+          left: {style: "none", size: 0, color: "FFFFFF"},
+          right: {style: "none", size: 0, color: "FFFFFF"},
+          insideHorizontal: {style: "none", size: 0, color: "FFFFFF"},
+          insideVertical: {style: "none", size: 0, color: "FFFFFF"},
+        };
+      } else if(boxOnly){
+        // Only outer border, no inner lines
+        tblBorders = {
+          top: {style: "single", size: 1, color: "000000"},
+          bottom: {style: "single", size: 1, color: "000000"},
+          left: {style: "single", size: 1, color: "000000"},
+          right: {style: "single", size: 1, color: "000000"},
+          insideHorizontal: {style: "none", size: 0, color: "FFFFFF"},
+          insideVertical: {style: "none", size: 0, color: "FFFFFF"},
+        };
+      }
+      // If hasBorder and not boxOnly, leave borders undefined (docx default = all borders)
+
       node.querySelectorAll('tr').forEach(tr=>{
         const cells = [];
+        const cellCount = tr.querySelectorAll('td,th').length || 1;
         tr.querySelectorAll('td,th').forEach(td=>{
           const cellBlocks = htmlToDocxBlocks(td, defaultAlign, defaultSize);
+          const cellAlignAttr = td.getAttribute('align');
+          const cellStyle = (td.getAttribute && td.getAttribute('style')) || '';
+          let cellAlign = defaultAlign;
+          if(cellAlignAttr === 'center') cellAlign = docx.AlignmentType.CENTER;
+          else if(cellAlignAttr === 'right') cellAlign = docx.AlignmentType.RIGHT;
+          else if(cellAlignAttr === 'left') cellAlign = docx.AlignmentType.LEFT;
+          else if(/text-align:\s*center/.test(cellStyle)) cellAlign = docx.AlignmentType.CENTER;
+          else if(/text-align:\s*right/.test(cellStyle)) cellAlign = docx.AlignmentType.RIGHT;
+          else if(/text-align:\s*left/.test(cellStyle)) cellAlign = docx.AlignmentType.LEFT;
+
+          let cellWidth = 100 / cellCount;
+          const widthMatch = cellStyle.match(/width:\s*(\d+(?:\.\d+)?)%/);
+          if(widthMatch) cellWidth = parseFloat(widthMatch[1]);
+
           cells.push(new docx.TableCell({
-            children: cellBlocks.length ? cellBlocks : [new docx.Paragraph('')],
-            width: {size: 100/Math.max(tr.children.length,1), type: docx.WidthType.PERCENTAGE}
+            children: cellBlocks.length ? cellBlocks : [new docx.Paragraph({children:[], alignment: cellAlign})],
+            width: {size: cellWidth, type: docx.WidthType.PERCENTAGE},
           }));
         });
         if(cells.length) rows.push(new docx.TableRow({children:cells}));
       });
-      if(rows.length) blocks.push(new docx.Table({rows, width:{size:100,type:docx.WidthType.PERCENTAGE}}));
+      if(rows.length){
+        const tblOpts = {
+          rows,
+          width: {size:100, type: docx.WidthType.PERCENTAGE},
+        };
+        if(tblBorders) tblOpts.borders = tblBorders;
+        blocks.push(new docx.Table(tblOpts));
+      }
     } else if(tag === 'h1' || tag === 'h2'){
       blocks.push(new docx.Paragraph({
         children: parseInlineRuns(node, {bold:true, size: tag==='h1'?32:26}),
@@ -2801,7 +2905,7 @@ function htmlToDocxBlocks(container, defaultAlign, defaultSize){
       } else {
         const st = styleAttrs(node);
         const runs = parseInlineRuns(node, {bold:false, size: st.size||defaultSize});
-        if(runs.length) blocks.push(new docx.Paragraph({children: runs, alignment: st.align || defaultAlign, spacing:{after:120}}));
+        if(runs.length) blocks.push(new docx.Paragraph({children: runs, alignment: st.align || defaultAlign, spacing:{after:80}}));
       }
     } else {
       if(node.querySelector('table')){
@@ -2809,7 +2913,7 @@ function htmlToDocxBlocks(container, defaultAlign, defaultSize){
       } else {
         const st = styleAttrs(node);
         const runs = parseInlineRuns(node, {bold:false, size: st.size||defaultSize});
-        if(runs.length) blocks.push(new docx.Paragraph({children: runs, alignment: st.align || defaultAlign, spacing:{after:120}}));
+        if(runs.length) blocks.push(new docx.Paragraph({children: runs, alignment: st.align || defaultAlign, spacing:{after:80}}));
       }
     }
   });
@@ -2946,7 +3050,34 @@ function buildDocHtml(){
     h2{font-size:13pt;border-bottom:1px solid #000;padding-bottom:2px;margin-top:22px;}
     table{width:100%;border-collapse:collapse;}
     td{vertical-align:top;padding:4px;}
-  </style></head>
+    .toast-item{
+    background:var(--paper-2);
+    color:var(--ink);
+    border-left:4px solid var(--danger);
+    padding:12px 18px;
+    border-radius:4px;
+    box-shadow:0 4px 12px rgba(0,0,0,.15);
+    font-family:'Hind Siliguri',sans-serif;
+    font-size:14px;
+    min-width:260px;
+    max-width:340px;
+    animation:toastSlide .35s ease;
+    pointer-events:auto;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:8px;
+  }
+  .toast-item.success{border-left-color:var(--seal);}
+  .toast-item .toast-icon{font-size:18px;}
+  @keyframes toastSlide{
+    from{transform:translateX(120%);opacity:0;}
+    to{transform:translateX(0);opacity:1;}
+  }
+  @keyframes toastFade{
+    to{transform:translateX(120%);opacity:0;}
+  }
+</style></head>
   <body lang="bn-BD">
     <h1>গণপ্রজাতন্ত্রী বাংলাদেশ সরকার<br/>${escapeHtml(g('deedType'))}</h1>
     <p><b>রেজিস্ট্রেশন কার্যালয়ের নাম:</b> ${escapeHtml(g('regOffice'))}</p>
