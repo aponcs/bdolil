@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>আপন কম্পিউটার এন্ড ষ্টেশনারীজ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;600;700&family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@600;700&family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <style>
   :root{
     --ink:#1c2b22;
@@ -255,7 +256,6 @@
     to{transform:translateX(120%);opacity:0;}
   }
 </style>
-<base target="_blank">
 </head>
 <body>
 
@@ -363,7 +363,7 @@
     <h2>৫. দলিলের মূল বিবরণ <span class="num">স্বয়ংক্রিয় প্রজন্মিত</span></h2>
     <p class="empty-note" style="margin-top:-4px;">দাতা/গ্রহীতা সংখ্যা, নাম, মূল্য ও জমির তথ্য অনুযায়ী নিচের বিবরণ (একবচন/বহুবচন সহ) স্বয়ংক্রিয়ভাবে তৈরি হয়। প্রয়োজনে সরাসরি সম্পাদনা করুন — সম্পাদিত লেখাই Word ফাইলে যাবে।</p>
     <div class="row-actions" style="margin-top:0;">
-      <button type="button" class="btn small ghost" onclick="regenerateNarrative()">বিবরণ পুনরায় তৈরি করুন</button>
+      <button type="button" class="btn small ghost" onclick="regenerateNarrative(true)">বিবরণ পুনরায় তৈরি করুন</button>
     </div>
     <div class="field" style="margin-top:10px;"><textarea id="narrativeText" lang="bn" spellcheck="true" style="min-height:170px;"></textarea></div>
   </div>
@@ -575,24 +575,6 @@
   </div>
 
   <div class="card">
-    <h2>দলিলের বিবরণের ডিফল্ট টেমপ্লেট</h2>
-    <p class="empty-note" style="margin-top:-4px;">প্রতিটি দলিলের ধরনের জন্য ডিফল্ট বিবরণ লিখে রাখুন। দলিল তৈরির সময় ধরন বেছে নিলে এখানে লেখা বিবরণ স্বয়ংক্রিয়ভাবে ৫নং ঘরে বসে যাবে।</p>
-
-    <div class="section-sub">সাফ কবলা</div>
-    <div class="field"><textarea id="nt_saf" style="min-height:120px;" placeholder="সাফ কবলার ডিফল্ট বিবরণ লিখুন..."></textarea></div>
-
-    <div class="section-sub">দানপত্র</div>
-    <div class="field"><textarea id="nt_dan" style="min-height:120px;" placeholder="দানপত্রের ডিফল্ট বিবরণ লিখুন..."></textarea></div>
-
-    <div class="section-sub">হেবা ঘোষণাপত্র</div>
-    <div class="field"><textarea id="nt_heba" style="min-height:120px;" placeholder="হেবা ঘোষণাপত্রের ডিফল্ট বিবরণ লিখুন..."></textarea></div>
-
-    <div class="row-actions">
-      <button class="btn" onclick="saveAllNarrativeTemplates()">সংরক্ষণ করুন</button>
-    </div>
-  </div>
-
-<div class="card">
     <h2>এলাকা-সংক্রান্ত তালিকা</h2>
     <p class="empty-note" style="margin-top:-4px;">মৌজা ও গ্রাম যোগ করার আগে এখানে ইউনিয়ন, উপজেলা, জেলা, ডাকঘর ও ভূমি (তফসিল) অফিসের নাম যোগ করে নিন — তাহলে নিচে মৌজা/গ্রাম যোগ করার সময় এগুলো ড্রপডাউন থেকে বেছে নেওয়া যাবে, বারবার টাইপ করতে হবে না।</p>
 
@@ -758,10 +740,9 @@
 
 <!-- ===================== FIREBASE SETUP ===================== -->
 <!-- ধাপ ৩ অনুযায়ী নিজের ফায়ারবেজ কনফিগ এখানে বসান -->
-<script src="https://unpkg.com/lucide@latest"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/lucide@0.469.0/dist/umd/lucide.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-<script src="https://unpkg.com/docx@9.7.1/dist/index.iife.js"></script>
 <script>
 const firebaseConfig = {
   apiKey: "AIzaSyBy2t1Me3jOd5CsHqo9Wbv2YT19TX17oLY",
@@ -776,6 +757,7 @@ let firebaseReady = false;
 try{
   firebase.initializeApp(firebaseConfig);
   db = firebase.firestore();
+  db.enablePersistence({synchronizeTabs:true}).catch(()=>{});
   firebaseReady = true;
 }catch(e){
   console.error('Firebase init failed — কনফিগ ঠিকভাবে বসানো হয়নি', e);
@@ -794,11 +776,18 @@ function splitKey(key){
   return {col, id};
 }
 async function storeSet(key, value){
-  if(!firebaseReady){ showToast('Firebase কনফিগ করা হয়নি', 'error'); return; }
+  if(!firebaseReady){ showToast('Firebase কনফিগ করা হয়নি', 'error'); return false; }
   try{
     const {col,id} = splitKey(key);
     await db.collection(col).doc(id).set({ value: JSON.stringify(value) });
-  }catch(e){ console.error('storage set failed', e); showToast('সংরক্ষণ ব্যর্থ হয়েছে', 'error'); }
+    return true;
+  }catch(e){ console.error('storage set failed', e); showToast('সংরক্ষণ ব্যর্থ হয়েছে', 'error'); return false; }
+}
+async function storeCount(prefix){
+  if(!firebaseReady) return 0;
+  const col = prefix.replace(/:$/,'');
+  try{ const r = await db.collection(col).count().get(); return r.data().count; }
+  catch(e){ try{ return (await db.collection(col).get()).size; }catch(e2){ return 0; } }
 }
 async function storeGet(key){
   if(!firebaseReady) return null;
@@ -990,42 +979,14 @@ function generateAffidavit(){
 দলিলে বর্ণিত কোনো তথ্য ভুলবশত লিপিবদ্ধ হইয়া থাকিলে তজ্জন্য ${dGr.pron} দায়ী থাকিব এবং প্রয়োজনে নিজ খরচায় ভুল শুদ্ধ করিয়া ক্ষতিপূরণসহ নতুন দলিল প্রস্তুত ও রেজিস্ট্রি করিয়া দিতে বাধ্য থাকিব। দলিলে বর্ণিত সম্পত্তিতে ${dGr.poss} বৈধ স্বত্ব ও অধিকার বহাল আছে এবং প্রদত্ত বিবরণ ${dGr.poss} জ্ঞান ও বিশ্বাসমতে সত্য।`;
 }
 
-function regenerateNarrative(){
+let narrativeEdited = false;
+function regenerateNarrative(force){
+  if(force === true) narrativeEdited = false;
+  if(narrativeEdited) return;
   document.getElementById('narrativeText').value = generateNarrative();
 }
-
-/* ===================== NARRATIVE TEMPLATES ===================== */
-let narrativeTemplateDB = {}; // deedType -> text
-
-async function loadNarrativeTemplates(){
-  narrativeTemplateDB = {};
-  const types = ['সাফ কবলা', 'দানপত্র', 'হেবা ঘোষণাপত্র'];
-  for(const type of types){
-    const key = 'narrativetemplate:' + type.replace(/\s+/g, '_');
-    const data = await storeGet(key);
-    if(data && data.text) narrativeTemplateDB[type] = data.text;
-  }
-  const ntSaf = document.getElementById('nt_saf');
-  const ntDan = document.getElementById('nt_dan');
-  const ntHeba = document.getElementById('nt_heba');
-  if(ntSaf) ntSaf.value = narrativeTemplateDB['সাফ কবলা'] || '';
-  if(ntDan) ntDan.value = narrativeTemplateDB['দানপত্র'] || '';
-  if(ntHeba) ntHeba.value = narrativeTemplateDB['হেবা ঘোষণাপত্র'] || '';
-}
-
-async function saveAllNarrativeTemplates(){
-  const types = [
-    {id:'nt_saf', name:'সাফ কবলা'},
-    {id:'nt_dan', name:'দানপত্র'},
-    {id:'nt_heba', name:'হেবা ঘোষণাপত্র'}
-  ];
-  for(const t of types){
-    const text = document.getElementById(t.id).value;
-    await storeSet('narrativetemplate:' + t.name.replace(/\s+/g, '_'), {text});
-  }
-  await loadNarrativeTemplates();
-  showToast('ডিফল্ট বিবরণ সংরক্ষণ করা হয়েছে', 'success');
-}
+let narrTimer = null;
+function scheduleNarrativeRefresh(){ clearTimeout(narrTimer); narrTimer = setTimeout(()=>regenerateNarrative(), 250); }
 
 /* ===================== TOAST NOTIFICATION ===================== */
 function showToast(msg, type){
@@ -1164,7 +1125,7 @@ function activateTab(tab){
     const sb = document.getElementById('sidebar');
     if(sb) sb.classList.remove('expanded');
   }
-  if(tab === 'area'){ renderAdminTables(); renderPersonsTable(); loadTemplateList(); }
+  if(tab === 'area'){ renderAdminTables(); renderPersonsTable(); ensureAdminLists().then(()=>{ renderAdminTables(); renderPersonsTable(); }); }
   if(tab === 'saved') renderSavedListTable();
   if(tab === 'home') refreshDashboard();
   window.scrollTo({top:0, behavior:'smooth'});
@@ -1216,18 +1177,16 @@ function toggleTheme(){
 
 async function refreshDashboard(){
   try{
-    const [drafts, mouzas, writers] = await Promise.all([
-      storeList('deeddraft:'), storeList('mouza:'), storeList('writer:')
-    ]);
-    document.getElementById('dashDrafts').textContent = toBnDigits(drafts.length);
-    document.getElementById('dashMouza').textContent = toBnDigits(mouzas.length);
-    document.getElementById('dashWriters').textContent = toBnDigits(writers.length);
+    await ensureDraftIndex();
+    const [d, m, w] = await Promise.all([storeCount('draftmeta:'), storeCount('mouza:'), storeCount('writer:')]);
+    document.getElementById('dashDrafts').textContent = toBnDigits(d);
+    document.getElementById('dashMouza').textContent = toBnDigits(m);
+    document.getElementById('dashWriters').textContent = toBnDigits(w);
   }catch(e){}
 }
 
 /* ===================== INIT ===================== */
 async function init(){
-  // 1. Render initial UI immediately so form, buttons, and icons display instantly
   renderAll();
   bindSimpleFieldPreviews();
   if(window.lucide) lucide.createIcons();
@@ -1236,26 +1195,41 @@ async function init(){
     if(el) el.addEventListener('input', ()=> stripDigitsFromField(el));
   });
   if(ENTRY_ONLY_MODE) activateTab('deed');
-
-  // 2. Load Firestore data in the background without blocking the screen
-  try {
-    await Promise.allSettled([
-      loadMouzaDB(), loadVillageDB(), loadPersonsDB(),
-      loadClassDB(), loadOfficeDB(), loadWritersDB(),
-      loadOccupationDB(), loadReligionDB(),
-      loadUnionDB(), loadUpazilaDB(), loadDistrictDB(),
-      loadPostOfficeDB(), loadLandOfficeDB(),
-      loadDraftList(), loadTemplateList(), loadNarrativeDefaults()
-    ]);
-  } catch(e) {
-    console.warn('Background database sync error:', e);
-  }
-
-  // 3. Update dashboard and select options that depend on loaded database content
   refreshDashboard();
-  refreshReuseSelects();
+  // শুধু ফর্মের জন্য জরুরি তথ্য আগে লোড হয়
+  await Promise.allSettled([
+    loadMouzaDB(), loadVillageDB(), loadClassDB(), loadOfficeDB(),
+    loadWritersDB(), loadOccupationDB(), loadReligionDB(), loadNarrativeDefaults()
+  ]);
+  ['donors','grantees'].forEach(renderPersonList);
+  regenerateNarrative();
   if(window.lucide) lucide.createIcons();
+  // বাকিগুলো পরে, ব্যাকগ্রাউন্ডে
+  setTimeout(()=>{ loadPersonsDB(); loadDraftList(); loadTemplateList(); }, 300);
+  setTimeout(()=>{ loadDocx().catch(()=>{}); }, 5000);
 }
+let adminListsPromise = null;
+function ensureAdminLists(){
+  return adminListsPromise || (adminListsPromise = Promise.allSettled([loadUnionDB(), loadUpazilaDB(), loadDistrictDB(), loadPostOfficeDB(), loadLandOfficeDB()]));
+}
+let docxPromise = null;
+function loadDocx(){
+  if(window.docx) return Promise.resolve();
+  if(docxPromise) return docxPromise;
+  const urls = ['https://cdn.jsdelivr.net/npm/docx@9.7.1/dist/index.iife.js','https://unpkg.com/docx@9.7.1/dist/index.iife.js'];
+  docxPromise = (async()=>{
+    for(const u of urls){
+      try{
+        await new Promise((res,rej)=>{ const sc=document.createElement('script'); sc.src=u; sc.onload=res; sc.onerror=rej; document.head.appendChild(sc); });
+        if(window.docx) return;
+      }catch(e){}
+    }
+    docxPromise = null;
+    throw new Error('docx load failed');
+  })();
+  return docxPromise;
+}
+document.addEventListener('DOMContentLoaded', ()=>{ if(window.lucide) lucide.createIcons(); });
 init();
 
 async function loadMouzaDB(){
@@ -1295,7 +1269,7 @@ async function loadOfficeDB(){
   const items = await storeListWithData('regoffice:');
   items.forEach(({value})=>{ officeDB.push(value.name); });
   populateSelect('regOffice', officeDB, '');
-  if(officeDB.length){ document.getElementById('regOffice').value = officeDB[0]; }
+  if(officeDB.length && !document.getElementById('regOffice').value){ document.getElementById('regOffice').value = officeDB[0]; }
 }
 async function loadWritersDB(){
   writersDB = [];
@@ -1398,14 +1372,12 @@ function bindSimpleFieldPreviews(){
   const regEl = document.getElementById('regOffice');
   if(regEl) regEl.addEventListener('change', regenerateNarrative);
 
+  const nt = document.getElementById('narrativeText');
+  if(nt) nt.addEventListener('input', ()=>{ narrativeEdited = true; });
   const deedEl = document.getElementById('deedType');
   if(deedEl) deedEl.addEventListener('change', function(){
-    const type = this.value;
-    const nt = document.getElementById('narrativeText');
-    if(narrativeTemplateDB[type] && !nt.value.trim()){
-      nt.value = narrativeTemplateDB[type];
-    }
-    regenerateNarrative();
+    if(narrativeEdited && !confirm('আপনি বিবরণ হাতে সম্পাদনা করেছেন। দলিলের ধরন বদলালে নতুন বিবরণ বসবে। চালিয়ে যাবেন?')) return;
+    regenerateNarrative(true);
   });
 }
 
@@ -1432,6 +1404,7 @@ function renderPersonList(role){
   const countIdMap = {donors:'donorCount', grantees:'granteeCount', witnesses:'witnessCount', identifiers:'identifierCount'};
   document.getElementById(countIdMap[role]).textContent = toBnDigits(state[role].length);
   if(role==='donors' || role==='grantees') refreshShareValidation();
+  refreshReuseSelects();
 }
 
 function nidValidationHtml(){
@@ -1747,8 +1720,8 @@ function buildScheduleBlock(idx, s){
         const kind = f==='price' ? 'money' : f==='landAmount' ? 'land' : (f==='mutationOld'||f==='mutationNew') ? 'mutation' : undefined;
         wEl.textContent = numPreview(el.value, kind);
       }
-      regenerateNarrative();
-      refreshScheduleTotals();
+      scheduleNarrativeRefresh();
+      if(f==='landAmount' || f==='price') refreshScheduleTotals();
     });
   });
 
@@ -1821,8 +1794,17 @@ function refreshScheduleTotals(){
   document.getElementById('totalScheduleLand').textContent = toBnDigits(totalLand);
   document.getElementById('totalSchedulePrice').textContent = toBnDigits(totalPrice);
   syncAutoShares();
-  renderPersonList('donors');
-  renderPersonList('grantees');
+  updateShareInputsInPlace();
+  refreshShareValidation();
+}
+function updateShareInputsInPlace(){
+  [['donors','donorList'],['grantees','granteeList']].forEach(([role,id])=>{
+    const blocks = document.getElementById(id).children;
+    state[role].forEach((p,i)=>{
+      const inp = blocks[i] && blocks[i].querySelector('[data-share-input]');
+      if(inp && !p.shareCustom) inp.value = p.share;
+    });
+  });
 }
 
 function totalScheduleLandValue(){
@@ -2260,9 +2242,7 @@ function renderPersonsTable(){
 
 async function renderSavedListTable(){
   const t = document.getElementById('savedListTable');
-  const rows = await storeListWithData('deeddraft:');
-  const items = rows.filter(r=>r.value).map(r=>({key:r.key, name:r.value.savedName||r.key, savedAt:r.value.savedAt||''}));
-  items.sort((a,b)=> (b.savedAt||'').localeCompare(a.savedAt||''));
+  const items = await getDraftItems();
   if(!items.length){ t.innerHTML = '<tr><td class="empty-note">এখনো কোনো খসড়া সংরক্ষণ করা হয়নি।</td></tr>'; return; }
   t.innerHTML = `<tr><th>নাম</th><th>সংরক্ষণের সময়</th><th></th></tr>` +
     items.map(it=>{
@@ -2285,6 +2265,7 @@ async function loadDraftByKeyAndGo(key){
 async function deleteDraftByKey(key){
   if(!confirm('এই খসড়া মুছে ফেলতে চান?')) return;
   await storeDelete(key);
+  await storeDelete('draftmeta:'+key.replace('deeddraft:',''));
   renderSavedListTable();
   refreshDashboard();
 }
@@ -2330,21 +2311,45 @@ function applyFullState(data){
     });
   });
   // Restore narrative text after renderAll to prevent overwrite by regenerateNarrative
-  if(data.fields && data.fields.narrativeText !== undefined){
-    document.getElementById('narrativeText').value = data.fields.narrativeText;
+  const savedNarr = data.fields && data.fields.narrativeText;
+  if(savedNarr !== undefined){
+    document.getElementById('narrativeText').value = savedNarr;
+    narrativeEdited = !!savedNarr && savedNarr !== generateNarrative();
   }
 }
 
+let draftIndexPromise = null;
+function ensureDraftIndex(){
+  if(!draftIndexPromise) draftIndexPromise = (async()=>{
+    const meta = await storeList('draftmeta:');
+    if(meta.length) return;
+    const full = await storeListWithData('deeddraft:'); // একবারই, পুরনো খসড়ার সূচি বানাতে
+    for(const r of full){
+      const id = r.key.replace('deeddraft:','');
+      await storeSet('draftmeta:'+id, {savedName:r.value.savedName||id, savedAt:r.value.savedAt||''});
+    }
+  })();
+  return draftIndexPromise;
+}
+async function getDraftItems(){
+  await ensureDraftIndex();
+  const rows = await storeListWithData('draftmeta:');
+  const items = rows.map(r=>({key:'deeddraft:'+r.key.replace('draftmeta:',''), name:r.value.savedName||r.key, savedAt:r.value.savedAt||''}));
+  items.sort((a,b)=> (b.savedAt||'').localeCompare(a.savedAt||''));
+  return items;
+}
 async function saveDeedDraftAsNew(){
   const firstMouza = (state.schedules[0] && state.schedules[0].mouza) || '';
   const defaultName = [firstMouza, state.donors[0] && state.donors[0].name, state.grantees[0] && state.grantees[0].name].filter(Boolean).join(' - ') || ('খসড়া ' + new Date().toLocaleDateString('bn-BD'));
   const name = prompt('খসড়ার একটি নাম দিন (পরে খুঁজে পেতে সাহায্য করবে):', defaultName);
   if(!name) return;
+  await ensureDraftIndex();
   const id = 'd' + Date.now();
   const data = collectFullState();
   data.savedName = name;
   data.savedAt = new Date().toISOString();
-  await storeSet('deeddraft:'+id, data);
+  if(!(await storeSet('deeddraft:'+id, data))) return;
+  await storeSet('draftmeta:'+id, {savedName:name, savedAt:data.savedAt});
   currentDraftId = id;
   await loadDraftList();
   refreshDashboard();
@@ -2353,15 +2358,13 @@ async function saveDeedDraftAsNew(){
 }
 
 async function resaveDeedDraft(){
-  if(!currentDraftId){
-    showToast('কোনো খসড়া লোড করা হয়নি', 'error');
-    return;
-  }
-  const old = await storeGet('deeddraft:'+currentDraftId);
+  if(!currentDraftId){ showToast('কোনো খসড়া লোড করা হয়নি', 'error'); return; }
+  const old = await storeGet('draftmeta:'+currentDraftId);
   const data = collectFullState();
   data.savedName = old ? old.savedName : ('খসড়া ' + currentDraftId);
   data.savedAt = new Date().toISOString();
-  await storeSet('deeddraft:'+currentDraftId, data);
+  if(!(await storeSet('deeddraft:'+currentDraftId, data))) return;
+  await storeSet('draftmeta:'+currentDraftId, {savedName:data.savedName, savedAt:data.savedAt});
   await loadDraftList();
   refreshDashboard();
   document.getElementById('draftSelect').value = 'deeddraft:'+currentDraftId;
@@ -2370,11 +2373,11 @@ async function resaveDeedDraft(){
 
 async function loadDraftList(){
   const sel = document.getElementById('draftSelect');
-  const rows = await storeListWithData('deeddraft:');
-  const items = rows.filter(r=>r.value).map(r=>({key:r.key, name:r.value.savedName||r.key, savedAt:r.value.savedAt||''}));
-  items.sort((a,b)=> (b.savedAt||'').localeCompare(a.savedAt||''));
+  const items = await getDraftItems();
+  const cur = sel.value;
   sel.innerHTML = '<option value="">— সংরক্ষিত খসড়া লোড করুন —</option>' +
     items.map(it=>`<option value="${escapeHtml(it.key)}">${escapeHtml(it.name)}</option>`).join('');
+  if(items.find(i=>i.key===cur)) sel.value = cur;
 }
 
 async function loadSelectedDraft(){
@@ -2393,16 +2396,18 @@ async function deleteSelectedDraft(){
   if(!sel.value){ showToast('একটি খসড়া নির্বাচন করুন', 'error'); return; }
   if(!confirm('এই খসড়া মুছে ফেলতে চান?')) return;
   await storeDelete(sel.value);
+  await storeDelete('draftmeta:'+sel.value.replace('deeddraft:',''));
   await loadDraftList();
+  refreshDashboard();
 }
 
 /* ===================== RESET ===================== */
 function clearDeedForm(){
   if(!confirm('পুরো ফর্ম রিসেট করতে চান?')) return;
   currentDraftId = null;
-  ['regOffice','extra'].forEach(id=>{
-    const el = document.getElementById(id); if(el) el.value='';
-  });
+  narrativeEdited = false;
+  document.getElementById('extra').value = '';
+  document.getElementById('regOffice').value = officeDB[0] || '';
   state.donors=[blankPerson()]; state.grantees=[blankPerson()];
   state.witnesses=[blankPerson(),blankPerson()]; state.identifiers=[blankPerson()];
   state.writer=blankPerson();
@@ -2662,6 +2667,7 @@ async function exportCustomWord(){
   const sel = document.getElementById('templateSelectForExport');
   if(!sel || !sel.value){ showToast('টেমপ্লেট নির্বাচন করুন', 'error'); return; }
   try {
+    await loadDocx();
     const data = await storeGet('customtemplate:'+sel.value);
     if(!data || !data.text){ showToast('টেমপ্লেট লোড করা যায়নি', 'error'); return; }
     const map = buildFieldMap();
@@ -3264,6 +3270,7 @@ function buildRtfDoc(){
 }
 async function exportWord(){
   try {
+    await loadDocx();
     const html = buildDocHtml();
     const firstMouza = (state.schedules[0] && state.schedules[0].mouza) || '';
     const fname = (document.getElementById('deedType').value || 'দলিল') + '_' + (firstMouza || 'খসড়া');
