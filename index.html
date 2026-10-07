@@ -1178,7 +1178,7 @@ function toggleTheme(){
 async function refreshDashboard(){
   try{
     await ensureDraftIndex();
-    const [d, m, w] = await Promise.all([storeCount('draftmeta:'), storeCount('mouza:'), storeCount('writer:')]);
+    const [d, m, w] = await Promise.all([storeCount('deeddraft:'), storeCount('mouza:'), storeCount('writer:')]);
     document.getElementById('dashDrafts').textContent = toBnDigits(d);
     document.getElementById('dashMouza').textContent = toBnDigits(m);
     document.getElementById('dashWriters').textContent = toBnDigits(w);
@@ -2321,20 +2321,30 @@ function applyFullState(data){
 let draftIndexPromise = null;
 function ensureDraftIndex(){
   if(!draftIndexPromise) draftIndexPromise = (async()=>{
-    const meta = await storeList('draftmeta:');
-    if(meta.length) return;
-    const full = await storeListWithData('deeddraft:'); // একবারই, পুরনো খসড়ার সূচি বানাতে
+    const [nMeta, nFull] = await Promise.all([storeCount('draftmeta:'), storeCount('deeddraft:')]);
+    if(nMeta >= nFull) return;
+    const have = new Set((await storeList('draftmeta:')).map(k=>k.replace('draftmeta:','')));
+    const full = await storeListWithData('deeddraft:');
     for(const r of full){
       const id = r.key.replace('deeddraft:','');
+      if(have.has(id)) continue;
       await storeSet('draftmeta:'+id, {savedName:r.value.savedName||id, savedAt:r.value.savedAt||''});
     }
-  })();
+  })().catch(e=>{ draftIndexPromise = null; });
   return draftIndexPromise;
 }
 async function getDraftItems(){
-  await ensureDraftIndex();
-  const rows = await storeListWithData('draftmeta:');
-  const items = rows.map(r=>({key:'deeddraft:'+r.key.replace('draftmeta:',''), name:r.value.savedName||r.key, savedAt:r.value.savedAt||''}));
+  try{ await ensureDraftIndex(); }catch(e){}
+  const [nMeta, nFull] = await Promise.all([storeCount('draftmeta:'), storeCount('deeddraft:')]);
+  let items;
+  if(nMeta > 0 && nMeta >= nFull){
+    const rows = await storeListWithData('draftmeta:');
+    items = rows.map(r=>({key:'deeddraft:'+r.key.replace('draftmeta:',''), name:r.value.savedName||r.key, savedAt:r.value.savedAt||''}));
+  } else {
+    // সূচি পড়া/লেখা না গেলে সরাসরি আসল খসড়া থেকে তালিকা বানাও (নিরাপদ ফলব্যাক)
+    const rows = await storeListWithData('deeddraft:');
+    items = rows.filter(r=>r.value).map(r=>({key:r.key, name:r.value.savedName||r.key, savedAt:r.value.savedAt||''}));
+  }
   items.sort((a,b)=> (b.savedAt||'').localeCompare(a.savedAt||''));
   return items;
 }
