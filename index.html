@@ -1230,7 +1230,7 @@ function loadDocx(){
   return docxPromise;
 }
 document.addEventListener('DOMContentLoaded', ()=>{ if(window.lucide) lucide.createIcons(); });
-init();
+
 
 async function loadMouzaDB(){
   mouzaDB = {};
@@ -3312,6 +3312,8 @@ function exportRtf(){
     showToast('RTF ফাইল তৈরিতে সমস্যা হয়েছে', 'error');
   }
 }
+
+init();
 </script>
 </body>
 </html>
