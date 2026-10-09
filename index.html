@@ -415,11 +415,10 @@
 
   <div class="card highlight-card">
     <h2><i data-lucide="file-down" class="lucide-icon"></i> দলিল ডাউনলোড করুন</h2>
-    <p class="empty-note" style="margin-top:-4px;">বর্তমান দলিলের তথ্য অনুযায়ী সরাসরি স্ট্যান্ডার্ড Word / RTF ফাইল ডাউনলোড করুন, অথবা কাস্টম টেমপ্লেট বেছে নিন।</p>
+    <p class="empty-note" style="margin-top:-4px;">বর্তমান দলিলের তথ্য অনুযায়ী সরাসরি স্ট্যান্ডার্ড Word ফাইল ডাউনলোড করুন, অথবা কাস্টম টেমপ্লেট বেছে নিন।</p>
     
     <div style="display:flex;flex-wrap:wrap;gap:12px;margin:12px 0 16px;">
       <button type="button" class="btn" onclick="exportWord()"><i data-lucide="download" class="lucide-icon"></i> সাধারণ Word (.docx) ডাউনলোড</button>
-      <button type="button" class="btn ghost" onclick="exportRtf()"><i data-lucide="file-text" class="lucide-icon"></i> Word RTF (.rtf) ডাউনলোড</button>
     </div>
 
     <div style="border-top:1px dashed var(--line);padding-top:14px;margin-top:10px;">
@@ -2610,69 +2609,6 @@ function buildFieldMap(){
   addScheduleTokensToMap(map, state.schedules);
   return map;
 }
-function rtfInline(el, bold){
-  let out = '';
-  el.childNodes.forEach(node=>{
-    if(node.nodeType === 3){
-      out += rtfEsc(node.textContent);
-    } else if(node.nodeType === 1){
-      const tag = node.tagName.toLowerCase();
-      const styleAttr = node.getAttribute('style') || '';
-      if(tag === 'br'){
-        out += /page-break/.test(styleAttr) ? '\\page\n' : '\\line\n';
-      } else if(tag === 'b' || tag === 'strong'){
-        out += '\\b ' + rtfInline(node, true) + '\\b0 ';
-      } else if(tag === 'span' && /font-size/.test(styleAttr)){
-        const m = /font-size:\s*([\d.]+)pt/.exec(styleAttr);
-        const half = m ? Math.round(parseFloat(m[1])*2) : 24;
-        out += `\\fs${half} ` + rtfInline(node, bold) + '\\fs24 ';
-      } else {
-        out += rtfInline(node, bold);
-      }
-    }
-  });
-  return out;
-}
-function rtfTable(table){
-  let out = '';
-  const rows = table.querySelectorAll(':scope > tbody > tr, :scope > tr');
-  rows.forEach(tr=>{
-    const cells = tr.querySelectorAll('td,th');
-    const n = cells.length || 1;
-    const cellWidth = Math.floor(9000/n);
-    let rowDef = '\\trowd\\trgaph108\\trleft0';
-    for(let i=1;i<=n;i++) rowDef += `\\cellx${cellWidth*i}`;
-    out += rowDef + '\n';
-    cells.forEach(td=>{ out += '\\pard\\intbl ' + rtfInline(td,false) + '\\cell\n'; });
-    out += '\\row\n';
-  });
-  return out;
-}
-function htmlFragmentToRtf(htmlFragment, defaultJustify){
-  const container = document.createElement('div');
-  container.innerHTML = htmlFragment;
-  const defAlign = defaultJustify ? '\\qj ' : '\\ql ';
-  let out = '';
-  Array.from(container.childNodes).forEach(node=>{
-    if(node.nodeType === 3){
-      if(node.textContent.trim()) out += '\\pard ' + defAlign + rtfEsc(node.textContent) + '\\par\n';
-      return;
-    }
-    if(node.nodeType !== 1) return;
-    const tag = node.tagName.toLowerCase();
-    const styleAttr = node.getAttribute('style') || '';
-    if(tag === 'table'){
-      out += rtfTable(node) + '\\pard\\par\n';
-    } else if(tag === 'div' && /text-align:\s*center/.test(styleAttr)){
-      out += '\\pard\\qc ' + rtfInline(node,false) + '\\par\n';
-    } else if(tag === 'br'){
-      out += /page-break/.test(styleAttr) ? '\\page\n' : '\\pard\\par\n';
-    } else {
-      out += '\\pard ' + defAlign + rtfInline(node,false) + '\\par\n';
-    }
-  });
-  return out;
-}
 async function exportCustomWord(){
   const sel = document.getElementById('templateSelectForExport');
   if(!sel || !sel.value){ showToast('টেমপ্লেট নির্বাচন করুন', 'error'); return; }
@@ -3179,105 +3115,6 @@ function buildDocHtml(){
   </body></html>`;
 }
 
-/* ===================== RTF EXPORT (native Word format, fixes nukta rendering) ===================== */
-function rtfPersonList(list, title, simple){
-  let out = '';
-  list.forEach((p,i)=>{
-    out += `\\b ${rtfEsc(title+' নং '+toBnDigits(i+1)+':')}\\b0\\par\n`;
-    if(simple){
-      out += rtfLine('নাম', p.name);
-      out += rtfLine('পিতা/স্বামীর নাম', p.fatherOrHusband);
-      out += rtfLine('মাতার নাম', p.mother);
-      out += rtfLine('ঠিকানা', [p.pVillage,p.pPost,p.pUpazila,p.pDistrict].filter(Boolean).join(', '));
-    } else {
-      out += rtfLine('নাম', p.name);
-      out += rtfLine('পিতার নাম', p.father);
-      out += rtfLine('স্বামীর নাম', p.husband||'প্রযোজ্য নহে');
-      out += rtfLine('মাতার নাম', p.mother);
-      if(p.share) out += rtfLine('অংশের/প্রাপ্য পরিমাণ', toBnDigits(p.share));
-      out += rtfLine('জন্ম তারিখ', p.dob);
-      out += rtfLine('ধর্ম', p.religion);
-      out += rtfLine('পেশা', p.occupation);
-      out += rtfLine('মোবাইল নম্বর', p.mobile?toBnDigits(p.mobile):'');
-      out += rtfLine('জাতীয় পরিচয়পত্র/জন্মনিবন্ধন নং', p.nid);
-      out += rtfLine('স্থায়ী ঠিকানা', personAddressStr(p,'perm'));
-      out += rtfLine('বর্তমান ঠিকানা', personAddressStr(p,'present'));
-    }
-    out += '\\par\n';
-  });
-  return out;
-}
-function rtfScheduleBlock(s, idx){
-  let out = `\\b ${rtfEsc('তফসিল নং '+toBnDigits(idx+1))}\\b0\\par\n`;
-  out += rtfLine('জেলা', s.district) + rtfLine('উপজেলা', s.thana) + rtfLine('ইউনিয়ন', s.union) + rtfLine('মৌজা', s.mouza) + rtfLine('ভূমি অফিস', s.office);
-  out += rtfLine('এস.এ জে.এল নং', s.saJl? toBnDigits(s.saJl)+' ('+numberToBanglaWords(parseNum(s.saJl))+')':'');
-  out += rtfLine('আর.এস জে.এল নং', s.rsJl? toBnDigits(s.rsJl)+' ('+numberToBanglaWords(parseNum(s.rsJl))+')':'');
-  out += rtfLine('এস.এ খতিয়ান', s.saKhatian? toBnDigits(s.saKhatian)+' ('+numberToBanglaWords(parseNum(s.saKhatian))+')':'');
-  out += rtfLine('আর.এস খতিয়ান', s.rsKhatian? toBnDigits(s.rsKhatian)+' ('+numberToBanglaWords(parseNum(s.rsKhatian))+')':'');
-  out += rtfLine('ডিপি খতিয়ান', s.dp? toBnDigits(s.dp)+' ('+numberToBanglaWords(parseNum(s.dp))+')':'');
-  out += rtfLine('নামজারি খতিয়ান (সাবেক)', s.mutationOld? toBnDigits(bnToEnDigits(s.mutationOld))+' ('+mutationToWords(s.mutationOld)+')':'');
-  out += rtfLine('নামজারি খতিয়ান (বর্তমান)', s.mutationNew? toBnDigits(bnToEnDigits(s.mutationNew))+' ('+mutationToWords(s.mutationNew)+')':'');
-  out += rtfLine('এস.এ দাগ', s.saDag? toBnDigits(s.saDag)+' ('+numberToBanglaWords(parseNum(s.saDag))+')':'');
-  out += rtfLine('আর.এস দাগ', s.rsDag? toBnDigits(s.rsDag)+' ('+numberToBanglaWords(parseNum(s.rsDag))+')':'');
-  const land = parseNum(s.landAmount);
-  out += rtfLine('জমির পরিমাণ', land? toBnDigits(land)+' একর ('+acreToShotokWords(land)+')':'');
-  out += rtfLine('শ্রেণী', s.landClass);
-  const price = parseNum(s.price);
-  out += rtfLine('মূল্য', price? toBnDigits(price)+' টাকা ('+numberToBanglaWords(price)+' টাকা মাত্র)':'');
-  let bnd = `উত্তরেঃ ${s.bN}; দক্ষিণেঃ ${s.bS}; পূর্বেঃ ${s.bE}; পশ্চিমেঃ ${s.bW}`;
-  if(s.extraBoundaries.length) bnd += '; ' + s.extraBoundaries.map(b=>b.label+'ঃ '+b.value).join('; ');
-  out += rtfLine('চৌহদ্দি', bnd);
-  return out + '\\par\n';
-}
-function buildRtfDoc(){
-  const g = id => document.getElementById(id).value;
-  const schedules = state.schedules;
-  const totalLand = round6(schedules.reduce((sum,s)=>sum+parseNum(s.landAmount),0));
-  const totalPrice = round6(schedules.reduce((sum,s)=>sum+parseNum(s.price),0));
-  const first = schedules[0] || blankSchedule();
-
-  let body = '';
-  body += `\\qc\\b\\fs32 ${rtfEsc('গণপ্রজাতন্ত্রী বাংলাদেশ সরকার')}\\par\n${rtfEsc(g('deedType'))}\\par\\b0\\fs24\\ql\\par\n`;
-  body += rtfLine('রেজিস্ট্রেশন কার্যালয়ের নাম', g('regOffice')) + '\\par\n';
-
-  body += `\\b\\fs28 ${rtfEsc('দলিলের সার সংক্ষেপ')}\\b0\\fs24\\par\n`;
-  body += rtfLine('মৌজার নাম', first.mouza) + rtfLine('ইউনিয়ন', first.union) + rtfLine('উপজেলা', first.thana) + rtfLine('জেলা', first.district);
-  body += rtfLine('মোট জমির পরিমাণ', totalLand? toBnDigits(totalLand)+' একর ('+acreToShotokWords(totalLand)+')':'');
-  body += rtfLine('তফসিল সংখ্যা', toBnDigits(schedules.length));
-  body += rtfLine('মোট মূল্য', totalPrice? toBnDigits(totalPrice)+' টাকা ('+numberToBanglaWords(totalPrice)+' টাকা মাত্র)':'') + '\\par\n';
-
-  body += `\\b\\fs28 ${rtfEsc('দলিলের বিবরণ')}\\b0\\fs24\\par\n`;
-  body += `\\qj ${rtfEsc(document.getElementById('narrativeText').value)}\\ql\\par\\par\n`;
-
-  body += `\\b\\fs28 ${rtfEsc('দলিল দাতা/দাত্রীগণের তথ্য')}\\b0\\fs24\\par\n`;
-  body += rtfPersonList(state.donors, 'দাতা', false);
-
-  body += `\\b\\fs28 ${rtfEsc('গ্রহীতাগণের তথ্য')}\\b0\\fs24\\par\n`;
-  body += rtfPersonList(state.grantees, 'গ্রহীতা', false);
-
-  body += `\\b\\fs28 ${rtfEsc('সম্পত্তির তফসিল')}\\b0\\fs24\\par\n`;
-  schedules.forEach((s,i)=>{ body += rtfScheduleBlock(s,i); });
-
-  body += `\\b\\fs28 ${rtfEsc('সাক্ষীগণ')}\\b0\\fs24\\par\n`;
-  body += rtfPersonList(state.witnesses, 'সাক্ষী', true);
-
-  body += `\\b\\fs28 ${rtfEsc('সনাক্তকারী')}\\b0\\fs24\\par\n`;
-  body += rtfPersonList(state.identifiers, 'সনাক্তকারী', true);
-
-  body += `\\b\\fs28 ${rtfEsc('দলিল লেখকের তথ্য')}\\b0\\fs24\\par\n`;
-  body += rtfLine('নাম', state.writer.name) + rtfLine('পিতার নাম', state.writer.husband) + rtfLine('মাতার নাম', state.writer.mother) + rtfLine('ঠিকানা', state.writer.father) + rtfLine('সনদ নং', state.writer.nid) + rtfLine('কার্যালয়', state.writer.occupation) + '\\par\n';
-
-  if(g('extra')){
-    body += `\\b\\fs28 ${rtfEsc('অতিরিক্ত তথ্য')}\\b0\\fs24\\par\n`;
-    body += `${rtfEsc(g('extra'))}\\par\\par\n`;
-  }
-
-  body += '\\par\\par\n';
-  body += `${rtfEsc('দাতা/দাত্রীগণের স্বাক্ষর')}\\tab\\tab\\tab${rtfEsc('গ্রহীতাগণের স্বাক্ষর')}\\tab\\tab\\tab${rtfEsc('দলিল লেখকের স্বাক্ষর')}\\par\n`;
-
-  const sz = {w:11907,h:16840}; // A4 in twips
-  return `{\\rtf1\\ansi\\ansicpg1252\\uc1\\deff0{\\fonttbl{\\f0\\fnil Nikosh;}{\\f1\\fnil Kalpurush;}{\\f2\\fnil Nirmala UI;}}\\paperw${sz.w}\\paperh${sz.h}\\margl1440\\margr1440\\margt1440\\margb1440\\f0\\fs24\n${body}\n}`;
-}
 async function exportWord(){
   try {
     await loadDocx();
@@ -3292,26 +3129,6 @@ async function exportWord(){
   }
 }
 
-function exportRtf(){
-  try {
-    const rtf = buildRtfDoc();
-    const firstMouza = (state.schedules[0] && state.schedules[0].mouza) || '';
-    const fname = ((document.getElementById('deedType').value || 'দলিল') + '_' + (firstMouza || 'খসড়া')) + '.rtf';
-    const blob = new Blob([rtf], {type: 'application/rtf;charset=utf-8'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = fname;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    showToast('Word RTF (.rtf) ডাউনলোড সম্পন্ন হয়েছে', 'success');
-  } catch(e) {
-    console.error('RTF export error:', e);
-    showToast('RTF ফাইল তৈরিতে সমস্যা হয়েছে', 'error');
-  }
-}
 
 init();
 </script>
