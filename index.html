@@ -532,6 +532,10 @@
         <label class="addr-toggle" style="margin-top:9px;"><input type="checkbox" id="templateJustify" checked> Justify (উভয় পাশ সমান করে সাজানো)</label>
       </div>
       <div class="field">
+        <label>লাইন ভাঙা</label>
+        <label class="addr-toggle" style="margin-top:9px;"><input type="checkbox" id="templateHtmlMode"> শুধু &lt;br&gt; ট্যাগে লাইন ভাঙবে (সাধারণ Enter = স্পেস)</label>
+      </div>
+      <div class="field">
         <label>টেক্সট সাইজ</label>
         <select id="templateFontSize">
           <option value="11">ছোট (১১pt)</option>
@@ -2737,10 +2741,19 @@ async function exportCustomWord(){
     });
     filled = fixBengaliNukta(filled);
     // Convert newlines to <br/> so Word OpenXML docx preserves line breaks
+    // HTML কমেন্ট বাদ; একাধিক লাইনে ভাঙা ট্যাগ (<table\n border=...>) এক লাইনে আনো
+    filled = filled.replace(/<!--[\s\S]*?-->/g, '')
+                   .replace(/<\/?[a-zA-Z][^<>]*>/g, tag => tag.replace(/\s*\r?\n\s*/g, ' '));
     // টেবিলের ভেতরের কোড-সাজানো নতুন লাইন বাদ দাও (নাহলে টেবিলের আগে ফাঁকা লাইন আসে)
-    filled = filled.replace(/(<(?:table|tr|tbody|thead)\b[^>]*>|<\/(?:tr|td|th|tbody|thead)>)[ \t]*\r?\n[ \t]*/gi, '$1')
+    filled = filled.replace(/(<(?:table|tr|td|th|tbody|thead)\b[^>]*>|<\/(?:tr|td|th|tbody|thead)>)[ \t]*\r?\n[ \t]*/gi, '$1')
                    .replace(/[ \t]*\r?\n[ \t]*(?=<(?:\/table|\/tr|tr|td|th|\/td|\/th|\/tbody|\/thead)\b)/gi, '');
-    filled = filled.replace(/\r\n/g, '\n').replace(/\n/g, '<br/>');
+    filled = filled.replace(/\r\n/g, '\n');
+    if(data.htmlMode){
+      // শুধু <br> ট্যাগে লাইন ভাঙবে; সাধারণ Enter = স্পেস
+      filled = filled.replace(/[ \t]*\n[ \t\n]*/g, ' ').replace(/\s+(<br\s*\/?>)/gi, '$1').replace(/(<br\s*\/?>)\s+/gi, '$1');
+    } else {
+      filled = filled.replace(/\n/g, '<br/>');
+    }
     const align = data.justify !== false ? docx.AlignmentType.JUSTIFIED : undefined;
     const baseSize = (parseInt(data.fontSize) || 12) * 2; // docx uses half-points
     await downloadDocxFromHtml(filled, sel.value, pageSizeTwipsMap[data.pageSize] || pageSizeTwipsMap['A4'], align, baseSize, true);
@@ -2784,7 +2797,8 @@ async function saveNamedTemplate(){
   const pageSize = document.getElementById('templatePageSize').value;
   const justify = document.getElementById('templateJustify').checked;
   const fontSize = document.getElementById('templateFontSize').value;
-  await storeSet('customtemplate:'+name, {text, pageSize, justify, fontSize});
+  const htmlMode = document.getElementById('templateHtmlMode').checked;
+  await storeSet('customtemplate:'+name, {text, pageSize, justify, fontSize, htmlMode});
   await loadTemplateList();
   showToast('"'+name+'" টেমপ্লেট সংরক্ষণ করা হয়েছে', 'success');
 }
@@ -2797,6 +2811,7 @@ async function loadTemplateForEdit(name){
   document.getElementById('templatePageSize').value = data.pageSize || 'A4';
   document.getElementById('templateJustify').checked = data.justify !== false;
   document.getElementById('templateFontSize').value = data.fontSize || '12';
+  document.getElementById('templateHtmlMode').checked = !!data.htmlMode;
 }
 
 async function deleteTemplateEntry(name){
@@ -2811,6 +2826,7 @@ function clearTemplateEditor(){
   document.getElementById('templatePageSize').value = 'A4';
   document.getElementById('templateJustify').checked = true;
   document.getElementById('templateFontSize').value = '12';
+  document.getElementById('templateHtmlMode').checked = false;
 }
 
 function insertTableIntoTemplate(){
@@ -2904,38 +2920,87 @@ const DOCX_FONT = 'Nikosh';
 function styleAttrs(el){
   const style = (el.getAttribute && el.getAttribute('style')) || '';
   const out = {};
-  const centerMatch = /text-align\s*:\s*center/i.test(style);
-  const justifyMatch = /text-align\s*:\s*justify/i.test(style);
-  if(centerMatch) out.align = docx.AlignmentType.CENTER;
-  else if(justifyMatch) out.align = docx.AlignmentType.JUSTIFIED;
-  const sizeMatch = style.match(/font-size\s*:\s*(\d+(?:\.\d+)?)pt/i);
-  if(sizeMatch) out.size = Math.round(parseFloat(sizeMatch[1]) * 2); // docx uses half-points
+  if(/text-align\s*:\s*center/i.test(style)) out.align = docx.AlignmentType.CENTER;
+  else if(/text-align\s*:\s*justify/i.test(style)) out.align = docx.AlignmentType.JUSTIFIED;
+  else if(/text-align\s*:\s*right/i.test(style)) out.align = docx.AlignmentType.RIGHT;
+  const sizeMatch = style.match(/font-size\s*:\s*(\d+(?:\.\d+)?)\s*(pt|px)/i);
+  if(sizeMatch){
+    const v = parseFloat(sizeMatch[1]);
+    out.size = Math.round(sizeMatch[2].toLowerCase() === 'px' ? v * 1.5 : v * 2); // docx = half-points; 1px = 0.75pt
+  }
+  const bd = style.match(/border-bottom\s*:[^;]*/i);
+  if(bd) out.underline = /double/i.test(bd[0]) ? docx.UnderlineType.DOUBLE : docx.UnderlineType.SINGLE;
+  if(!out.underline && /text-decoration[^;]*underline/i.test(style)) out.underline = docx.UnderlineType.SINGLE;
+  if(/font-weight\s*:\s*(bold|[6-9]00)/i.test(style)) out.bold = true;
+  if(/font-style\s*:\s*italic/i.test(style)) out.italics = true;
+  return out;
+}
+function inlineCtx(el, ctx){
+  const tag = (el.tagName || '').toLowerCase();
+  const st = styleAttrs(el);
+  const out = Object.assign({}, ctx);
+  if(tag === 'b' || tag === 'strong' || st.bold) out.bold = true;
+  if(tag === 'i' || tag === 'em' || st.italics) out.italics = true;
+  if(tag === 'u' && !out.underline) out.underline = docx.UnderlineType.SINGLE;
+  if(st.underline) out.underline = st.underline;
+  if(st.size) out.size = st.size;
   return out;
 }
 function parseInlineRuns(node, ctx){
   ctx = ctx || {bold:false, size:24};
   let runs = [];
+  const mk = (text, br)=> new docx.TextRun({
+    text, break: br ? 1 : undefined, bold: ctx.bold, italics: ctx.italics,
+    underline: ctx.underline ? {type: ctx.underline} : undefined, font: DOCX_FONT, size: ctx.size
+  });
   node.childNodes.forEach(child=>{
-    if(child.nodeType === 3){ // text node
+    if(child.nodeType === 3){
       const text = fixBengaliNukta(child.textContent);
-      const lines = text.split(/\r?\n/);
-      lines.forEach((line, lIdx)=>{
-        if(lIdx > 0) runs.push(new docx.TextRun({text:'', break:1, font: DOCX_FONT, size: ctx.size}));
-        if(line) runs.push(new docx.TextRun({text: line, bold: ctx.bold, font: DOCX_FONT, size: ctx.size}));
+      text.split(/\r?\n/).forEach((line, lIdx)=>{
+        if(lIdx > 0) runs.push(mk('', true));
+        if(line) runs.push(mk(line, false));
       });
     } else if(child.nodeType === 1){
-      const tag = child.tagName.toLowerCase();
-      if(tag === 'br'){
-        runs.push(new docx.TextRun({text:'', break:1, font: DOCX_FONT, size: ctx.size}));
-      } else if(tag === 'b' || tag === 'strong'){
-        runs = runs.concat(parseInlineRuns(child, Object.assign({}, ctx, {bold:true})));
-      } else {
-        const st = styleAttrs(child);
-        runs = runs.concat(parseInlineRuns(child, Object.assign({}, ctx, st.size?{size:st.size}:{})));
-      }
+      if(child.tagName.toLowerCase() === 'br') runs.push(mk('', true));
+      else runs = runs.concat(parseInlineRuns(child, inlineCtx(child, ctx)));
     }
   });
   return runs;
+}
+function tablePxWidth(node){
+  const m0 = String(node.getAttribute('width') || '').match(/^\s*(\d+(?:\.\d+)?)\s*(?:px)?\s*$/i);
+  let px = m0 ? parseFloat(m0[1]) : 0;
+  const m = (node.getAttribute('style') || '').match(/(?:^|;)\s*width:\s*(\d+(?:\.\d+)?)px/i);
+  if(m) px = parseFloat(m[1]);
+  return px;
+}
+function flexDivToBlocks(node, defaultAlign, defaultSize, newlineMode){
+  const style = node.getAttribute('style') || '';
+  const jm = ((style.match(/justify-content\s*:\s*([a-z-]+)/i) || [])[1] || 'flex-start').toLowerCase();
+  const kids = Array.from(node.children).filter(c=>c.tagName.toLowerCase() !== 'br');
+  if(!kids.length) return [];
+  const none = {style:'none', size:0, color:'FFFFFF'};
+  let share = 100, before = 0, after = 0;
+  if(jm === 'flex-end' || jm === 'end' || jm === 'right'){ share = 45; before = 55; }
+  else if(jm === 'center'){ share = 50; before = 25; after = 25; }
+  const pct = n => ({size: n, type: docx.WidthType.PERCENTAGE});
+  const spacer = n => new docx.TableCell({children:[new docx.Paragraph({children:[]})], width: pct(n)});
+  const cells = [];
+  if(before) cells.push(spacer(before));
+  kids.forEach(k=>{
+    const st = styleAttrs(k);
+    const blocks = htmlToDocxBlocks(k, st.align || defaultAlign, st.size || defaultSize, newlineMode);
+    cells.push(new docx.TableCell({
+      children: blocks.length ? blocks : [new docx.Paragraph({children:[]})],
+      width: pct(share / kids.length)
+    }));
+  });
+  if(after) cells.push(spacer(after));
+  return [new docx.Table({
+    rows: [new docx.TableRow({children: cells})],
+    width: pct(100),
+    borders: {top:none, bottom:none, left:none, right:none, insideHorizontal:none, insideVertical:none}
+  })];
 }
 function docxTable(node, defaultAlign, defaultSize, newlineMode){
   const blocks = [];
@@ -2971,11 +3036,26 @@ function docxTable(node, defaultAlign, defaultSize, newlineMode){
       }
       // If hasBorder and not boxOnly, leave borders undefined (docx default = all borders)
 
-      node.querySelectorAll('tr').forEach(tr=>{
+      // শুধু এই টেবিলের নিজের সারি/কলাম (ভেতরের নেস্টেড টেবিলের নয়)
+      const kids = el => Array.from(el.children);
+      const trList = [];
+      kids(node).forEach(ch=>{
+        const t = ch.tagName.toLowerCase();
+        if(t === 'tr') trList.push(ch);
+        else if(t === 'tbody' || t === 'thead' || t === 'tfoot') kids(ch).forEach(r=>{ if(r.tagName.toLowerCase() === 'tr') trList.push(r); });
+      });
+      // px প্রস্থ (যেমন width="220") থাকলে সেটি মানা হবে; ১px = ১৫ টুইপ
+      const pxOf = v => { const m = String(v||'').match(/^\s*(\d+(?:\.\d+)?)\s*(?:px)?\s*$/i); return m ? parseFloat(m[1]) : 0; };
+      let tblPx = pxOf(node.getAttribute('width'));
+      const mw = styleAttr.match(/(?:^|;)\s*width:\s*(\d+(?:\.\d+)?)px/i);
+      if(mw) tblPx = parseFloat(mw[1]);
+      let firstRowWidths = null;
+      trList.forEach(tr=>{
         const cells = [];
-        const cellCount = tr.querySelectorAll('td,th').length || 1;
-        tr.querySelectorAll('td,th').forEach(td=>{
-          const cellBlocks = htmlToDocxBlocks(td, defaultAlign, defaultSize, newlineMode);
+        const tds = kids(tr).filter(c=>/^(td|th)$/i.test(c.tagName));
+        const cellCount = tds.length || 1;
+        const widths = [];
+        tds.forEach(td=>{
           const cellAlignAttr = td.getAttribute('align');
           const cellStyle = (td.getAttribute && td.getAttribute('style')) || '';
           let cellAlign = defaultAlign;
@@ -2985,23 +3065,38 @@ function docxTable(node, defaultAlign, defaultSize, newlineMode){
           else if(/text-align:\s*center/.test(cellStyle)) cellAlign = docx.AlignmentType.CENTER;
           else if(/text-align:\s*right/.test(cellStyle)) cellAlign = docx.AlignmentType.RIGHT;
           else if(/text-align:\s*left/.test(cellStyle)) cellAlign = docx.AlignmentType.LEFT;
+          const cellBlocks = htmlToDocxBlocks(td, cellAlign, styleAttrs(td).size || defaultSize, newlineMode);
 
-          let cellWidth = 100 / cellCount;
-          const widthMatch = cellStyle.match(/width:\s*(\d+(?:\.\d+)?)%/);
-          if(widthMatch) cellWidth = parseFloat(widthMatch[1]);
-
+          let widthOpt;
+          if(tblPx){
+            let px = pxOf(td.getAttribute('width'));
+            const mpx = cellStyle.match(/(?:^|;)\s*width:\s*(\d+(?:\.\d+)?)px/i);
+            if(mpx) px = parseFloat(mpx[1]);
+            const mpc = cellStyle.match(/(?:^|;)\s*width:\s*(\d+(?:\.\d+)?)%/);
+            if(!px && mpc) px = tblPx * parseFloat(mpc[1]) / 100;
+            if(!px) px = tblPx / cellCount;
+            widths.push(Math.round(px*15));
+            widthOpt = {size: Math.round(px*15), type: docx.WidthType.DXA};
+          } else {
+            let cellWidth = 100 / cellCount;
+            const widthMatch = cellStyle.match(/width:\s*(\d+(?:\.\d+)?)%/);
+            if(widthMatch) cellWidth = parseFloat(widthMatch[1]);
+            widthOpt = {size: cellWidth, type: docx.WidthType.PERCENTAGE};
+          }
           cells.push(new docx.TableCell({
             children: cellBlocks.length ? cellBlocks : [new docx.Paragraph({children:[], alignment: cellAlign})],
-            width: {size: cellWidth, type: docx.WidthType.PERCENTAGE},
+            width: widthOpt,
           }));
         });
+        if(!firstRowWidths && widths.length) firstRowWidths = widths;
         if(cells.length) rows.push(new docx.TableRow({children:cells}));
       });
       if(rows.length){
         const tblOpts = {
           rows,
-          width: {size:100, type: docx.WidthType.PERCENTAGE},
+          width: tblPx ? {size: Math.round(tblPx*15), type: docx.WidthType.DXA} : {size:100, type: docx.WidthType.PERCENTAGE},
         };
+        if(tblPx && firstRowWidths){ tblOpts.columnWidths = firstRowWidths; tblOpts.layout = docx.TableLayoutType.FIXED; }
         if(tblBorders) tblOpts.borders = tblBorders;
         blocks.push(new docx.Table(tblOpts));
       }
@@ -3027,8 +3122,31 @@ function htmlToDocxBlocks(container, defaultAlign, defaultSize, newlineMode){
     lines.forEach(l=> para({children:l, alignment:defaultAlign}));
     toks = []; afterBlock = false;
   };
+  let floatGroup = [];
+  const flushFloat = ()=>{
+    if(!floatGroup.length) return;
+    if(pageBreakNext) para({children:[]});
+    if(floatGroup.length === 1){
+      blocks.push(...docxTable(floatGroup[0], defaultAlign, defaultSize, newlineMode));
+    } else {
+      const none = {style:'none', size:0, color:'FFFFFF'};
+      const ws = floatGroup.map(t=> Math.round((tablePxWidth(t) || 220) * 15) + 300);
+      const cells = floatGroup.map((t,i)=> new docx.TableCell({
+        children: docxTable(t, defaultAlign, defaultSize, newlineMode),
+        width: {size: ws[i], type: docx.WidthType.DXA}
+      }));
+      blocks.push(new docx.Table({
+        rows: [new docx.TableRow({children: cells})],
+        width: {size: ws.reduce((a,b)=>a+b,0), type: docx.WidthType.DXA},
+        columnWidths: ws, layout: docx.TableLayoutType.FIXED,
+        borders: {top:none, bottom:none, left:none, right:none, insideHorizontal:none, insideVertical:none}
+      }));
+    }
+    floatGroup = []; afterBlock = true;
+  };
   container.childNodes.forEach(node=>{
     if(node.nodeType === 3){
+      if(floatGroup.length){ if(!node.textContent.replace(/\s|\u00A0/g,'')) return; flushFloat(); }
       const text = fixBengaliNukta(node.textContent);
       if(!text.replace(/[ \t\r\n]/g,'')){ if(!toks.length || /[\r\n]/.test(text)) return; }
       text.split(/\r?\n/).forEach((line,i)=>{
@@ -3040,14 +3158,21 @@ function htmlToDocxBlocks(container, defaultAlign, defaultSize, newlineMode){
     if(node.nodeType !== 1) return;
     const tag = node.tagName.toLowerCase();
     if(tag === 'br'){
-      if(/page-break/.test(node.getAttribute('style') || '')){ flush(); pageBreakNext = true; afterBlock = true; }
+      const pb = /page-break/.test(node.getAttribute('style') || '');
+      if(floatGroup.length && !pb) return;
+      if(pb){ flushFloat(); flush(); pageBreakNext = true; afterBlock = true; }
       else toks.push('BR');
       return;
     }
+    if(tag === 'table' && /float\s*:\s*(left|right)/i.test(node.getAttribute('style') || '')){
+      if(!floatGroup.length) flush();
+      floatGroup.push(node);
+      return;
+    }
+    flushFloat();
     const isBlock = tag==='table' || tag==='h1' || tag==='h2' || tag==='div' || tag==='p' || node.querySelector('table');
     if(!isBlock){
-      const st = styleAttrs(node);
-      toks.push(...parseInlineRuns(node, {bold:(tag==='b'||tag==='strong'), size: st.size||defaultSize}));
+      toks.push(...parseInlineRuns(node, inlineCtx(node, {bold:false, size: defaultSize})));
       return;
     }
     flush();
@@ -3056,6 +3181,8 @@ function htmlToDocxBlocks(container, defaultAlign, defaultSize, newlineMode){
       blocks.push(...docxTable(node, defaultAlign, defaultSize, newlineMode));
     } else if(tag === 'h1' || tag === 'h2'){
       para({children: parseInlineRuns(node, {bold:true, size: tag==='h1'?32:26}), alignment: tag==='h1' ? docx.AlignmentType.CENTER : undefined, spacing:{after:200}});
+    } else if(tag === 'div' && /display\s*:\s*flex/i.test(node.getAttribute('style') || '') && node.children.length){
+      blocks.push(...flexDivToBlocks(node, defaultAlign, defaultSize, newlineMode));
     } else if((tag === 'div' || tag === 'p') && !node.querySelector('table')){
       const st = styleAttrs(node);
       const runs = parseInlineRuns(node, {bold:false, size: st.size||defaultSize});
@@ -3065,6 +3192,7 @@ function htmlToDocxBlocks(container, defaultAlign, defaultSize, newlineMode){
     }
     afterBlock = true;
   });
+  flushFloat();
   flush();
   return blocks;
 }
