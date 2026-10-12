@@ -382,10 +382,10 @@
 
   <div class="card">
     <h2>৮. দলিল লেখকের তথ্য</h2>
-    <div class="row-actions" style="margin-top:0;">
-      <label style="font-size:12.5px;color:var(--muted);">এডমিন তালিকা থেকে নির্বাচন করুন:</label>
-      <select class="writer-select" id="writerReuse" onchange="reuseIntoWriter(this.value)"><option value="">— নির্বাচন করুন —</option></select>
+    <div class="field" style="margin-top:10px;max-width:420px;">
+      <input id="writerSearch" list="writerList" placeholder="লেখকের নাম বা সনদ নং লিখে খুঁজুন" oninput="pickWriterByName(this.value)" autocomplete="off">
     </div>
+    <datalist id="writerList"></datalist>
     <div class="grid" id="writerBlock" style="margin-top:10px;"></div>
     <p class="hint">নতুন লেখক যোগ করতে "এলাকা তথ্য (এডমিন)" ট্যাবে যান।</p>
   </div>
@@ -553,21 +553,24 @@
   
   <div class="card">
     <h2>দলিলের ডিফল্ট বিবরণ (প্রকৃতি অনুযায়ী)</h2>
-    <p class="empty-note" style="margin-top:-4px;">নিচে প্রতিটি দলিলের প্রকৃতির জন্য ডিফল্ট বিবরণ লিখে সংরক্ষণ করুন। দলিল তৈরির সময় প্রকৃতি বেছে নিলে এই বিবরণ স্বয়ংক্রিয়ভাবে লোড হবে। খালি রাখলে স্বয়ংক্রিয় তৈরি বিবরণ দেখাবে।</p>
+    <p class="empty-note" style="margin-top:-4px;">নিচে প্রতিটি দলিলের প্রকৃতির জন্য ডিফল্ট বিবরণ লিখে সংরক্ষণ করুন। দলিল তৈরির সময় প্রকৃতি বেছে নিলে এই বিবরণ স্বয়ংক্রিয়ভাবে লোড হবে। খালি রাখলে স্বয়ংক্রিয় তৈরি বিবরণ দেখাবে।<br><b>নিচের বাটন চাপলে</b> লেখার কার্সরের জায়গায় একটি স্বয়ংক্রিয় শব্দ বসবে — যেমন মূল্য, জমির পরিমাণ বা একবচন/বহুবচন শব্দ। দলিল তৈরির সময় এগুলো নিজে বদলে যাবে (একজন দাতা হলে "আমি", একাধিক হলে "আমরা")। "নমুনা বসান" চাপলে একটি তৈরি নমুনা আসবে, যা আপনি বদলে নিতে পারবেন।</p>
     <div class="field">
       <label>সাফ কবলা — ডিফল্ট বিবরণ</label>
+      <div class="row-actions token-bar" data-target="defaultNarrativeSaf" data-type="সাফ কবলা"></div>
       <textarea id="defaultNarrativeSaf" style="min-height:120px;" placeholder="খালি রাখলে স্বয়ংক্রিয় বিবরণ তৈরি হবে..."></textarea>
     </div>
     <div class="row-actions"><button class="btn small" onclick="saveDefaultNarrative('saf_kabala')">সংরক্ষণ করুন</button></div>
 
     <div class="field" style="margin-top:14px;">
       <label>দানপত্র — ডিফল্ট বিবরণ</label>
+      <div class="row-actions token-bar" data-target="defaultNarrativeDan" data-type="দানপত্র"></div>
       <textarea id="defaultNarrativeDan" style="min-height:120px;" placeholder="খালি রাখলে স্বয়ংক্রিয় বিবরণ তৈরি হবে..."></textarea>
     </div>
     <div class="row-actions"><button class="btn small" onclick="saveDefaultNarrative('danpatra')">সংরক্ষণ করুন</button></div>
 
     <div class="field" style="margin-top:14px;">
       <label>হেবা ঘোষণাপত্র — ডিফল্ট বিবরণ</label>
+      <div class="row-actions token-bar" data-target="defaultNarrativeHeba" data-type="হেবা ঘোষণাপত্র"></div>
       <textarea id="defaultNarrativeHeba" style="min-height:120px;" placeholder="খালি রাখলে স্বয়ংক্রিয় বিবরণ তৈরি হবে..."></textarea>
     </div>
     <div class="row-actions"><button class="btn small" onclick="saveDefaultNarrative('heba')">সংরক্ষণ করুন</button></div>
@@ -911,9 +914,6 @@ function generateNarrative(){
   const g = id => (document.getElementById(id)?document.getElementById(id).value:'');
   const deedType = g('deedType') || 'সাফ কবলা';
   // If admin has set a default narrative for this deed type, use it
-  if(narrativeDefaults[deedType]){
-    return narrativeDefaults[deedType];
-  }
   const dGr = donorGrammar(), grGr = granteeGrammar();
   const schedules = state.schedules;
   const totalPrice = round6(schedules.reduce((sum,s)=>sum+parseNum(s.price),0));
@@ -927,6 +927,20 @@ function generateNarrative(){
   const scheduleDesc = schedules.length>1
     ? schedules.map((s,i)=>`তফসিল-${toBnDigits(i+1)}ঃ মৌজা ${s.mouza||'...'}, এস.এ জে.এল ${s.saJl?toBnDigits(s.saJl):'...'}/আর.এস জে.এল ${s.rsJl?toBnDigits(s.rsJl):'...'}, খতিয়ান ${s.saKhatian?toBnDigits(s.saKhatian):'...'}/${s.rsKhatian?toBnDigits(s.rsKhatian):'...'}, দাগ ${s.saDag?toBnDigits(s.saDag):'...'}/${s.rsDag?toBnDigits(s.rsDag):'...'}`).join('; ')
     : `জে.এল নং ${first.saJl?toBnDigits(first.saJl):'...'} (আর.এস জে.এল নং ${first.rsJl?toBnDigits(first.rsJl):'...'}), খতিয়ান নং ${first.saKhatian?toBnDigits(first.saKhatian):'...'}/${first.rsKhatian?toBnDigits(first.rsKhatian):'...'}, দাগ নং ${first.saDag?toBnDigits(first.saDag):'...'}/${first.rsDag?toBnDigits(first.rsDag):'...'}`;
+
+  if(narrativeDefaults[deedType]){
+    const tk = {
+      'দলিলের_ধরন':deedType, 'জেলা':district, 'থানা':thana, 'রেজিস্ট্রেশন_অফিস':office, 'মৌজা':mouza,
+      'ইউনিয়ন': first.union || '.........', 'তফসিল_বিবরণ':scheduleDesc,
+      'মোট_জমি_কথায়':landWords, 'মোট_জমি': totalLand ? toBnDigits(totalLand) : '...',
+      'মোট_মূল্য_কথায়':priceWords, 'মোট_মূল্য': totalPrice ? toBnDigits(totalPrice) : '...',
+      'দাতার_নাম':donorNames, 'গ্রহীতার_নাম':granteeNames,
+      'আমি_আমরা':dGr.pron, 'আমার_আমাদের':dGr.poss, 'দাতা_শব্দ':dGr.role, 'একত্রে':dGr.together,
+      'আপনি_আপনারা':grGr.pron2, 'আপনার_আপনাদের':grGr.poss2, 'গ্রহীতা_শব্দ':grGr.role,
+      'সাক্ষী_শব্দ':witnessGrammar(), 'সনাক্তকারী_শব্দ':identifierGrammar()
+    };
+    return narrativeDefaults[deedType].replace(/\{\{\s*([^}]+?)\s*\}\}/g, (m,k)=> (k in tk) ? tk[k] : m);
+  }
 
   if(deedType === 'দানপত্র'){
     return `পরম করুণাময় মহান সৃষ্টিকর্তার নাম স্মরণপূর্বক অত্র দানপত্র দলিল প্রসঙ্গে বর্ণনা ও প্রকাশ করিতেছি যে, জেলা-${district}, উপজেলা-${thana} ও সাবরেজিষ্ট্রারী ${office} অধীন মৌজা ${mouza} স্থিত ${scheduleDesc} ভুক্ত মোট ${landWords} ভূমির বৈধ মালিক ও দখলকার ${dGr.pron} ${dGr.role} ${donorNames}।
@@ -986,6 +1000,89 @@ function regenerateNarrative(force){
 }
 let narrTimer = null;
 function scheduleNarrativeRefresh(){ clearTimeout(narrTimer); narrTimer = setTimeout(()=>regenerateNarrative(), 250); }
+
+
+/* ===================== বিবরণ টেমপ্লেটের স্বয়ংক্রিয় শব্দ বাটন ===================== */
+const NARRATIVE_TOKEN_GROUPS = [
+  ['তথ্য (নিজে বদলায়)', [
+    ['মূল্য (কথায়)','মোট_মূল্য_কথায়'], ['মূল্য (অঙ্কে)','মোট_মূল্য'],
+    ['জমির পরিমাণ (কথায়)','মোট_জমি_কথায়'], ['জমি (অঙ্কে)','মোট_জমি'],
+    ['মৌজা','মৌজা'], ['ইউনিয়ন','ইউনিয়ন'], ['উপজেলা','থানা'], ['জেলা','জেলা'],
+    ['রেজিস্ট্রি অফিস','রেজিস্ট্রেশন_অফিস'], ['তফসিল বিবরণ','তফসিল_বিবরণ'], ['দলিলের ধরন','দলিলের_ধরন'],
+    ['দাতার নাম','দাতার_নাম'], ['গ্রহীতার নাম','গ্রহীতার_নাম']
+  ]],
+  ['একবচন/বহুবচন (নিজে বদলায়)', [
+    ['আমি/আমরা','আমি_আমরা'], ['আমার/আমাদের','আমার_আমাদের'], ['দাতা/দাতাগণ','দাতা_শব্দ'],
+    ['আপনি/আপনারা','আপনি_আপনারা'], ['আপনার/আপনাদের','আপনার_আপনাদের'], ['গ্রহীতা/গ্রহীতাগণ','গ্রহীতা_শব্দ'],
+    ['সাক্ষী/সাক্ষীগণ','সাক্ষী_শব্দ'], ['সনাক্তকারী/গণ','সনাক্তকারী_শব্দ'], ['একত্রে (বহুবচনে)','একত্রে']
+  ]]
+];
+const NARRATIVE_STARTERS = {
+'সাফ কবলা': `পরম করুণাময় মহান সৃষ্টিকর্তার নাম স্মরণপূর্বক অত্র {{দলিলের_ধরন}} দলিল প্রসঙ্গে বর্ণনা ও প্রকাশ করিতেছি যে, জেলা-{{জেলা}}, উপজেলা-{{থানা}} ও সাবরেজিষ্ট্রারী {{রেজিস্ট্রেশন_অফিস}} অধীন মৌজা {{মৌজা}} স্থিত {{তফসিল_বিবরণ}} ভুক্ত মোট {{মোট_জমি_কথায়}} ভূমির বৈধ মালিক ও দখলকার {{আমি_আমরা}} {{দাতা_শব্দ}} {{দাতার_নাম}}।
+
+বর্তমানে {{আমার_আমাদের}} টাকার প্রয়োজনে তপশীল বর্ণিত ভূমি বিক্রয় করিবার সিদ্ধান্ত গ্রহণ করিয়া মূল্য বাবদ {{মোট_মূল্য_কথায়}} ({{মোট_মূল্য}}) টাকা ধার্য্য করতঃ {{আপনার_আপনাদের}} বরাবরে বিক্রয় করিতে সম্মত হই। অদ্য সাব্যস্তকৃত মূল্যের সমুদয় টাকা উপস্থিত সাক্ষীগণের সম্মুখে {{আমি_আমরা}} {{আপনার_আপনাদের}} নিকট হইতে এককালীন নগদ বুঝিয়া পাইয়া তপশীল বর্ণিত ভূমির স্বত্ব ও দখল {{আপনার_আপনাদের}} বরাবরে সমজাইয়া দিয়া চিরতরে নিঃস্বত্ববান ও দখলত্যাগী হইলাম।
+
+বিক্রীত সম্পত্তি {{আপনার_আপনাদের}} নামে নামজারি করাইয়া দান-বিক্রয় ও যাবতীয় ভোগদখল সংক্রান্ত কার্যাদিতে যথেচ্ছভাবে {{গ্রহীতা_শব্দ}} বংশানুক্রমিকভাবে ভোগদখল করিতে থাকিবেন। ইহাতে {{আমি_আমরা}} বা {{আমার_আমাদের}} উত্তরাধিকারীগণের কাহারো কোনোরূপ দাবি-দাওয়া নাই বা রহিল না। ভবিষ্যতে কোনো প্রকার আপত্তি উত্থাপিত হইলে সমুদয় ক্ষতিপূরণসহ মূল্যের সাকুল্য টাকা ফেরত দিতে {{আমি_আমরা}} বাধ্য থাকিব।`,
+'দানপত্র': `পরম করুণাময় মহান সৃষ্টিকর্তার নাম স্মরণপূর্বক অত্র দানপত্র দলিল প্রসঙ্গে বর্ণনা ও প্রকাশ করিতেছি যে, জেলা-{{জেলা}}, উপজেলা-{{থানা}} ও সাবরেজিষ্ট্রারী {{রেজিস্ট্রেশন_অফিস}} অধীন মৌজা {{মৌজা}} স্থিত {{তফসিল_বিবরণ}} ভুক্ত মোট {{মোট_জমি_কথায়}} ভূমির বৈধ মালিক ও দখলকার {{আমি_আমরা}} {{দাতা_শব্দ}} {{দাতার_নাম}}।
+
+{{আমি_আমরা}} স্বেচ্ছায়, সন্তুষ্ট মনে ও নিঃস্বার্থভাবে তপশীল বর্ণিত ভূমি {{আপনার_আপনাদের}} বরাবরে দান করিতে সম্মত হইলাম। দানকৃত সম্পত্তি {{আপনার_আপনাদের}} নামে নামজারি করাইয়া দান ও যাবতীয় ভোগদখল সংক্রান্ত কার্যাদিতে যথেচ্ছভাবে {{গ্রহীতা_শব্দ}} বংশানুক্রমিকভাবে ভোগদখল করিতে থাকিবেন। ইহাতে {{আমি_আমরা}} বা {{আমার_আমাদের}} উত্তরাধিকারীগণের কাহারো কোনোরূপ দাবি-দাওয়া নাই বা রহিল না। ভবিষ্যতে কোনো প্রকার আপত্তি উত্থাপিত হইলে সমুদয় ক্ষতিপূরণসহ দান বাতিল করিতে {{আমি_আমরা}} বাধ্য থাকিব।`,
+'হেবা ঘোষণাপত্র': `পরম করুণাময় মহান সৃষ্টিকর্তার নাম স্মরণপূর্বক অত্র হেবা ঘোষণাপত্র দলিল প্রসঙ্গে বর্ণনা ও প্রকাশ করিতেছি যে, জেলা-{{জেলা}}, উপজেলা-{{থানা}} ও সাবরেজিষ্ট্রারী {{রেজিস্ট্রেশন_অফিস}} অধীন মৌজা {{মৌজা}} স্থিত {{তফসিল_বিবরণ}} ভুক্ত মোট {{মোট_জমি_কথায়}} ভূমির বৈধ মালিক ও দখলকার {{আমি_আমরা}} {{দাতা_শব্দ}} {{দাতার_নাম}}।
+
+{{আমি_আমরা}} স্বেচ্ছায়, সন্তুষ্ট মনে ও নিঃস্বার্থভাবে তপশীল বর্ণিত ভূমি {{আপনার_আপনাদের}} বরাবরে হেবা করিতে সম্মত হইলাম। হেবাকৃত সম্পত্তি {{আপনার_আপনাদের}} নামে নামজারি করাইয়া হেবা ও যাবতীয় ভোগদখল সংক্রান্ত কার্যাদিতে যথেচ্ছভাবে {{গ্রহীতা_শব্দ}} বংশানুক্রমিকভাবে ভোগদখল করিতে থাকিবেন। ইহাতে {{আমি_আমরা}} বা {{আমার_আমাদের}} উত্তরাধিকারীগণের কাহারো কোনোরূপ দাবি-দাওয়া নাই বা রহিল না। ভবিষ্যতে কোনো প্রকার আপত্তি উত্থাপিত হইলে সমুদয় ক্ষতিপূরণসহ হেবা বাতিল করিতে {{আমি_আমরা}} বাধ্য থাকিব।`
+};
+function insertNarrativeToken(id, key){
+  const ta = document.getElementById(id);
+  if(!ta) return;
+  const t = '{{' + key + '}}';
+  const st = ta.selectionStart == null ? ta.value.length : ta.selectionStart;
+  const en = ta.selectionEnd == null ? st : ta.selectionEnd;
+  ta.value = ta.value.slice(0, st) + t + ta.value.slice(en);
+  ta.focus();
+  ta.selectionStart = ta.selectionEnd = st + t.length;
+}
+function loadStarterNarrative(id, type){
+  const ta = document.getElementById(id);
+  if(!ta || !NARRATIVE_STARTERS[type]) return;
+  if(ta.value.trim() && !confirm('এখনকার লেখা মুছে নমুনা বসবে। চালিয়ে যাবেন?')) return;
+  ta.value = NARRATIVE_STARTERS[type];
+}
+function initNarrativeTokenBars(){
+  document.querySelectorAll('.token-bar').forEach(bar=>{
+    const id = bar.dataset.target, type = bar.dataset.type;
+    bar.style.cssText = 'display:block;margin:6px 0;';
+    bar.innerHTML = '';
+    const starter = document.createElement('button');
+    starter.type = 'button'; starter.className = 'btn small';
+    starter.textContent = '✨ নমুনা বসান';
+    starter.addEventListener('click', ()=> loadStarterNarrative(id, type));
+    bar.appendChild(starter);
+    NARRATIVE_TOKEN_GROUPS.forEach(([title, items])=>{
+      const row = document.createElement('div');
+      row.style.cssText = 'display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px;';
+      const lab = document.createElement('span');
+      lab.className = 'action-label'; lab.style.minWidth = '0'; lab.textContent = title + ':';
+      row.appendChild(lab);
+      items.forEach(([label, key])=>{
+        const b = document.createElement('button');
+        b.type = 'button'; b.className = 'btn small ghost'; b.textContent = label;
+        b.addEventListener('click', ()=> insertNarrativeToken(id, key));
+        row.appendChild(b);
+      });
+      bar.appendChild(row);
+    });
+  });
+}
+/* ===================== দলিলের ধরন অনুযায়ী টেমপ্লেট অটো-সিলেক্ট ===================== */
+function autoSelectTemplateForDeedType(){
+  const sel = document.getElementById('templateSelectForExport');
+  const typeEl = document.getElementById('deedType');
+  if(!sel || !typeEl) return;
+  const type = (typeEl.value || '').trim();
+  if(!type) return;
+  const opts = Array.from(sel.options).filter(o=>o.value);
+  const pick = opts.find(o=>o.value.trim() === type) || opts.find(o=>o.value.includes(type));
+  if(pick) sel.value = pick.value;
+}
 
 /* ===================== TOAST NOTIFICATION ===================== */
 function showToast(msg, type){
@@ -1188,6 +1285,7 @@ async function refreshDashboard(){
 async function init(){
   renderAll();
   bindSimpleFieldPreviews();
+  initNarrativeTokenBars();
   if(window.lucide) lucide.createIcons();
   ['aw_name','aw_father','aw_mother'].forEach(id=>{
     const el = document.getElementById(id);
@@ -1274,9 +1372,17 @@ async function loadWritersDB(){
   writersDB = [];
   const items = await storeListWithData('writer:');
   items.forEach(({value})=>{ writersDB.push(value); });
-  const sel = document.getElementById('writerReuse');
-  sel.innerHTML = '<option value="">— নির্বাচন করুন —</option>' +
-    writersDB.map(w=>`<option value="${w.id}">${escapeHtml(w.name)}</option>`).join('');
+  const dl = document.getElementById('writerList');
+  if(dl) dl.innerHTML = writersDB.map(w=>`<option value="${escapeHtml(w.name)}" label="${escapeHtml([w.certNo?('সনদ: '+w.certNo):'', w.office||''].filter(Boolean).join(' — '))}">`).join('');
+}
+function pickWriterByName(q){
+  q = (q||'').trim();
+  if(!q) return;
+  const norm = x => bnToEnDigits(String(x||'')).trim().toLowerCase();
+  const nq = norm(q);
+  const w = writersDB.find(x=>(x.name||'').trim() === q) ||
+            writersDB.find(x=>x.certNo && norm(x.certNo) === nq);
+  if(w) reuseIntoWriter(w.id);
 }
 async function loadOccupationDB(){
   occupationDB = [];
@@ -1375,6 +1481,7 @@ function bindSimpleFieldPreviews(){
   if(nt) nt.addEventListener('input', ()=>{ narrativeEdited = true; });
   const deedEl = document.getElementById('deedType');
   if(deedEl) deedEl.addEventListener('change', function(){
+    autoSelectTemplateForDeedType();
     if(narrativeEdited && !confirm('আপনি বিবরণ হাতে সম্পাদনা করেছেন। দলিলের ধরন বদলালে নতুন বিবরণ বসবে। চালিয়ে যাবেন?')) return;
     regenerateNarrative(true);
   });
@@ -2315,6 +2422,7 @@ function applyFullState(data){
     document.getElementById('narrativeText').value = savedNarr;
     narrativeEdited = !!savedNarr && savedNarr !== generateNarrative();
   }
+  autoSelectTemplateForDeedType();
 }
 
 let draftIndexPromise = null;
@@ -2415,6 +2523,7 @@ function clearDeedForm(){
   if(!confirm('পুরো ফর্ম রিসেট করতে চান?')) return;
   currentDraftId = null;
   narrativeEdited = false;
+  const ws = document.getElementById('writerSearch'); if(ws) ws.value = '';
   document.getElementById('extra').value = '';
   document.getElementById('regOffice').value = officeDB[0] || '';
   state.donors=[blankPerson()]; state.grantees=[blankPerson()];
@@ -2628,10 +2737,13 @@ async function exportCustomWord(){
     });
     filled = fixBengaliNukta(filled);
     // Convert newlines to <br/> so Word OpenXML docx preserves line breaks
-    filled = filled.replace(/\r\n/g, '<br/>').replace(/\n/g, '<br/>');
+    // টেবিলের ভেতরের কোড-সাজানো নতুন লাইন বাদ দাও (নাহলে টেবিলের আগে ফাঁকা লাইন আসে)
+    filled = filled.replace(/(<(?:table|tr|tbody|thead)\b[^>]*>|<\/(?:tr|td|th|tbody|thead)>)[ \t]*\r?\n[ \t]*/gi, '$1')
+                   .replace(/[ \t]*\r?\n[ \t]*(?=<(?:\/table|\/tr|tr|td|th|\/td|\/th|\/tbody|\/thead)\b)/gi, '');
+    filled = filled.replace(/\r\n/g, '\n').replace(/\n/g, '<br/>');
     const align = data.justify !== false ? docx.AlignmentType.JUSTIFIED : undefined;
     const baseSize = (parseInt(data.fontSize) || 12) * 2; // docx uses half-points
-    await downloadDocxFromHtml(filled, sel.value, pageSizeTwipsMap[data.pageSize] || pageSizeTwipsMap['A4'], align, baseSize);
+    await downloadDocxFromHtml(filled, sel.value, pageSizeTwipsMap[data.pageSize] || pageSizeTwipsMap['A4'], align, baseSize, true);
     showToast('টেমপ্লেট Word ফাইল ডাউনলোড সম্পন্ন হয়েছে', 'success');
   } catch(e) {
     console.error('Template export error:', e);
@@ -2660,6 +2772,7 @@ async function loadTemplateList(){
     sel.innerHTML = '<option value="">— টেমপ্লেট নির্বাচন করুন —</option>' +
       items.map(it=>`<option value="${escapeHtml(it.name)}">${escapeHtml(it.name)}</option>`).join('');
     if(items.find(it=>it.name===current)) sel.value = current;
+    if(!sel.value) autoSelectTemplateForDeedType();
   }
 }
 
@@ -2824,21 +2937,9 @@ function parseInlineRuns(node, ctx){
   });
   return runs;
 }
-function htmlToDocxBlocks(container, defaultAlign, defaultSize){
-  defaultSize = defaultSize || 24;
+function docxTable(node, defaultAlign, defaultSize, newlineMode){
   const blocks = [];
-  container.childNodes.forEach(node=>{
-    if(node.nodeType === 3){
-      const text = fixBengaliNukta(node.textContent);
-      const lines = text.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
-      lines.forEach(l=>{
-        blocks.push(new docx.Paragraph({children:[new docx.TextRun({text:l, font:DOCX_FONT, size:defaultSize})], alignment: defaultAlign}));
-      });
-      return;
-    }
-    if(node.nodeType !== 1) return;
-    const tag = node.tagName.toLowerCase();
-    if(tag === 'table'){
+
       const rows = [];
       const borderAttr = node.getAttribute('border');
       const styleAttr = (node.getAttribute && node.getAttribute('style')) || '';
@@ -2874,7 +2975,7 @@ function htmlToDocxBlocks(container, defaultAlign, defaultSize){
         const cells = [];
         const cellCount = tr.querySelectorAll('td,th').length || 1;
         tr.querySelectorAll('td,th').forEach(td=>{
-          const cellBlocks = htmlToDocxBlocks(td, defaultAlign, defaultSize);
+          const cellBlocks = htmlToDocxBlocks(td, defaultAlign, defaultSize, newlineMode);
           const cellAlignAttr = td.getAttribute('align');
           const cellStyle = (td.getAttribute && td.getAttribute('style')) || '';
           let cellAlign = defaultAlign;
@@ -2904,32 +3005,67 @@ function htmlToDocxBlocks(container, defaultAlign, defaultSize){
         if(tblBorders) tblOpts.borders = tblBorders;
         blocks.push(new docx.Table(tblOpts));
       }
-    } else if(tag === 'h1' || tag === 'h2'){
-      blocks.push(new docx.Paragraph({
-        children: parseInlineRuns(node, {bold:true, size: tag==='h1'?32:26}),
-        alignment: tag==='h1' ? docx.AlignmentType.CENTER : undefined,
-        spacing: {after:200}
-      }));
-    } else if(tag === 'br'){
-      blocks.push(new docx.Paragraph(''));
-    } else if(tag === 'div' || tag === 'p'){
-      if(node.querySelector('table')){
-        blocks.push(...htmlToDocxBlocks(node, defaultAlign, defaultSize));
-      } else {
-        const st = styleAttrs(node);
-        const runs = parseInlineRuns(node, {bold:false, size: st.size||defaultSize});
-        if(runs.length) blocks.push(new docx.Paragraph({children: runs, alignment: st.align || defaultAlign, spacing:{after:80}}));
-      }
-    } else {
-      if(node.querySelector('table')){
-        blocks.push(...htmlToDocxBlocks(node, defaultAlign, defaultSize));
-      } else {
-        const st = styleAttrs(node);
-        const runs = parseInlineRuns(node, {bold:false, size: st.size||defaultSize});
-        if(runs.length) blocks.push(new docx.Paragraph({children: runs, alignment: st.align || defaultAlign, spacing:{after:80}}));
-      }
+    
+  return blocks;
+}
+function htmlToDocxBlocks(container, defaultAlign, defaultSize, newlineMode){
+  defaultSize = defaultSize || 24;
+  const blocks = [];
+  let toks = [];          // বর্তমান লাইনগুলোর টুকরো ('BR' = লাইন ভাঙা)
+  let afterBlock = false; // ঠিক আগে টেবিল/ব্লক ছিল
+  let pageBreakNext = false;
+  const para = (opts)=>{
+    if(pageBreakNext){ opts.pageBreakBefore = true; pageBreakNext = false; }
+    blocks.push(new docx.Paragraph(opts));
+  };
+  const flush = ()=>{
+    if(!toks.length) return;
+    const lines = [[]];
+    toks.forEach(t=>{ if(t === 'BR') lines.push([]); else lines[lines.length-1].push(t); });
+    if(newlineMode && afterBlock && lines.length > 1 && !lines[0].length) lines.shift();
+    if(lines.length > 1 && !lines[lines.length-1].length) lines.pop();
+    lines.forEach(l=> para({children:l, alignment:defaultAlign}));
+    toks = []; afterBlock = false;
+  };
+  container.childNodes.forEach(node=>{
+    if(node.nodeType === 3){
+      const text = fixBengaliNukta(node.textContent);
+      if(!text.replace(/[ \t\r\n]/g,'')){ if(!toks.length || /[\r\n]/.test(text)) return; }
+      text.split(/\r?\n/).forEach((line,i)=>{
+        if(i > 0) toks.push('BR');
+        if(line) toks.push(new docx.TextRun({text:line, font:DOCX_FONT, size:defaultSize}));
+      });
+      return;
     }
+    if(node.nodeType !== 1) return;
+    const tag = node.tagName.toLowerCase();
+    if(tag === 'br'){
+      if(/page-break/.test(node.getAttribute('style') || '')){ flush(); pageBreakNext = true; afterBlock = true; }
+      else toks.push('BR');
+      return;
+    }
+    const isBlock = tag==='table' || tag==='h1' || tag==='h2' || tag==='div' || tag==='p' || node.querySelector('table');
+    if(!isBlock){
+      const st = styleAttrs(node);
+      toks.push(...parseInlineRuns(node, {bold:(tag==='b'||tag==='strong'), size: st.size||defaultSize}));
+      return;
+    }
+    flush();
+    if(tag === 'table'){
+      if(pageBreakNext) para({children:[]});
+      blocks.push(...docxTable(node, defaultAlign, defaultSize, newlineMode));
+    } else if(tag === 'h1' || tag === 'h2'){
+      para({children: parseInlineRuns(node, {bold:true, size: tag==='h1'?32:26}), alignment: tag==='h1' ? docx.AlignmentType.CENTER : undefined, spacing:{after:200}});
+    } else if((tag === 'div' || tag === 'p') && !node.querySelector('table')){
+      const st = styleAttrs(node);
+      const runs = parseInlineRuns(node, {bold:false, size: st.size||defaultSize});
+      if(runs.length) para({children: runs, alignment: st.align || defaultAlign, spacing:{after:80}});
+    } else {
+      blocks.push(...htmlToDocxBlocks(node, defaultAlign, defaultSize, newlineMode));
+    }
+    afterBlock = true;
   });
+  flush();
   return blocks;
 }
 const pageSizeTwipsMap = {
@@ -2938,7 +3074,7 @@ const pageSizeTwipsMap = {
   'Letter': {width:12240, height:15840},
   'Deed8.5x13.5': {width:12240, height:19440}
 };
-async function downloadDocxFromHtml(htmlStr, filename, pageSizeTwips, defaultAlign, defaultSize){
+async function downloadDocxFromHtml(htmlStr, filename, pageSizeTwips, defaultAlign, defaultSize, newlineMode){
   defaultSize = defaultSize || 24;
   let bodyEl;
   if(/<html[\s>]/i.test(htmlStr)){
@@ -2949,7 +3085,7 @@ async function downloadDocxFromHtml(htmlStr, filename, pageSizeTwips, defaultAli
     wrapper.innerHTML = htmlStr;
     bodyEl = wrapper;
   }
-  const blocks = htmlToDocxBlocks(bodyEl, defaultAlign, defaultSize);
+  const blocks = htmlToDocxBlocks(bodyEl, defaultAlign, defaultSize, newlineMode);
   const sectionProps = {};
   if(pageSizeTwips){
     sectionProps.page = { size: { width: pageSizeTwips.width, height: pageSizeTwips.height }, margin: {top:1440,bottom:1440,left:1440,right:1440} };
@@ -3079,7 +3215,7 @@ function buildDocHtml(){
     </table>
 
     <h2>দলিলের বিবরণ</h2>
-    <p>${escapeHtml(document.getElementById('narrativeText').value).replace(/\n/g,'<br/><br/>')}</p>
+    <p>${escapeHtml(document.getElementById('narrativeText').value).replace(/\n/g,'<br/>')}</p>
 
     <h2>দলিল দাতা/দাত্রীগণের তথ্য</h2>
     ${personRowsHtml(state.donors,'দাতা')}
