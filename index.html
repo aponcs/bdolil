@@ -328,6 +328,19 @@
           <option>হেবা ঘোষণাপত্র</option>
         </select>
       </div>
+      <div class="field">
+        <label>সম্পাদনের তারিখ (ইংরেজি)</label>
+        <input type="date" id="deedDateEn">
+      </div>
+      <div class="field">
+        <label>সম্পাদনের তারিখ (বাংলা: দিন / মাস / সন)</label>
+        <div style="display:flex;gap:6px;">
+          <input id="bnDay" class="bn-num" style="width:70px;" placeholder="দিন">
+          <select id="bnMonth" style="flex:1;"></select>
+          <input id="bnYear" class="bn-num" style="width:90px;" placeholder="সন">
+        </div>
+        <div class="hint">ইংরেজি তারিখ দিলে বাংলা তারিখ নিজে বসে — ভুল মনে হলে হাতে বদলে নিন</div>
+      </div>
     </div>
   </div>
 
@@ -505,6 +518,13 @@
         <b>কোনো তথ্য খালি থাকলে সেই অংশ পুরোপুরি বাদ দিতে চাইলে:</b> <code>{{#টোকেন_নাম}}...{{/টোকেন_নাম}}</code> দিয়ে ঘিরে দিন। ভেতরের অংশ শুধু তখনই দেখাবে যখন ঐ টোকেনে তথ্য থাকবে, নাহলে পুরো অংশটাই (লেবেলসহ) বাদ পড়ে যাবে। যেমনঃ<br>
         <code>{{#এসএ_খতিয়ান}}এস.এ খতিয়ানঃ {{এসএ_খতিয়ান}}{{/এসএ_খতিয়ান}}</code><br>
         এস.এ খতিয়ান খালি রাখলে এই পুরো লাইনটাই ডকুমেন্টে আসবে না। নিচের "❓ শর্তসাপেক্ষ অংশ যোগ করুন" বাটন চাপলে এটা স্বয়ংক্রিয়ভাবে বসিয়ে দেবে। (দাতা/গ্রহীতার স্বামী/পিতার তথ্য এমনিতেই খালি থাকলে বাদ পড়ে যায়, আলাদা করে কিছু করতে হয় না।)
+      </p>
+      <p style="margin-top:8px;background:var(--callout-green);padding:8px 10px;border-radius:4px;font-size:12px;">
+        <b>সব ব্যক্তি/তফসিল ঘুরিয়ে বসাতে (একাধিক গ্রহীতা, সাক্ষী ইত্যাদি):</b> <code>{{#প্রতি_গ্রহীতা}} ... {{/প্রতি_গ্রহীতা}}</code> দিয়ে অংশটি ঘিরে ভেতরে <code>গ্রহীতা_১_নাম</code> ধরনের টোকেন একবার লিখুন — প্রতিজনের জন্য নিজে কপি হবে। একইভাবে <code>প্রতি_দাতা</code>, <code>প্রতি_সাক্ষী</code>, <code>প্রতি_সনাক্তকারী</code>, <code>প্রতি_তফসিল</code>। ভেতরে <code>{{ক্রম}}</code> = ১,২,৩ আর <code>{{ক্রম_বর্ণ}}</code> = ক,খ,গ। টেবিলের সারি ঘিরেও দেওয়া যায়।<br>
+        <b>সংখ্যা + কথায় ( ) সহ:</b> টোকেনের শেষে <code>_সহ</code> যোগ করুন, যেমন <code>{{তফসিল_১_এসএ_দাগ_সহ}}</code> → ৩৩০ (তিন শত ত্রিশ); এছাড়া <code>{{জমির_পরিমাণ_সহ}}</code>, <code>{{মূল্য_সহ}}</code>, <code>{{মোট_জমির_পরিমাণ_সহ}}</code>, <code>{{মোট_মূল্য_সহ}}</code>।<br>
+        <b>তারিখ (ফর্মের "সম্পাদনের তারিখ" ঘর থেকে):</b> <code>{{দলিলের_তারিখ_বাংলা}}</code>, <code>{{দলিলের_তারিখ_ইংরেজি}}</code>, <code>{{দলিলের_তারিখ_সম্পূর্ণ}}</code>, <code>{{বাংলা_দিন}}</code>, <code>{{বাংলা_মাস}}</code>, <code>{{বাংলা_সন}}</code>, <code>{{ইংরেজি_দিন}}</code>, <code>{{ইংরেজি_মাস}}</code>, <code>{{ইংরেজি_সন}}</code>।<br>
+        <b>নাম/শব্দ:</b> <code>{{দাতাদের_নাম}}</code>, <code>{{গ্রহীতাদের_নাম}}</code> (সবার নাম "ক, খ ও গ"), <code>{{আমি_আমরা}}</code>, <code>{{আমার_আমাদের}}</code>, <code>{{আপনি_আপনারা}}</code>, <code>{{আপনার_আপনাদের}}</code>, <code>{{দাতা_শব্দ}}</code>, <code>{{গ্রহীতা_শব্দ}}</code>।<br>
+        <b>টেবিলের ঘরের প্রস্থ আলাদা করতে:</b> <code>&lt;td style="width:30%"&gt;</code> বা <code>&lt;td width="30%"&gt;</code> (% অথবা px) এবং টেবিলের মোট প্রস্থ <code>&lt;table width="340"&gt;</code> বা <code>width="60%"</code>। কোলন আলাদা ঘরে লিখলে "◌ঃ" সমস্যা হয় না।
       </p>
     </details>
     <div class="row-actions" style="margin-top:0;">
@@ -1088,6 +1108,28 @@ function autoSelectTemplateForDeedType(){
   if(pick) sel.value = pick.value;
 }
 
+/* ===================== সম্পাদনের তারিখ (ইংরেজি + বাংলা) ===================== */
+const BN_MONTHS = ['বৈশাখ','জ্যৈষ্ঠ','আষাঢ়','শ্রাবণ','ভাদ্র','আশ্বিন','কার্তিক','অগ্রহায়ণ','পৌষ','মাঘ','ফাল্গুন','চৈত্র'];
+const EN_MONTHS_BN = ['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
+function syncBnDateFromEn(){
+  const v = document.getElementById('deedDateEn').value;
+  if(!v) return;
+  const [y,m,d] = v.split('-').map(Number);
+  const b = toBanglaCalendarDate(new Date(y, m-1, d));
+  document.getElementById('bnDay').value = toBnDigits(b.day);
+  document.getElementById('bnMonth').value = b.month;
+  document.getElementById('bnYear').value = toBnDigits(b.year);
+}
+function setDeedDatesToday(){
+  const d = new Date();
+  document.getElementById('deedDateEn').value = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  syncBnDateFromEn();
+}
+function initDeedDates(){
+  document.getElementById('bnMonth').innerHTML = BN_MONTHS.map(m=>`<option value="${m}">${m}</option>`).join('');
+  document.getElementById('deedDateEn').addEventListener('change', syncBnDateFromEn);
+  setDeedDatesToday();
+}
 /* ===================== TOAST NOTIFICATION ===================== */
 function showToast(msg, type){
   const box = document.getElementById('toastBox');
@@ -1290,6 +1332,7 @@ async function init(){
   renderAll();
   bindSimpleFieldPreviews();
   initNarrativeTokenBars();
+  initDeedDates();
   if(window.lucide) lucide.createIcons();
   ['aw_name','aw_father','aw_mother'].forEach(id=>{
     const el = document.getElementById(id);
@@ -2381,7 +2424,7 @@ async function deleteDraftByKey(key){
 }
 
 /* ===================== DRAFT SAVE / LOAD ===================== */
-const plainFieldIds = ['regOffice','deedType','extra','narrativeText'];
+const plainFieldIds = ['regOffice','deedType','extra','narrativeText','deedDateEn','bnDay','bnMonth','bnYear'];
 
 function collectFullState(){
   const fields = {};
@@ -2527,6 +2570,7 @@ function clearDeedForm(){
   if(!confirm('পুরো ফর্ম রিসেট করতে চান?')) return;
   currentDraftId = null;
   narrativeEdited = false;
+  setDeedDatesToday();
   const ws = document.getElementById('writerSearch'); if(ws) ws.value = '';
   document.getElementById('extra').value = '';
   document.getElementById('regOffice').value = officeDB[0] || '';
@@ -2650,6 +2694,17 @@ function addScheduleTokensToMap(map, schedules){
       map[`তফসিল_${n}_শ্রেণি`] = s.landClass || '';
       map[`তফসিল_${n}_মূল্য`] = price ? toBnDigits(price) : '';
       map[`তফসিল_${n}_মূল্য_কথায়`] = price ? (numberToBanglaWords(price)+' টাকা মাত্র') : '';
+      map[`তফসিল_${n}_এসএ_জেএল_সহ`] = numWords(s.saJl);
+      map[`তফসিল_${n}_আরএস_জেএল_সহ`] = numWords(s.rsJl);
+      map[`তফসিল_${n}_এসএ_খতিয়ান_সহ`] = numWords(s.saKhatian);
+      map[`তফসিল_${n}_আরএস_খতিয়ান_সহ`] = numWords(s.rsKhatian);
+      map[`তফসিল_${n}_ডিপি_সহ`] = numWords(s.dp);
+      map[`তফসিল_${n}_নামজারি_সাবেক_সহ`] = mutWords(s.mutationOld);
+      map[`তফসিল_${n}_নামজারি_বর্তমান_সহ`] = mutWords(s.mutationNew);
+      map[`তফসিল_${n}_এসএ_দাগ_সহ`] = numWords(s.saDag);
+      map[`তফসিল_${n}_আরএস_দাগ_সহ`] = numWords(s.rsDag);
+      map[`তফসিল_${n}_জমির_পরিমাণ_সহ`] = landWordsFull(land);
+      map[`তফসিল_${n}_মূল্য_সহ`] = priceWordsFull(price);
       map[`তফসিল_${n}_চৌহদ্দি_উত্তর`] = s.bN || '';
       map[`তফসিল_${n}_চৌহদ্দি_দক্ষিণ`] = s.bS || '';
       map[`তফসিল_${n}_চৌহদ্দি_পূর্ব`] = s.bE || '';
@@ -2657,6 +2712,10 @@ function addScheduleTokensToMap(map, schedules){
     });
   });
 }
+function numWords(v){ return v ? toBnDigits(bnToEnDigits(v)) + ' (' + numberToBanglaWords(parseNum(v)) + ')' : ''; }
+function mutWords(v){ return v ? toBnDigits(bnToEnDigits(v)) + ' (' + mutationToWords(v) + ')' : ''; }
+function landWordsFull(a){ return a ? toBnDigits(a) + ' (' + acreToShotokWords(a) + ')' : ''; }
+function priceWordsFull(p){ return p ? toBnDigits(p) + ' (' + numberToBanglaWords(p) + ' টাকা মাত্র)' : ''; }
 function isGregorianLeap(y){
   return (y%4===0 && y%100!==0) || y%400===0;
 }
@@ -2668,9 +2727,9 @@ function toBanglaCalendarDate(date){
   if(date >= aprilFourteen){ bYear = gYear - 593; refYear = gYear; }
   else { bYear = gYear - 594; refYear = gYear - 1; }
   const startOfBanglaYear = new Date(refYear, 3, 14);
-  const diffDays = Math.floor((date - startOfBanglaYear) / 86400000);
+  const diffDays = Math.round((date - startOfBanglaYear) / 86400000);
   const isBanglaLeap = isGregorianLeap(refYear + 1);
-  const monthLengths = [31,31,31,31,31,31,30,30,30,30, isBanglaLeap?30:29, 30];
+  const monthLengths = [31,31,31,31,31,30,30,30,30,30, isBanglaLeap?31:30, 30];
   const monthNames = ['বৈশাখ','জ্যৈষ্ঠ','আষাঢ়','শ্রাবণ','ভাদ্র','আশ্বিন','কার্তিক','অগ্রহায়ণ','পৌষ','মাঘ','ফাল্গুন','চৈত্র'];
   let remaining = diffDays, monthIdx = 0;
   while(monthIdx < 11 && remaining >= monthLengths[monthIdx]){ remaining -= monthLengths[monthIdx]; monthIdx++; }
@@ -2720,7 +2779,56 @@ function buildFieldMap(){
   addPersonTokensToMap(map, state.witnesses, 'সাক্ষী', true);
   addPersonTokensToMap(map, state.identifiers, 'সনাক্তকারী', true);
   addScheduleTokensToMap(map, state.schedules);
+  // প্রথম তফসিলের সংখ্যা + কথায় ( ) সহ
+  ['এসএ_জেএল','আরএস_জেএল','এসএ_খতিয়ান','আরএস_খতিয়ান','ডিপি','নামজারি_সাবেক','নামজারি_বর্তমান','এসএ_দাগ','আরএস_দাগ','জমির_পরিমাণ','মূল্য'].forEach(k=>{
+    map[k+'_সহ'] = map['তফসিল_১_'+k+'_সহ'] || '';
+  });
+  const totLand = round6(state.schedules.reduce((sum,x)=>sum+parseNum(x.landAmount),0));
+  const totPrice = round6(state.schedules.reduce((sum,x)=>sum+parseNum(x.price),0));
+  const dG = donorGrammar(), gG = granteeGrammar();
+  Object.assign(map, {
+    'মোট_জমির_পরিমাণ_সহ': landWordsFull(totLand), 'মোট_মূল্য_সহ': priceWordsFull(totPrice),
+    'মোট_জমি_কথায়': totLand ? acreToShotokWords(totLand) : '', 'মোট_মূল্য_কথায়': totPrice ? numberToBanglaWords(totPrice)+' টাকা মাত্র' : '',
+    'দাতাদের_নাম': bengaliJoinNames(state.donors), 'গ্রহীতাদের_নাম': bengaliJoinNames(state.grantees),
+    'দাতার_সংখ্যা': toBnDigits(state.donors.length), 'গ্রহীতার_সংখ্যা': toBnDigits(state.grantees.length),
+    'আমি_আমরা': dG.pron, 'আমার_আমাদের': dG.poss, 'দাতা_শব্দ': dG.role,
+    'আপনি_আপনারা': gG.pron2, 'আপনার_আপনাদের': gG.poss2, 'গ্রহীতা_শব্দ': gG.role,
+    'সাক্ষী_শব্দ': witnessGrammar(), 'সনাক্তকারী_শব্দ': identifierGrammar()
+  });
+  // সম্পাদনের তারিখ (ফর্মে দেওয়া ইংরেজি ও বাংলা)
+  const enV = g('deedDateEn');
+  let ey, em, ed;
+  if(enV){ [ey,em,ed] = enV.split('-').map(Number); }
+  else { const t = new Date(); ey = t.getFullYear(); em = t.getMonth()+1; ed = t.getDate(); }
+  const dd = String(ed).padStart(2,'0'), mm = String(em).padStart(2,'0');
+  const enAscii = dd+'/'+mm+'/'+ey, enBn = toBnDigits(enAscii);
+  const bd = g('bnDay'), bm = g('bnMonth'), by = g('bnYear');
+  const bnText = (bd||bm||by) ? ([bd,bm].filter(Boolean).join(' ') + (by ? ', '+by+' বঙ্গাব্দ' : '')) : '';
+  const full = bnText + ' মোতাবেক ' + enBn + ' ইংরেজি';
+  Object.assign(map, {
+    'দলিলের_তারিখ_বাংলা': bnText, 'দলিলের_তারিখ_ইংরেজি': enBn, 'দলিলের_তারিখ_সম্পূর্ণ': full,
+    'বাংলা_দিন': bd, 'বাংলা_মাস': bm, 'বাংলা_সন': by,
+    'ইংরেজি_দিন': toBnDigits(dd), 'ইংরেজি_মাস': toBnDigits(mm), 'ইংরেজি_মাস_নাম': EN_MONTHS_BN[em-1] || '', 'ইংরেজি_সন': toBnDigits(ey),
+    'আজকের_তারিখ_ইংরেজি': enAscii, 'আজকের_তারিখ_বঙ্গাব্দ': bnText, 'আজকের_তারিখ_সম্পূর্ণ': full, 'আজকের_তারিখ': enBn
+  });
   return map;
+}
+function expandRepeatBlocks(text){
+  const kinds = {'দাতা':state.donors.length, 'গ্রহীতা':state.grantees.length, 'সাক্ষী':state.witnesses.length, 'সনাক্তকারী':state.identifiers.length, 'তফসিল':state.schedules.length};
+  const letters = ['ক','খ','গ','ঘ','ঙ','চ','ছ','জ','ঝ','ঞ'];
+  Object.keys(kinds).forEach(k=>{
+    const re = new RegExp('\\{\\{#প্রতি_'+k+'\\}\\}([\\s\\S]*?)\\{\\{\\/প্রতি_'+k+'\\}\\}', 'g');
+    text = text.replace(re, (m, inner)=>{
+      let out = '';
+      for(let i=1;i<=kinds[k];i++){
+        out += inner.replace(new RegExp(k+'_[১1]_','g'), k+'_'+toBnDigits(i)+'_')
+                    .replace(/\{\{\s*ক্রম_বর্ণ\s*\}\}/g, letters[i-1] || String(i))
+                    .replace(/\{\{\s*ক্রম\s*\}\}/g, toBnDigits(i));
+      }
+      return out;
+    });
+  });
+  return text;
 }
 async function exportCustomWord(){
   const sel = document.getElementById('templateSelectForExport');
@@ -2730,7 +2838,7 @@ async function exportCustomWord(){
     const data = await storeGet('customtemplate:'+sel.value);
     if(!data || !data.text){ showToast('টেমপ্লেট লোড করা যায়নি', 'error'); return; }
     const map = buildFieldMap();
-    let filled = data.text.replace(/\{\{#([^}]+?)\}\}([\s\S]*?)\{\{\/\1\}\}\n?/g, (match, key, inner)=>{
+    let filled = expandRepeatBlocks(data.text).replace(/\{\{#([^}]+?)\}\}([\s\S]*?)\{\{\/\1\}\}\n?/g, (match, key, inner)=>{
       const trimmedKey = key.trim();
       return (trimmedKey in map && map[trimmedKey]) ? inner : '';
     });
@@ -2740,6 +2848,8 @@ async function exportCustomWord(){
       return match;
     });
     filled = fixBengaliNukta(filled);
+    // ফাঁকা/ট্যাগের পরে একা ঃ (বিসর্গ) এর আগে ◌ বসে — সেখানে সাধারণ কোলন (:) বসাও
+    filled = filled.replace(/(\s|&nbsp;|&#160;|>)ঃ/g, '$1:');
     // Convert newlines to <br/> so Word OpenXML docx preserves line breaks
     // HTML কমেন্ট বাদ; একাধিক লাইনে ভাঙা ট্যাগ (<table\n border=...>) এক লাইনে আনো
     filled = filled.replace(/<!--[\s\S]*?-->/g, '')
@@ -2923,6 +3033,12 @@ function styleAttrs(el){
   if(/text-align\s*:\s*center/i.test(style)) out.align = docx.AlignmentType.CENTER;
   else if(/text-align\s*:\s*justify/i.test(style)) out.align = docx.AlignmentType.JUSTIFIED;
   else if(/text-align\s*:\s*right/i.test(style)) out.align = docx.AlignmentType.RIGHT;
+  if(!out.align){
+    const al = ((el.getAttribute && el.getAttribute('align')) || '').toLowerCase();
+    if(al === 'center') out.align = docx.AlignmentType.CENTER;
+    else if(al === 'right') out.align = docx.AlignmentType.RIGHT;
+    else if(al === 'justify') out.align = docx.AlignmentType.JUSTIFIED;
+  }
   const sizeMatch = style.match(/font-size\s*:\s*(\d+(?:\.\d+)?)\s*(pt|px)/i);
   if(sizeMatch){
     const v = parseFloat(sizeMatch[1]);
@@ -3002,105 +3118,100 @@ function flexDivToBlocks(node, defaultAlign, defaultSize, newlineMode){
     borders: {top:none, bottom:none, left:none, right:none, insideHorizontal:none, insideVertical:none}
   })];
 }
+let docxAvail = 9360;
+function docxWidthSpec(el){
+  const st = el.getAttribute('style') || '';
+  let m = st.match(/(?:^|;)\s*width\s*:\s*(\d+(?:\.\d+)?)\s*(%|px)/i);
+  if(!m){
+    const a = String(el.getAttribute('width') || '').match(/^\s*(\d+(?:\.\d+)?)\s*(%|px)?\s*$/i);
+    if(a) m = [a[0], a[1], a[2] || 'px'];
+  }
+  if(!m) return null;
+  const v = parseFloat(m[1]);
+  return m[2].toLowerCase() === '%' ? {pct:v} : {px:v};
+}
 function docxTable(node, defaultAlign, defaultSize, newlineMode){
+  const avail = docxAvail;
   const blocks = [];
+  const borderAttr = parseInt(node.getAttribute('border')) || 0;
+  const styleAttr = node.getAttribute('style') || '';
+  const none = {style:'none', size:0, color:'FFFFFF'};
+  const one = {style:'single', size:1, color:'000000'};
+  let tblBorders;
+  if(!borderAttr) tblBorders = {top:none, bottom:none, left:none, right:none, insideHorizontal:none, insideVertical:none};
+  else if(/box-only/.test(styleAttr)) tblBorders = {top:one, bottom:one, left:one, right:one, insideHorizontal:none, insideVertical:none};
 
-      const rows = [];
-      const borderAttr = node.getAttribute('border');
-      const styleAttr = (node.getAttribute && node.getAttribute('style')) || '';
-      const hasBorder = borderAttr === '1' || borderAttr === '2';
-      const boxOnly = /box-only/.test(styleAttr);
-
-      // Build border object safely
-      let tblBorders = undefined;
-      if(!hasBorder && borderAttr !== '1' && borderAttr !== '2'){
-        // border="0" or no border = completely borderless
-        tblBorders = {
-          top: {style: "none", size: 0, color: "FFFFFF"},
-          bottom: {style: "none", size: 0, color: "FFFFFF"},
-          left: {style: "none", size: 0, color: "FFFFFF"},
-          right: {style: "none", size: 0, color: "FFFFFF"},
-          insideHorizontal: {style: "none", size: 0, color: "FFFFFF"},
-          insideVertical: {style: "none", size: 0, color: "FFFFFF"},
-        };
-      } else if(boxOnly){
-        // Only outer border, no inner lines
-        tblBorders = {
-          top: {style: "single", size: 1, color: "000000"},
-          bottom: {style: "single", size: 1, color: "000000"},
-          left: {style: "single", size: 1, color: "000000"},
-          right: {style: "single", size: 1, color: "000000"},
-          insideHorizontal: {style: "none", size: 0, color: "FFFFFF"},
-          insideVertical: {style: "none", size: 0, color: "FFFFFF"},
-        };
-      }
-      // If hasBorder and not boxOnly, leave borders undefined (docx default = all borders)
-
-      // শুধু এই টেবিলের নিজের সারি/কলাম (ভেতরের নেস্টেড টেবিলের নয়)
-      const kids = el => Array.from(el.children);
-      const trList = [];
-      kids(node).forEach(ch=>{
-        const t = ch.tagName.toLowerCase();
-        if(t === 'tr') trList.push(ch);
-        else if(t === 'tbody' || t === 'thead' || t === 'tfoot') kids(ch).forEach(r=>{ if(r.tagName.toLowerCase() === 'tr') trList.push(r); });
+  const kids = el => Array.from(el.children);
+  const trList = [];
+  kids(node).forEach(ch=>{
+    const t = ch.tagName.toLowerCase();
+    if(t === 'tr') trList.push(ch);
+    else if(t === 'tbody' || t === 'thead' || t === 'tfoot') kids(ch).forEach(r=>{ if(r.tagName.toLowerCase() === 'tr') trList.push(r); });
+  });
+  const tspec = docxWidthSpec(node);
+  const tableTwips = Math.round(tspec ? (tspec.pct ? avail * tspec.pct / 100 : tspec.px * 15) : avail);
+  const rowsData = trList.map(tr=> kids(tr).filter(c=>/^(td|th)$/i.test(c.tagName)).map(td=>({
+    td, span: Math.max(1, parseInt(td.getAttribute('colspan')) || 1), spec: docxWidthSpec(td)
+  })));
+  const rowWidths = row=>{
+    let known = 0, unk = 0;
+    const tw = row.map(c=>{
+      if(c.spec){ const w = c.spec.pct ? tableTwips * c.spec.pct / 100 : c.spec.px * 15; known += w; return w; }
+      unk += c.span; return null;
+    });
+    let scale = 1;
+    if(known > tableTwips) scale = tableTwips / known;
+    else if(!unk && known > 0 && row.every(c=>c.spec && c.spec.pct)) scale = tableTwips / known;
+    const rest = Math.max(tableTwips - known * scale, 0);
+    const per = unk ? Math.max(rest / unk, 500) : 0;
+    return row.map((c,i)=> Math.round(tw[i] != null ? tw[i] * scale : per * c.span));
+  };
+  let gridCols = 1;
+  rowsData.forEach(r=>{ gridCols = Math.max(gridCols, r.reduce((a,c)=>a+c.span, 0)); });
+  let grid = null;
+  const rows = [];
+  rowsData.forEach(row=>{
+    if(!row.length) return;
+    const ws = rowWidths(row);
+    if(!grid && row.reduce((a,c)=>a+c.span, 0) === gridCols){
+      grid = [];
+      row.forEach((c,i)=>{ for(let k=0;k<c.span;k++) grid.push(Math.round(ws[i] / c.span)); });
+    }
+    const cells = row.map((c,i)=>{
+      const td = c.td;
+      const cellStyle = td.getAttribute('style') || '';
+      const aAttr = (td.getAttribute('align') || '').toLowerCase();
+      let cellAlign = defaultAlign;
+      if(aAttr === 'center') cellAlign = docx.AlignmentType.CENTER;
+      else if(aAttr === 'right') cellAlign = docx.AlignmentType.RIGHT;
+      else if(aAttr === 'left') cellAlign = docx.AlignmentType.LEFT;
+      else if(/text-align\s*:\s*center/i.test(cellStyle)) cellAlign = docx.AlignmentType.CENTER;
+      else if(/text-align\s*:\s*right/i.test(cellStyle)) cellAlign = docx.AlignmentType.RIGHT;
+      else if(/text-align\s*:\s*left/i.test(cellStyle)) cellAlign = docx.AlignmentType.LEFT;
+      else if(td.tagName.toLowerCase() === 'th') cellAlign = docx.AlignmentType.CENTER;
+      let va;
+      const vAttr = ((td.getAttribute('valign') || '') + ' ' + ((cellStyle.match(/vertical-align\s*:\s*([a-z]+)/i) || [])[1] || '')).toLowerCase();
+      if(/middle|center/.test(vAttr)) va = docx.VerticalAlign.CENTER;
+      else if(/bottom/.test(vAttr)) va = docx.VerticalAlign.BOTTOM;
+      const prev = docxAvail;
+      docxAvail = Math.max(ws[i] - 220, 600);
+      const cellBlocks = htmlToDocxBlocks(td, cellAlign, styleAttrs(td).size || defaultSize, newlineMode);
+      docxAvail = prev;
+      return new docx.TableCell({
+        children: cellBlocks.length ? cellBlocks : [new docx.Paragraph({children:[], alignment: cellAlign})],
+        width: {size: ws[i], type: docx.WidthType.DXA},
+        columnSpan: c.span > 1 ? c.span : undefined,
+        verticalAlign: va
       });
-      // px প্রস্থ (যেমন width="220") থাকলে সেটি মানা হবে; ১px = ১৫ টুইপ
-      const pxOf = v => { const m = String(v||'').match(/^\s*(\d+(?:\.\d+)?)\s*(?:px)?\s*$/i); return m ? parseFloat(m[1]) : 0; };
-      let tblPx = pxOf(node.getAttribute('width'));
-      const mw = styleAttr.match(/(?:^|;)\s*width:\s*(\d+(?:\.\d+)?)px/i);
-      if(mw) tblPx = parseFloat(mw[1]);
-      let firstRowWidths = null;
-      trList.forEach(tr=>{
-        const cells = [];
-        const tds = kids(tr).filter(c=>/^(td|th)$/i.test(c.tagName));
-        const cellCount = tds.length || 1;
-        const widths = [];
-        tds.forEach(td=>{
-          const cellAlignAttr = td.getAttribute('align');
-          const cellStyle = (td.getAttribute && td.getAttribute('style')) || '';
-          let cellAlign = defaultAlign;
-          if(cellAlignAttr === 'center') cellAlign = docx.AlignmentType.CENTER;
-          else if(cellAlignAttr === 'right') cellAlign = docx.AlignmentType.RIGHT;
-          else if(cellAlignAttr === 'left') cellAlign = docx.AlignmentType.LEFT;
-          else if(/text-align:\s*center/.test(cellStyle)) cellAlign = docx.AlignmentType.CENTER;
-          else if(/text-align:\s*right/.test(cellStyle)) cellAlign = docx.AlignmentType.RIGHT;
-          else if(/text-align:\s*left/.test(cellStyle)) cellAlign = docx.AlignmentType.LEFT;
-          const cellBlocks = htmlToDocxBlocks(td, cellAlign, styleAttrs(td).size || defaultSize, newlineMode);
-
-          let widthOpt;
-          if(tblPx){
-            let px = pxOf(td.getAttribute('width'));
-            const mpx = cellStyle.match(/(?:^|;)\s*width:\s*(\d+(?:\.\d+)?)px/i);
-            if(mpx) px = parseFloat(mpx[1]);
-            const mpc = cellStyle.match(/(?:^|;)\s*width:\s*(\d+(?:\.\d+)?)%/);
-            if(!px && mpc) px = tblPx * parseFloat(mpc[1]) / 100;
-            if(!px) px = tblPx / cellCount;
-            widths.push(Math.round(px*15));
-            widthOpt = {size: Math.round(px*15), type: docx.WidthType.DXA};
-          } else {
-            let cellWidth = 100 / cellCount;
-            const widthMatch = cellStyle.match(/width:\s*(\d+(?:\.\d+)?)%/);
-            if(widthMatch) cellWidth = parseFloat(widthMatch[1]);
-            widthOpt = {size: cellWidth, type: docx.WidthType.PERCENTAGE};
-          }
-          cells.push(new docx.TableCell({
-            children: cellBlocks.length ? cellBlocks : [new docx.Paragraph({children:[], alignment: cellAlign})],
-            width: widthOpt,
-          }));
-        });
-        if(!firstRowWidths && widths.length) firstRowWidths = widths;
-        if(cells.length) rows.push(new docx.TableRow({children:cells}));
-      });
-      if(rows.length){
-        const tblOpts = {
-          rows,
-          width: tblPx ? {size: Math.round(tblPx*15), type: docx.WidthType.DXA} : {size:100, type: docx.WidthType.PERCENTAGE},
-        };
-        if(tblPx && firstRowWidths){ tblOpts.columnWidths = firstRowWidths; tblOpts.layout = docx.TableLayoutType.FIXED; }
-        if(tblBorders) tblOpts.borders = tblBorders;
-        blocks.push(new docx.Table(tblOpts));
-      }
-    
+    });
+    rows.push(new docx.TableRow({children: cells}));
+  });
+  if(rows.length){
+    const opts = {rows, width: {size: tableTwips, type: docx.WidthType.DXA}, layout: docx.TableLayoutType.FIXED};
+    if(grid) opts.columnWidths = grid;
+    if(tblBorders) opts.borders = tblBorders;
+    blocks.push(new docx.Table(opts));
+  }
   return blocks;
 }
 function htmlToDocxBlocks(container, defaultAlign, defaultSize, newlineMode){
@@ -3170,7 +3281,7 @@ function htmlToDocxBlocks(container, defaultAlign, defaultSize, newlineMode){
       return;
     }
     flushFloat();
-    const isBlock = tag==='table' || tag==='h1' || tag==='h2' || tag==='div' || tag==='p' || node.querySelector('table');
+    const isBlock = tag==='table' || tag==='h1' || tag==='h2' || tag==='div' || tag==='p' || tag==='center' || node.querySelector('table');
     if(!isBlock){
       toks.push(...parseInlineRuns(node, inlineCtx(node, {bold:false, size: defaultSize})));
       return;
@@ -3183,10 +3294,10 @@ function htmlToDocxBlocks(container, defaultAlign, defaultSize, newlineMode){
       para({children: parseInlineRuns(node, {bold:true, size: tag==='h1'?32:26}), alignment: tag==='h1' ? docx.AlignmentType.CENTER : undefined, spacing:{after:200}});
     } else if(tag === 'div' && /display\s*:\s*flex/i.test(node.getAttribute('style') || '') && node.children.length){
       blocks.push(...flexDivToBlocks(node, defaultAlign, defaultSize, newlineMode));
-    } else if((tag === 'div' || tag === 'p') && !node.querySelector('table')){
+    } else if((tag === 'div' || tag === 'p' || tag === 'center') && !node.querySelector('table')){
       const st = styleAttrs(node);
       const runs = parseInlineRuns(node, {bold:false, size: st.size||defaultSize});
-      if(runs.length) para({children: runs, alignment: st.align || defaultAlign, spacing:{after:80}});
+      if(runs.length) para({children: runs, alignment: st.align || (tag === 'center' ? docx.AlignmentType.CENTER : defaultAlign), spacing:{after:80}});
     } else {
       blocks.push(...htmlToDocxBlocks(node, defaultAlign, defaultSize, newlineMode));
     }
@@ -3213,6 +3324,7 @@ async function downloadDocxFromHtml(htmlStr, filename, pageSizeTwips, defaultAli
     wrapper.innerHTML = htmlStr;
     bodyEl = wrapper;
   }
+  docxAvail = Math.max((pageSizeTwips ? pageSizeTwips.width : 11906) - 2880, 3000);
   const blocks = htmlToDocxBlocks(bodyEl, defaultAlign, defaultSize, newlineMode);
   const sectionProps = {};
   if(pageSizeTwips){
