@@ -255,6 +255,7 @@
   @keyframes toastFade{
     to{transform:translateX(120%);opacity:0;}
   }
+  .ai-filled{background:var(--callout-yellow)!important;border-color:var(--brass)!important;}
 </style>
 </head>
 <body>
@@ -318,7 +319,7 @@
     <div class="grid">
       <div class="field">
         <label>রেজিস্ট্রেশন কার্যালয়ের নাম</label>
-        <select id="regOffice"></select>
+        <input id="regOffice" list="regOfficeList" autocomplete="off" placeholder="নাম লিখে খুঁজুন বা বাছুন">
       </div>
       <div class="field">
         <label>দলিলের প্রকৃতি</label>
@@ -340,11 +341,6 @@
           <input id="bnYear" class="bn-num" style="width:90px;" placeholder="সন">
         </div>
         <div class="hint">ইংরেজি তারিখ দিলে বাংলা তারিখ নিজে বসে — ভুল মনে হলে হাতে বদলে নিন</div>
-      </div>
-      <div class="field">
-        <label>সাব-রেজিস্ট্রার</label>
-        <input id="subRegSearch" list="subRegList" placeholder="নাম লিখে খুঁজুন বা তালিকা থেকে বাছুন" autocomplete="off">
-        <div class="hint">তালিকা এডমিন ট্যাবের "সাব-রেজিস্ট্রার তালিকা" থেকে আসে</div>
       </div>
     </div>
   </div>
@@ -425,7 +421,7 @@
 
     <div class="action-row">
       <span class="action-label">পুরনো খসড়া</span>
-      <select class="reuse-select" id="draftSelect" style="max-width:240px;"><option value="">— সংরক্ষিত খসড়া বাছুন —</option></select>
+      <input id="draftSelect" list="draftList" autocomplete="off" placeholder="🔍 খসড়ার নাম লিখে খুঁজুন" style="width:260px;max-width:100%;padding:6px 8px;border:1px solid var(--line);border-radius:4px;font-size:13px;">
       <button class="btn small ghost" onclick="loadSelectedDraft()"><i data-lucide="folder-open" class="lucide-icon"></i> লোড করুন</button>
       <button class="btn small danger" onclick="deleteSelectedDraft()"><i data-lucide="trash-2" class="lucide-icon"></i> মুছুন</button>
     </div>
@@ -442,7 +438,7 @@
     <div style="border-top:1px dashed var(--line);padding-top:14px;margin-top:10px;">
       <label style="font-weight:600;font-size:14px;display:block;margin-bottom:8px;">কাস্টম টেমপ্লেট অনুযায়ী ডাউনলোড করতে চান?</label>
       <div class="action-row" style="margin:0;">
-        <select class="plain-select" id="templateSelectForExport" style="max-width:280px;"><option value="">— টেমপ্লেট নির্বাচন করুন —</option></select>
+        <input id="templateSelectForExport" list="templateList" autocomplete="off" placeholder="🔍 টেমপ্লেটের নাম লিখে খুঁজুন" style="width:280px;max-width:100%;padding:6px 8px;border:1px solid var(--line);border-radius:4px;font-size:13px;">
         <button type="button" class="btn ghost" onclick="exportCustomWord()"><i data-lucide="download" class="lucide-icon"></i> টেমপ্লেট ডাউনলোড</button>
       </div>
     </div>
@@ -541,6 +537,7 @@
       <button type="button" class="btn small ghost" onclick="insertConditionalIntoTemplate()"><i data-lucide="help-circle" class="lucide-icon"></i> শর্তসাপেক্ষ অংশ (খালি হলে বাদ) যোগ করুন</button>
       <button type="button" class="btn small ghost" onclick="makeSelectionBiggerInTemplate()"><i data-lucide="type" class="lucide-icon"></i> নির্বাচিত অংশ বড় করুন</button>
     </div>
+    <div class="row-actions token-bar" data-target="customTemplateText" data-kind="custom"></div>
     <div class="field" style="margin-top:10px;"><textarea id="customTemplateText" style="min-height:220px;" placeholder="যেমনঃ&#10;গণপ্রজাতন্ত্রী বাংলাদেশ সরকার&#10;{{দলিলের_ধরন}} দলিল&#10;&#10;মৌজাঃ {{মৌজা}}, উপজেলাঃ {{থানা}}, জেলাঃ {{জেলা}}&#10;মূল্যঃ {{মূল্য_কথায়}}&#10;&#10;দাতাগণঃ&#10;{{দাতাগণ}}&#10;&#10;গ্রহীতাগণঃ&#10;{{গ্রহীতাগণ}}"></textarea></div>
     <div class="grid wide" style="margin-top:10px;">
       <div class="field"><label>টেমপ্লেটের নাম</label><input id="templateNameInput" placeholder="যেমনঃ আমার সাফ কবলা ফরম্যাট"></div>
@@ -651,10 +648,10 @@
     <p class="empty-note">এখানে একবার মৌজার তথ্য এন্ট্রি দিলে, দলিল ফর্মে মৌজার নাম লিখলেই সংশ্লিষ্ট তথ্য স্বয়ংক্রিয়ভাবে পূরণ হবে। এই তথ্য এই সরঞ্জামের সব ব্যবহারকারী দেখতে পাবেন।</p>
     <div class="grid wide">
       <div class="field"><label>মৌজার নাম</label><input id="am_mouza"></div>
-      <div class="field"><label>সিটি কর্পোরেশন/পৌরসভা/ইউনিয়ন</label><select id="am_union"></select></div>
-      <div class="field"><label>উপজেলা</label><select id="am_thana"></select></div>
-      <div class="field"><label>জেলা</label><select id="am_district"></select></div>
-      <div class="field"><label>ভূমি অফিসের নাম</label><select id="am_office"></select></div>
+      <div class="field"><label>সিটি কর্পোরেশন/পৌরসভা/ইউনিয়ন</label><input id="am_union" list="unionList" autocomplete="off" placeholder="লিখে খুঁজুন বা বাছুন"></div>
+      <div class="field"><label>উপজেলা</label><input id="am_thana" list="upazilaList" autocomplete="off" placeholder="লিখে খুঁজুন বা বাছুন"></div>
+      <div class="field"><label>জেলা</label><input id="am_district" list="districtList" autocomplete="off" placeholder="লিখে খুঁজুন বা বাছুন"></div>
+      <div class="field"><label>ভূমি অফিসের নাম</label><input id="am_office" list="landOfficeList" autocomplete="off" placeholder="লিখে খুঁজুন বা বাছুন"></div>
     </div>
     <div class="row-actions"><button class="btn" onclick="saveMouzaEntry()">সংরক্ষণ করুন</button></div>
     <table class="admin-table" id="mouzaTable"></table>
@@ -665,9 +662,9 @@
     <p class="empty-note">ব্যক্তির স্থায়ী/বর্তমান ঠিকানায় গ্রামের নাম দিলে ডাকঘর, উপজেলা ও জেলা স্বয়ংক্রিয়ভাবে পূরণ হবে।</p>
     <div class="grid wide">
       <div class="field"><label>গ্রামের নাম</label><input id="av_village"></div>
-      <div class="field"><label>ডাকঘর</label><select id="av_post"></select></div>
-      <div class="field"><label>উপজেলা</label><select id="av_upazila"></select></div>
-      <div class="field"><label>জেলা</label><select id="av_district"></select></div>
+      <div class="field"><label>ডাকঘর</label><input id="av_post" list="postOfficeList" autocomplete="off" placeholder="লিখে খুঁজুন বা বাছুন"></div>
+      <div class="field"><label>উপজেলা</label><input id="av_upazila" list="upazilaList" autocomplete="off" placeholder="লিখে খুঁজুন বা বাছুন"></div>
+      <div class="field"><label>জেলা</label><input id="av_district" list="districtList" autocomplete="off" placeholder="লিখে খুঁজুন বা বাছুন"></div>
     </div>
     <div class="row-actions"><button class="btn" onclick="saveVillageEntry()">সংরক্ষণ করুন</button></div>
     <table class="admin-table" id="villageTable"></table>
@@ -714,8 +711,20 @@
   </div>
 
   <div class="card">
+    <h2>🪪 NID / হাতের লেখা স্ক্যান (AI) সেটিংস</h2>
+    <p class="empty-note" style="margin-top:-4px;">দাতা/গ্রহীতার ব্লকের ডান পাশের "🪪 স্ক্যান" বাটনে NID কার্ডের (বা হাতে লেখা তথ্যের) ছবি দিলে নাম, পিতা, মাতা, জন্ম তারিখ ও আইডি নম্বর নিজে বসবে। এর জন্য <b>Claude (Anthropic)</b> অথবা <b>Gemini (Google)</b> — যেকোনো একটির <b>API Key</b> লাগে। Key শুধু এই ব্রাউজারে জমা থাকে — সাইটের কোডে বা GitHub-এ যায় না। ছবি পড়ার জন্য নির্বাচিত কোম্পানির সার্ভারে পাঠানো হয়, আমাদের ডেটাবেসে ছবি জমা হয় না। Claude-এ প্রতিটি ছবিতে সামান্য খরচ হয়; Gemini-র বিনামূল্যের (free) ধাপ আছে, তবে তাতে পাঠানো লেখা/ছবি Google তাদের সেবা উন্নত করতে ব্যবহার করতে পারে — NID-এর মতো গোপন তথ্যের জন্য Gemini-র পেইড (বিলিং চালু) ধাপ বা Claude নিরাপদ। <b>বসে যাওয়া তথ্য (হলুদ ঘর) প্রতিবার নিজে মিলিয়ে নিন।</b></p>
+    <div class="grid wide">
+      <div class="field"><label>কোন AI ব্যবহার করবেন</label><select id="ai_provider" onchange="onAiProviderChange()"><option value="claude">Claude (Anthropic)</option><option value="gemini">Gemini (Google)</option></select></div>
+      <div class="field"><label>API Key</label><input type="password" id="ai_key" placeholder="sk-ant-..." autocomplete="off"></div>
+      <div class="field"><label>মডেল</label><input id="ai_model" placeholder="claude-sonnet-5-5"></div>
+    </div>
+    <div class="row-actions"><button class="btn" onclick="saveAiSettings()">সংরক্ষণ করুন</button><button class="btn danger" onclick="clearAiKey()">Key মুছুন</button></div>
+    <p class="hint" id="aiStatus"></p>
+  </div>
+
+  <div class="card">
     <h2>সাব-রেজিস্ট্রার তালিকা</h2>
-    <p class="empty-note" style="margin-top:-4px;">এখানে যোগ করা সাব-রেজিস্ট্রারকে দলিল ফর্মে সার্চ করে বাছা যাবে। টেমপ্লেটে <code>{{সাব_রেজিস্ট্রারের_নাম}}</code>, <code>{{সাব_রেজিস্ট্রারের_পদবী}}</code>, <code>{{সাব_রেজিস্ট্রারের_কার্যালয়}}</code> ব্যবহার করুন। তালিকার প্রথম নামটি ফর্মে আগে থেকে বাছা থাকবে।</p>
+    <p class="empty-note" style="margin-top:-4px;">এখানে যোগ করা সাব-রেজিস্ট্রারকে দলিল ফর্মে সার্চ করে বাছা যাবে। টেমপ্লেটে <code>{{সাব_রেজিস্ট্রারের_নাম}}</code>, <code>{{সাব_রেজিস্ট্রারের_পদবী}}</code>, <code>{{সাব_রেজিস্ট্রারের_কার্যালয়}}</code> ব্যবহার করুন। যাকে "ডিফল্ট" করা থাকবে (প্রথমজন নিজে ডিফল্ট হয়), তারই তথ্য টেমপ্লেটে নিজে বসবে — দলিল ফর্মে আলাদা করে বাছতে হবে না।</p>
     <div class="grid wide">
       <div class="field"><label>নাম</label><input id="asr_name" placeholder="যেমনঃ মোঃ তফাজ্জল হোসেন"></div>
       <div class="field"><label>পদবী</label><input id="asr_title" placeholder="সাব-রেজিস্ট্রার"></div>
@@ -782,7 +791,17 @@
 <datalist id="mouzaList"></datalist>
 <datalist id="villageList"></datalist>
 <datalist id="personList"></datalist>
-<datalist id="subRegList"></datalist>
+<datalist id="regOfficeList"></datalist>
+<datalist id="draftList"></datalist>
+<datalist id="templateList"></datalist>
+<datalist id="unionList"></datalist>
+<datalist id="upazilaList"></datalist>
+<datalist id="districtList"></datalist>
+<datalist id="postOfficeList"></datalist>
+<datalist id="landOfficeList"></datalist>
+<datalist id="religionList"></datalist>
+<datalist id="occupationList"></datalist>
+<datalist id="classList"></datalist>
 
 <!-- ===================== FIREBASE SETUP ===================== -->
 <!-- ধাপ ৩ অনুযায়ী নিজের ফায়ারবেজ কনফিগ এখানে বসান -->
@@ -947,6 +966,7 @@ function granteeGrammar(){
     ? {pron2:'আপনারা', poss2:'আপনাদের', role:'গ্রহীতাগণ'}
     : {pron2:'আপনি', poss2:'আপনার', role:'গ্রহীতা'};
 }
+function ownWord(n){ return n > 1 ? 'নিজ নিজ' : 'নিজ'; }
 function witnessGrammar(){
   return state.witnesses.length>1 ? 'সাক্ষীগণ' : 'সাক্ষী';
 }
@@ -981,7 +1001,11 @@ function generateNarrative(){
       'দাতার_নাম':donorNames, 'গ্রহীতার_নাম':granteeNames,
       'আমি_আমরা':dGr.pron, 'আমার_আমাদের':dGr.poss, 'দাতা_শব্দ':dGr.role, 'একত্রে':dGr.together,
       'আপনি_আপনারা':grGr.pron2, 'আপনার_আপনাদের':grGr.poss2, 'গ্রহীতা_শব্দ':grGr.role,
-      'সাক্ষী_শব্দ':witnessGrammar(), 'সনাক্তকারী_শব্দ':identifierGrammar()
+      'সাক্ষী_শব্দ':witnessGrammar(), 'সনাক্তকারী_শব্দ':identifierGrammar(),
+      'নিজ_নিজ': ownWord(state.donors.length), 'গ্রহীতা_নিজ_নিজ': ownWord(state.grantees.length),
+      'হলফকারী_শব্দ': state.donors.length > 1 ? 'হলফকারীগণ' : 'হলফকারী',
+      'তিনি_তাহারা': state.donors.length > 1 ? 'তাহারা' : 'তিনি',
+      'ক্রেতা_শব্দ': state.grantees.length > 1 ? 'ক্রেতাগণ' : 'ক্রেতা'
     };
     return narrativeDefaults[deedType].replace(/\{\{\s*([^}]+?)\s*\}\}/g, (m,k)=> (k in tk) ? tk[k] : m);
   }
@@ -1058,7 +1082,22 @@ const NARRATIVE_TOKEN_GROUPS = [
   ['একবচন/বহুবচন (নিজে বদলায়)', [
     ['আমি/আমরা','আমি_আমরা'], ['আমার/আমাদের','আমার_আমাদের'], ['দাতা/দাতাগণ','দাতা_শব্দ'],
     ['আপনি/আপনারা','আপনি_আপনারা'], ['আপনার/আপনাদের','আপনার_আপনাদের'], ['গ্রহীতা/গ্রহীতাগণ','গ্রহীতা_শব্দ'],
-    ['সাক্ষী/সাক্ষীগণ','সাক্ষী_শব্দ'], ['সনাক্তকারী/গণ','সনাক্তকারী_শব্দ'], ['একত্রে (বহুবচনে)','একত্রে']
+    ['নিজ/নিজ নিজ (দাতা)','নিজ_নিজ'], ['নিজ/নিজ নিজ (গ্রহীতা)','গ্রহীতা_নিজ_নিজ'], ['সাক্ষী/সাক্ষীগণ','সাক্ষী_শব্দ'], ['সনাক্তকারী/গণ','সনাক্তকারী_শব্দ'], ['একত্রে (বহুবচনে)','একত্রে']
+  ]]
+];
+const CUSTOM_TOKEN_GROUPS = [
+  ['একবচন/বহুবচন (নিজে বদলায়)', [
+    ['আমি/আমরা','আমি_আমরা'], ['আমার/আমাদের','আমার_আমাদের'], ['নিজ/নিজ নিজ (দাতা)','নিজ_নিজ'],
+    ['দাতা/দাতাগণ','দাতা_শব্দ'], ['হলফকারী/গণ','হলফকারী_শব্দ'], ['তিনি/তাহারা','তিনি_তাহারা'],
+    ['আপনি/আপনারা','আপনি_আপনারা'], ['আপনার/আপনাদের','আপনার_আপনাদের'], ['নিজ/নিজ নিজ (গ্রহীতা)','গ্রহীতা_নিজ_নিজ'],
+    ['গ্রহীতা/গ্রহীতাগণ','গ্রহীতা_শব্দ'], ['ক্রেতা/ক্রেতাগণ','ক্রেতা_শব্দ'], ['সাক্ষী/সাক্ষীগণ','সাক্ষী_শব্দ'], ['সনাক্তকারী/গণ','সনাক্তকারী_শব্দ']
+  ]],
+  ['তথ্য (নিজে বদলায়)', [
+    ['দাতাদের নাম','দাতাদের_নাম'], ['গ্রহীতাদের নাম','গ্রহীতাদের_নাম'],
+    ['মূল্য (কমাসহ)','মোট_মূল্য_কমা'], ['মূল্য (কথায়)','মোট_মূল্য_কথায়'], ['মূল্য (অঙ্ক+কথা)','মোট_মূল্য_সহ'],
+    ['জমি (অঙ্ক+কথা)','মোট_জমির_পরিমাণ_সহ'], ['মৌজা','মৌজা'], ['ইউনিয়ন','ইউনিয়ন'], ['উপজেলা','থানা'], ['জেলা','জেলা'],
+    ['রেজিস্ট্রি অফিস','রেজিস্ট্রেশন_অফিস'], ['দলিলের ধরন','দলিলের_ধরন'], ['তারিখ (বাংলা+ইংরেজি)','দলিলের_তারিখ_সম্পূর্ণ'],
+    ['সাব-রেজিস্ট্রারের নাম','সাব_রেজিস্ট্রারের_নাম'], ['লেখকের নাম','লেখকের_নাম']
   ]]
 ];
 const NARRATIVE_STARTERS = {
@@ -1093,14 +1132,17 @@ function loadStarterNarrative(id, type){
 function initNarrativeTokenBars(){
   document.querySelectorAll('.token-bar').forEach(bar=>{
     const id = bar.dataset.target, type = bar.dataset.type;
+    const groups = bar.dataset.kind === 'custom' ? CUSTOM_TOKEN_GROUPS : NARRATIVE_TOKEN_GROUPS;
     bar.style.cssText = 'display:block;margin:6px 0;';
     bar.innerHTML = '';
-    const starter = document.createElement('button');
-    starter.type = 'button'; starter.className = 'btn small';
-    starter.textContent = '✨ নমুনা বসান';
-    starter.addEventListener('click', ()=> loadStarterNarrative(id, type));
-    bar.appendChild(starter);
-    NARRATIVE_TOKEN_GROUPS.forEach(([title, items])=>{
+    if(type){
+      const starter = document.createElement('button');
+      starter.type = 'button'; starter.className = 'btn small';
+      starter.textContent = '✨ নমুনা বসান';
+      starter.addEventListener('click', ()=> loadStarterNarrative(id, type));
+      bar.appendChild(starter);
+    }
+    groups.forEach(([title, items])=>{
       const row = document.createElement('div');
       row.style.cssText = 'display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px;';
       const lab = document.createElement('span');
@@ -1123,9 +1165,9 @@ function autoSelectTemplateForDeedType(){
   if(!sel || !typeEl) return;
   const type = (typeEl.value || '').trim();
   if(!type) return;
-  const opts = Array.from(sel.options).filter(o=>o.value);
-  const pick = opts.find(o=>o.value.trim() === type) || opts.find(o=>o.value.includes(type));
-  if(pick) sel.value = pick.value;
+  const names = Array.from(document.querySelectorAll('#templateList option')).map(o=>o.value).filter(Boolean);
+  const pick = names.find(n=>n.trim() === type) || names.find(n=>n.includes(type));
+  if(pick) sel.value = pick;
 }
 
 /* ===================== সম্পাদনের তারিখ (ইংরেজি + বাংলা) ===================== */
@@ -1157,24 +1199,29 @@ async function loadSubRegDB(){
   const items = await storeListWithData('subreg:');
   items.forEach(({value})=>{ subRegDB.push(value); });
   subRegDB.sort((a,b)=>(a.savedAt||0)-(b.savedAt||0));
-  const dl = document.getElementById('subRegList');
-  if(dl) dl.innerHTML = subRegDB.map(x=>`<option value="${escapeHtml(x.name)}" label="${escapeHtml([x.title, x.office].filter(Boolean).join(' — '))}">`).join('');
-  const inp = document.getElementById('subRegSearch');
-  if(inp && !inp.value && subRegDB.length) inp.value = subRegDB[0].name;
   renderSubRegTable();
 }
 function renderSubRegTable(){
   const t = document.getElementById('subRegTable');
   if(!t) return;
-  t.innerHTML = subRegDB.length ? '<tr><th>নাম</th><th>পদবী</th><th>কার্যালয়/ঠিকানা</th><th></th></tr>' +
-    subRegDB.map(x=>`<tr><td>${escapeHtml(x.name)}</td><td>${escapeHtml(x.title)}</td><td>${escapeHtml(x.office)}</td><td><button class="btn small danger" onclick="deleteSubRegEntry('${x.id}')">মুছুন</button></td></tr>`).join('')
+  const def = subRegDB.find(x=>x.isDefault) || subRegDB[0];
+  t.innerHTML = subRegDB.length ? '<tr><th>নাম</th><th>পদবী</th><th>কার্যালয়/ঠিকানা</th><th>ডিফল্ট</th><th></th></tr>' +
+    subRegDB.map(x=>`<tr><td>${escapeHtml(x.name)}</td><td>${escapeHtml(x.title)}</td><td>${escapeHtml(x.office)}</td><td>${x === def ? '✓ এটি টেমপ্লেটে বসছে' : `<button class="btn small ghost" onclick="setDefaultSubReg('${x.id}')">ডিফল্ট করুন</button>`}</td><td><button class="btn small danger" onclick="deleteSubRegEntry('${x.id}')">মুছুন</button></td></tr>`).join('')
     : '<tr><td class="empty-note">এখনো কোনো সাব-রেজিস্ট্রার যোগ করা হয়নি।</td></tr>';
+}
+async function setDefaultSubReg(id){
+  for(const x of subRegDB){
+    const want = x.id === id;
+    if(!!x.isDefault !== want){ x.isDefault = want; await storeSet('subreg:'+x.id, x); }
+  }
+  renderSubRegTable();
+  showToast('ডিফল্ট সাব-রেজিস্ট্রার ঠিক করা হয়েছে', 'success');
 }
 async function saveSubRegEntry(){
   const name = document.getElementById('asr_name').value.trim();
   if(!name){ showToast('সাব-রেজিস্ট্রারের নাম দিন', 'error'); return; }
   const id = 'sr_' + Date.now();
-  const rec = {id, name, title: document.getElementById('asr_title').value.trim() || 'সাব-রেজিস্ট্রার', office: document.getElementById('asr_office').value.trim(), savedAt: Date.now()};
+  const rec = {id, name, title: document.getElementById('asr_title').value.trim() || 'সাব-রেজিস্ট্রার', office: document.getElementById('asr_office').value.trim(), savedAt: Date.now(), isDefault: subRegDB.length === 0};
   if(!(await storeSet('subreg:'+id, rec))) return;
   ['asr_name','asr_title','asr_office'].forEach(x=>document.getElementById(x).value='');
   await loadSubRegDB();
@@ -1184,6 +1231,138 @@ async function deleteSubRegEntry(id){
   if(!confirm('এই সাব-রেজিস্ট্রার মুছে ফেলতে চান?')) return;
   await storeDelete('subreg:'+id);
   await loadSubRegDB();
+}
+/* ===================== NID / হাতের লেখার ছবি থেকে তথ্য (AI) ===================== */
+const AI_DEFAULT_MODEL = {claude:'claude-sonnet-5-5', gemini:'gemini-3.1-flash-lite'};
+const AI_KEY_PLACEHOLDER = {claude:'sk-ant-...', gemini:'AIza...'};
+function aiLs(k, v){ try{ if(v === undefined) return localStorage.getItem(k) || ''; if(v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); }catch(e){} return ''; }
+function aiKeyName(pv){ return pv === 'gemini' ? 'dolil_gemini_key' : 'dolil_ai_key'; }
+function aiModelName(pv){ return pv === 'gemini' ? 'dolil_gemini_model' : 'dolil_ai_model'; }
+function getAiSettings(providerOverride){
+  const provider = providerOverride || aiLs('dolil_ai_provider') || 'claude';
+  return {provider, key: aiLs(aiKeyName(provider)), model: aiLs(aiModelName(provider)) || AI_DEFAULT_MODEL[provider]};
+}
+function loadAiSettingsUi(){
+  const pv = aiLs('dolil_ai_provider') || 'claude';
+  const sel = document.getElementById('ai_provider'); if(sel) sel.value = pv;
+  fillAiFields(pv);
+}
+function fillAiFields(pv){
+  const st = getAiSettings(pv);
+  const k = document.getElementById('ai_key'), m = document.getElementById('ai_model'), msg = document.getElementById('aiStatus');
+  if(k){ k.value = st.key; k.placeholder = AI_KEY_PLACEHOLDER[pv]; }
+  if(m){ m.value = st.model; m.placeholder = AI_DEFAULT_MODEL[pv]; }
+  if(msg) msg.textContent = st.key ? '✓ ' + (pv === 'gemini' ? 'Gemini' : 'Claude') + ' Key সংরক্ষিত আছে' : 'Key দেওয়া নেই — স্ক্যান বাটন কাজ করবে না';
+}
+function onAiProviderChange(){ fillAiFields(document.getElementById('ai_provider').value); }
+function saveAiSettings(){
+  const pv = document.getElementById('ai_provider').value;
+  const key = document.getElementById('ai_key').value.trim();
+  const model = document.getElementById('ai_model').value.trim() || AI_DEFAULT_MODEL[pv];
+  aiLs('dolil_ai_provider', pv); aiLs(aiKeyName(pv), key); aiLs(aiModelName(pv), model);
+  loadAiSettingsUi();
+  showToast('স্ক্যান সেটিংস সংরক্ষণ করা হয়েছে', 'success');
+}
+function clearAiKey(){
+  if(!confirm('এই AI-র সংরক্ষিত API Key এই ব্রাউজার থেকে মুছে ফেলতে চান?')) return;
+  aiLs(aiKeyName(document.getElementById('ai_provider').value), null);
+  loadAiSettingsUi();
+}
+function loadImageFile(file){
+  return new Promise((res, rej)=>{
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = ()=>{ URL.revokeObjectURL(url); res(img); };
+    img.onerror = ()=>{ URL.revokeObjectURL(url); rej(new Error('ছবি খোলা যায়নি')); };
+    img.src = url;
+  });
+}
+async function imageFileToBase64(file, maxDim){
+  const img = await loadImageFile(file);
+  const sc = Math.min(1, maxDim / Math.max(img.naturalWidth, img.naturalHeight));
+  const w = Math.round(img.naturalWidth * sc), h = Math.round(img.naturalHeight * sc);
+  const c = document.createElement('canvas');
+  c.width = w; c.height = h;
+  c.getContext('2d').drawImage(img, 0, 0, w, h);
+  return c.toDataURL('image/jpeg', 0.88).split(',')[1];
+}
+const SCAN_PROMPT = 'This image shows one person\'s identity information: a Bangladeshi National ID card (old or smart card), a birth registration certificate, a passport page, or a handwritten note. Extract the fields below and reply with ONLY one JSON object and nothing else: {"doc_type":"nid|birth|passport|handwritten|other","name":"","father":"","mother":"","husband":"","dob":"DD/MM/YYYY","nid":""}. Rules: write name, father, mother and husband in Bengali script exactly as printed or written (use the Bengali-script line when the card has one; if only English is present, transliterate it to Bengali). dob must be DD/MM/YYYY with ASCII digits. nid is the ID/registration/passport number with digits only (no spaces; keep letters only for a passport). Use an empty string for any field that is not visible or not clearly readable. Never guess or invent values.';
+function applyScannedToPerson(role, idx, r){
+  const p = state[role][idx];
+  const filled = [];
+  const set = (k, v)=>{ if(v != null && String(v).trim()){ p[k] = String(v).trim(); filled.push(k); } };
+  set('name', r.name); set('father', r.father); set('mother', r.mother); set('husband', r.husband);
+  if(r.dob && String(r.dob).trim()) set('dob', toBnDigits(String(r.dob).trim()));
+  if(r.nid && String(r.nid).trim()){
+    const raw = String(r.nid).trim();
+    set('nid', toBnDigits(r.doc_type === 'passport' ? raw : raw.replace(/\D/g,'')));
+    p.idType = r.doc_type === 'birth' ? 'birth' : r.doc_type === 'passport' ? 'passport' : 'nid';
+  }
+  renderPersonList(role);
+  const box = document.getElementById({donors:'donorList', grantees:'granteeList'}[role]);
+  const block = box && box.children[idx];
+  filled.forEach(k=>{ const el = block && block.querySelector('[data-f="'+k+'"]'); if(el) el.classList.add('ai-filled'); });
+  return filled;
+}
+async function callVisionAI(st, b64){
+  if(st.provider === 'gemini'){
+    const url = 'https://generativelanguage.googleapis.com/v1beta/models/' + encodeURIComponent(st.model) + ':generateContent?key=' + encodeURIComponent(st.key);
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {'content-type': 'application/json'},
+      body: JSON.stringify({
+        contents: [{parts: [{inline_data: {mime_type: 'image/jpeg', data: b64}}, {text: SCAN_PROMPT}]}],
+        generationConfig: {temperature: 0, responseMimeType: 'application/json'}
+      })
+    });
+    if(!res.ok){
+      let m = ''; try{ m = (await res.json()).error.message || ''; }catch(e){}
+      const bad = res.status === 403 || (res.status === 400 && /api key/i.test(m));
+      throw {status: res.status, friendly: bad ? 'API Key ভুল বা বন্ধ' : res.status === 429 ? 'বিনামূল্যের সীমা পার — একটু পরে চেষ্টা করুন' : res.status === 404 ? 'মডেলের নাম ঠিক নয় (এডমিনে মডেল দেখুন)' : ('সার্ভার ত্রুটি (' + res.status + ')')};
+    }
+    const data = await res.json();
+    return (((data.candidates || [])[0] || {}).content || {}).parts ? data.candidates[0].content.parts.map(x=>x.text || '').join('') : '';
+  }
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'x-api-key': st.key,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: st.model, max_tokens: 600,
+      messages: [{role:'user', content:[
+        {type:'image', source:{type:'base64', media_type:'image/jpeg', data:b64}},
+        {type:'text', text: SCAN_PROMPT}
+      ]}]
+    })
+  });
+  if(!res.ok){
+    throw {status: res.status, friendly: res.status === 401 ? 'API Key ভুল বা বন্ধ' : res.status === 429 ? 'অনেক বেশি অনুরোধ — একটু পরে চেষ্টা করুন' : ('সার্ভার ত্রুটি (' + res.status + ')')};
+  }
+  const data = await res.json();
+  return (data.content || []).filter(b=>b.type === 'text').map(b=>b.text).join('');
+}
+async function scanIdForPerson(role, idx, file){
+  if(!file) return;
+  const st = getAiSettings();
+  if(!st.key){ showToast('আগে এডমিন ট্যাবে API Key দিয়ে সংরক্ষণ করুন', 'error'); return; }
+  showToast('ছবি পড়া হচ্ছে, কয়েক সেকেন্ড অপেক্ষা করুন…', 'success');
+  try{
+    const b64 = await imageFileToBase64(file, 1600);
+    const text = await callVisionAI(st, b64);
+    const m = text.match(/\{[\s\S]*\}/);
+    if(!m){ showToast('ছবি থেকে তথ্য পড়া যায়নি — পরিষ্কার ছবি দিন', 'error'); return; }
+    const filled = applyScannedToPerson(role, idx, JSON.parse(m[0]));
+    if(!filled.length) showToast('ছবি থেকে কোনো তথ্য পড়া যায়নি — পরিষ্কার ছবি দিন', 'error');
+    else showToast('তথ্য বসানো হয়েছে — হলুদ ঘরগুলো মিলিয়ে নিন', 'success');
+  }catch(e){
+    if(e && e.friendly){ showToast('স্ক্যান ব্যর্থ: ' + e.friendly, 'error'); return; }
+    console.error('scan failed', e);
+    showToast('স্ক্যান ব্যর্থ — ইন্টারনেট বা ছবি পরীক্ষা করুন', 'error');
+  }
 }
 /* ===================== TOAST NOTIFICATION ===================== */
 function showToast(msg, type){
@@ -1388,6 +1567,7 @@ async function init(){
   bindSimpleFieldPreviews();
   initNarrativeTokenBars();
   initDeedDates();
+  loadAiSettingsUi();
   if(window.lucide) lucide.createIcons();
   ['aw_name','aw_father','aw_mother'].forEach(id=>{
     const el = document.getElementById(id);
@@ -1461,6 +1641,7 @@ async function loadClassDB(){
   const items = await storeListWithData('landclass:');
   items.forEach(({value})=>{ classDB.push(value.name); });
   classDB.sort();
+  fillDatalist('classList', classDB);
   if(document.getElementById('scheduleList')) renderSchedules();
 }
 async function loadOfficeDB(){
@@ -1491,12 +1672,14 @@ async function loadOccupationDB(){
   const items = await storeListWithData('occupation:');
   items.forEach(({value})=>{ occupationDB.push(value.name); });
   occupationDB.sort();
+  fillDatalist('occupationList', occupationDB);
 }
 async function loadReligionDB(){
   religionDB = [];
   const items = await storeListWithData('religion:');
   items.forEach(({value})=>{ religionDB.push(value.name); });
   religionDB.sort();
+  fillDatalist('religionList', religionDB);
 }
 async function loadUnionDB(){
   unionDB = [];
@@ -1535,8 +1718,14 @@ async function loadLandOfficeDB(){
   landOfficeDB.sort();
   populateSelect('am_office', landOfficeDB, 'নির্বাচন করুন');
 }
+function fillDatalist(id, items){
+  const dl = document.getElementById(id);
+  if(dl) dl.innerHTML = items.map(n=>`<option value="${escapeHtml(n)}">`).join('');
+}
 function populateSelect(id, items, placeholder){
   const sel = document.getElementById(id);
+  if(!sel) return;
+  if(sel.tagName === 'INPUT'){ fillDatalist(sel.getAttribute('list'), items); return; }
   const current = sel.value;
   sel.innerHTML = (placeholder!==null&&placeholder!==undefined ? `<option value="">${escapeHtml(placeholder)}</option>` : '') +
     items.map(n=>`<option value="${escapeHtml(n)}">${escapeHtml(n)}</option>`).join('');
@@ -1650,6 +1839,7 @@ function buildPersonBlock(role, idx, p){
       <b>${roleLabels[role]} নং ${toBnDigits(idx+1)}</b>
       <div class="row-actions" style="margin:0;">
         <input class="reuse-search" list="personList" placeholder="🔍 পূর্বের তথ্য: নাম বা NID লিখে খুঁজুন" autocomplete="off" style="width:250px;max-width:100%;padding:6px 8px;border:1px solid var(--line);border-radius:4px;font-size:13px;" onchange="pickPersonByText('${role}',${idx},this.value)">
+        <button type="button" class="btn small" title="NID কার্ড বা হাতে লেখা তথ্যের ছবি থেকে তথ্য নিন" onclick="this.nextElementSibling.click()">🪪 স্ক্যান</button><input type="file" accept="image/*" style="display:none" onchange="scanIdForPerson('${role}',${idx},this.files[0]);this.value=''">
         <button type="button" class="btn small ghost" onclick="savePersonFromBlock('${role}',${idx})">সংরক্ষণ করুন</button>
         ${state[role].length>1 ? `<button type="button" class="btn small danger" onclick="removePerson('${role}',${idx})">মুছুন</button>` : ''}
       </div>
@@ -1665,8 +1855,8 @@ function buildPersonBlock(role, idx, p){
       <div class="field"><label>স্বামীর নাম</label><input data-f="husband" value="${escapeHtml(p.husband)}"></div>
       <div class="field"><label>মাতার নাম</label><input data-f="mother" value="${escapeHtml(p.mother)}"></div>
       <div class="field"><label>জন্ম তারিখ (দিন/মাস/বছর)</label><input type="text" class="bn-num" data-f="dob" placeholder="যেমনঃ ১৫/০৬/১৯৯০" value="${escapeHtml(p.dob)}"></div>
-      <div class="field"><label>ধর্ম</label><select data-f="religion">${relOptions}</select></div>
-      <div class="field"><label>পেশা</label><select data-f="occupation">${occOptions}</select></div>
+      <div class="field"><label>ধর্ম</label><input data-f="religion" list="religionList" autocomplete="off" value="${escapeHtml(p.religion)}"></div>
+      <div class="field"><label>পেশা</label><input data-f="occupation" list="occupationList" autocomplete="off" value="${escapeHtml(p.occupation)}"></div>
       <div class="field">
         <label>মোবাইল নম্বর</label>
         <input data-f="mobile" class="bn-num" value="${escapeHtml(p.mobile)}" placeholder="যেমনঃ ০১৭১২৩৪৫৬৭৮৯">
@@ -1894,7 +2084,7 @@ function buildScheduleBlock(idx, s){
         <input data-s="landAmount" class="bn-num" inputmode="decimal" value="${escapeHtml(s.landAmount)}" placeholder="যেমনঃ ০.০৩৩৩ বা 0.0333">
         <div class="bn-preview" data-w="landAmount">${numPreview(s.landAmount,'land')}</div>
       </div>
-      <div class="field"><label>জমির শ্রেণী</label><select data-s="landClass">${classOptions}</select></div>
+      <div class="field"><label>জমির শ্রেণী</label><input data-s="landClass" list="classList" autocomplete="off" value="${escapeHtml(s.landClass)}"></div>
       <div class="field">
         <label>মূল্য (টাকা)</label>
         <input data-s="price" class="bn-num" inputmode="numeric" value="${escapeHtml(s.price)}" placeholder="যেমনঃ ২০০০০০ বা 200000">
@@ -2504,7 +2694,7 @@ async function deleteDraftByKey(key){
 }
 
 /* ===================== DRAFT SAVE / LOAD ===================== */
-const plainFieldIds = ['regOffice','deedType','extra','narrativeText','deedDateEn','bnDay','bnMonth','bnYear','subRegSearch'];
+const plainFieldIds = ['regOffice','deedType','extra','narrativeText','deedDateEn','bnDay','bnMonth','bnYear'];
 
 function collectFullState(){
   const fields = {};
@@ -2597,7 +2787,7 @@ async function saveDeedDraftAsNew(){
   currentDraftId = id;
   await loadDraftList();
   refreshDashboard();
-  document.getElementById('draftSelect').value = 'deeddraft:'+id;
+  selectDraftInInput('deeddraft:'+id);
   showToast('"'+name+'" নতুন খসড়া সংরক্ষণ করা হয়েছে', 'success');
 }
 
@@ -2611,36 +2801,50 @@ async function resaveDeedDraft(){
   await storeSet('draftmeta:'+currentDraftId, {savedName:data.savedName, savedAt:data.savedAt});
   await loadDraftList();
   refreshDashboard();
-  document.getElementById('draftSelect').value = 'deeddraft:'+currentDraftId;
+  selectDraftInInput('deeddraft:'+currentDraftId);
   showToast('"'+data.savedName+'" খসড়া হালনাগাদ করা হয়েছে', 'success');
 }
 
-async function loadDraftList(){
-  const sel = document.getElementById('draftSelect');
-  const items = await getDraftItems();
-  const cur = sel.value;
-  sel.innerHTML = '<option value="">— সংরক্ষিত খসড়া লোড করুন —</option>' +
-    items.map(it=>`<option value="${escapeHtml(it.key)}">${escapeHtml(it.name)}</option>`).join('');
-  if(items.find(i=>i.key===cur)) sel.value = cur;
+let draftSearchMap = {};
+function selectDraftInInput(key){
+  const inp = document.getElementById('draftSelect');
+  if(inp) inp.value = Object.keys(draftSearchMap).find(l=>draftSearchMap[l] === key) || '';
 }
-
+function draftKeyFromInput(){
+  const inp = document.getElementById('draftSelect');
+  return draftSearchMap[(inp.value || '').trim()] || null;
+}
+async function loadDraftList(){
+  const items = await getDraftItems();
+  draftSearchMap = {};
+  const seen = {};
+  const html = items.map(it=>{
+    let label = it.name;
+    seen[label] = (seen[label] || 0) + 1;
+    if(seen[label] > 1) label += ' (' + (it.savedAt ? new Date(it.savedAt).toLocaleDateString('bn-BD') : '') + ' #' + seen[label] + ')';
+    draftSearchMap[label] = it.key;
+    return `<option value="${escapeHtml(label)}">`;
+  }).join('');
+  const dl = document.getElementById('draftList');
+  if(dl) dl.innerHTML = html;
+}
 async function loadSelectedDraft(){
-  const sel = document.getElementById('draftSelect');
-  if(!sel.value){ showToast('একটি খসড়া নির্বাচন করুন', 'error'); return; }
-  const data = await storeGet(sel.value);
+  const key = draftKeyFromInput();
+  if(!key){ showToast('তালিকা থেকে একটি খসড়া বাছুন', 'error'); return; }
+  const data = await storeGet(key);
   if(!data){ showToast('খসড়া লোড করা যায়নি', 'error'); return; }
   applyFullState(data);
-  currentDraftId = sel.value.replace('deeddraft:','');
+  currentDraftId = key.replace('deeddraft:','');
   regenerateNarrative();
   showToast('খসড়া লোড হয়েছে', 'success');
 }
-
 async function deleteSelectedDraft(){
-  const sel = document.getElementById('draftSelect');
-  if(!sel.value){ showToast('একটি খসড়া নির্বাচন করুন', 'error'); return; }
+  const key = draftKeyFromInput();
+  if(!key){ showToast('তালিকা থেকে একটি খসড়া বাছুন', 'error'); return; }
   if(!confirm('এই খসড়া মুছে ফেলতে চান?')) return;
-  await storeDelete(sel.value);
-  await storeDelete('draftmeta:'+sel.value.replace('deeddraft:',''));
+  await storeDelete(key);
+  await storeDelete('draftmeta:'+key.replace('deeddraft:',''));
+  document.getElementById('draftSelect').value = '';
   await loadDraftList();
   refreshDashboard();
 }
@@ -2651,7 +2855,6 @@ function clearDeedForm(){
   currentDraftId = null;
   narrativeEdited = false;
   setDeedDatesToday();
-  { const sr = document.getElementById('subRegSearch'); if(sr) sr.value = subRegDB.length ? subRegDB[0].name : ''; }
   const ws = document.getElementById('writerSearch'); if(ws) ws.value = '';
   document.getElementById('extra').value = '';
   document.getElementById('regOffice').value = officeDB[0] || '';
@@ -2889,7 +3092,11 @@ function buildFieldMap(){
     'দাতার_সংখ্যা': toBnDigits(state.donors.length), 'গ্রহীতার_সংখ্যা': toBnDigits(state.grantees.length),
     'আমি_আমরা': dG.pron, 'আমার_আমাদের': dG.poss, 'দাতা_শব্দ': dG.role,
     'আপনি_আপনারা': gG.pron2, 'আপনার_আপনাদের': gG.poss2, 'গ্রহীতা_শব্দ': gG.role,
-    'সাক্ষী_শব্দ': witnessGrammar(), 'সনাক্তকারী_শব্দ': identifierGrammar()
+    'সাক্ষী_শব্দ': witnessGrammar(), 'সনাক্তকারী_শব্দ': identifierGrammar(),
+    'নিজ_নিজ': ownWord(state.donors.length), 'গ্রহীতা_নিজ_নিজ': ownWord(state.grantees.length),
+    'হলফকারী_শব্দ': state.donors.length > 1 ? 'হলফকারীগণ' : 'হলফকারী',
+    'তিনি_তাহারা': state.donors.length > 1 ? 'তাহারা' : 'তিনি',
+    'ক্রেতা_শব্দ': state.grantees.length > 1 ? 'ক্রেতাগণ' : 'ক্রেতা'
   });
   // সম্পাদনের তারিখ (ফর্মে দেওয়া ইংরেজি ও বাংলা)
   const enV = g('deedDateEn');
@@ -2907,8 +3114,8 @@ function buildFieldMap(){
     'ইংরেজি_দিন': toBnDigits(dd), 'ইংরেজি_মাস': toBnDigits(mm), 'ইংরেজি_মাস_নাম': EN_MONTHS_BN[em-1] || '', 'ইংরেজি_সন': toBnDigits(ey),
     'আজকের_তারিখ_ইংরেজি': enAscii, 'আজকের_তারিখ_বঙ্গাব্দ': bnText, 'আজকের_তারিখ_সম্পূর্ণ': full, 'আজকের_তারিখ': enBn
   });
-  const srName = g('subRegSearch').trim();
-  const srRec = subRegDB.find(x=>x.name === srName);
+  const srRec = subRegDB.find(x=>x.isDefault) || subRegDB[0];
+  const srName = srRec ? srRec.name : '';
   Object.assign(map, {
     'সাব_রেজিস্ট্রারের_নাম': srName,
     'সাব_রেজিস্ট্রারের_পদবী': srRec ? (srRec.title || 'সাব-রেজিস্ট্রার') : (srName ? 'সাব-রেজিস্ট্রার' : ''),
@@ -2994,10 +3201,7 @@ async function loadTemplateList(){
 
   const sel = document.getElementById('templateSelectForExport');
   if(sel){
-    const current = sel.value;
-    sel.innerHTML = '<option value="">— টেমপ্লেট নির্বাচন করুন —</option>' +
-      items.map(it=>`<option value="${escapeHtml(it.name)}">${escapeHtml(it.name)}</option>`).join('');
-    if(items.find(it=>it.name===current)) sel.value = current;
+    fillDatalist('templateList', items.map(it=>it.name));
     if(!sel.value) autoSelectTemplateForDeedType();
   }
 }
