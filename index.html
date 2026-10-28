@@ -1278,13 +1278,27 @@ function loadImageFile(file){
   });
 }
 async function imageFileToBase64(file, maxDim){
-  const img = await loadImageFile(file);
-  const sc = Math.min(1, maxDim / Math.max(img.naturalWidth, img.naturalHeight));
-  const w = Math.round(img.naturalWidth * sc), h = Math.round(img.naturalHeight * sc);
+  let src = null, w = 0, h = 0, isBitmap = false;
+  // বড় ফাইল (মোবাইলের ক্যামেরা ছবি) পুরো আকারে মেমরিতে না নিয়ে সরাসরি ছোট আকারে ডিকোড করা
+  if(typeof createImageBitmap === 'function' && file.size > 1500000){
+    try{
+      src = await createImageBitmap(file, {resizeWidth: maxDim, resizeQuality: 'medium'});
+      w = src.width; h = src.height; isBitmap = true;
+    }catch(e){ src = null; }
+  }
+  if(!src){
+    src = await loadImageFile(file);
+    w = src.naturalWidth; h = src.naturalHeight;
+  }
+  const sc = Math.min(1, maxDim / Math.max(w, h));
+  const cw = Math.round(w * sc), ch = Math.round(h * sc);
   const c = document.createElement('canvas');
-  c.width = w; c.height = h;
-  c.getContext('2d').drawImage(img, 0, 0, w, h);
-  return c.toDataURL('image/jpeg', 0.88).split(',')[1];
+  c.width = cw; c.height = ch;
+  c.getContext('2d').drawImage(src, 0, 0, cw, ch);
+  if(isBitmap && src.close) src.close();
+  const out = c.toDataURL('image/jpeg', 0.88).split(',')[1];
+  c.width = c.height = 1;
+  return out;
 }
 const SCAN_PROMPT = 'This image shows one person\'s identity information: a Bangladeshi National ID card (old or smart card), a birth registration certificate, a passport page, or a handwritten note. Extract the fields below and reply with ONLY one JSON object and nothing else: {"doc_type":"nid|birth|passport|handwritten|other","name":"","father":"","mother":"","husband":"","dob":"DD/MM/YYYY","nid":""}. Rules: write name, father, mother and husband in Bengali script exactly as printed or written (use the Bengali-script line when the card has one; if only English is present, transliterate it to Bengali). dob must be DD/MM/YYYY with ASCII digits. nid is the ID/registration/passport number with digits only (no spaces; keep letters only for a passport). Use an empty string for any field that is not visible or not clearly readable. Never guess or invent values.';
 function applyScannedToPerson(role, idx, r){
@@ -1304,6 +1318,30 @@ function applyScannedToPerson(role, idx, r){
   filled.forEach(k=>{ const el = block && block.querySelector('[data-f="'+k+'"]'); if(el) el.classList.add('ai-filled'); });
   return filled;
 }
+function prepareScan(role, idx, btn){
+  // ছবি তুলতে ক্যামেরা খুললে মোবাইল ব্রাউজার অনেক সময় পেজ রিলোড করে — তাই আগেই ফর্মের তথ্য রেখে দিই
+  try{
+    localStorage.setItem('dolil_autosave', JSON.stringify({t: Date.now(), state: collectFullState()}));
+    localStorage.setItem('dolil_scan_pending', JSON.stringify({t: Date.now(), role, idx}));
+  }catch(e){}
+  btn.nextElementSibling.click();
+}
+function restoreAfterScanReload(){
+  let pend = null, sv = null;
+  try{ pend = JSON.parse(localStorage.getItem('dolil_scan_pending') || 'null'); }catch(e){}
+  if(!pend) return;
+  try{ localStorage.removeItem('dolil_scan_pending'); }catch(e){}
+  if(Date.now() - pend.t > 15*60*1000) return;
+  try{ sv = JSON.parse(localStorage.getItem('dolil_autosave') || 'null'); }catch(e){}
+  if(!sv || !sv.state) return;
+  applyFullState(sv.state);
+  activateTab('deed');
+  showToast('ক্যামেরা খোলার সময় ব্রাউজার রিলোড হয়েছিল — আপনার ভরা তথ্য ফিরিয়ে আনা হয়েছে। ছবি তুলে আগে ফোনের গ্যালারিতে রাখুন, তারপর "🪪 স্ক্যান" চেপে গ্যালারি থেকে ছবিটি বাছুন।', 'success');
+}
+window.addEventListener('focus', ()=>{
+  // ছবি না বেছেই ফিরে এলে (বাতিল) অপেক্ষমাণ চিহ্ন মুছে দিই
+  setTimeout(()=>{ try{ localStorage.removeItem('dolil_scan_pending'); }catch(e){} }, 4000);
+});
 async function callVisionAI(st, b64){
   if(st.provider === 'gemini'){
     const url = 'https://generativelanguage.googleapis.com/v1beta/models/' + encodeURIComponent(st.model) + ':generateContent?key=' + encodeURIComponent(st.key);
@@ -1347,6 +1385,7 @@ async function callVisionAI(st, b64){
 }
 async function scanIdForPerson(role, idx, file){
   if(!file) return;
+  try{ localStorage.removeItem('dolil_scan_pending'); }catch(e){}
   const st = getAiSettings();
   if(!st.key){ showToast('আগে এডমিন ট্যাবে API Key দিয়ে সংরক্ষণ করুন', 'error'); return; }
   showToast('ছবি পড়া হচ্ছে, কয়েক সেকেন্ড অপেক্ষা করুন…', 'success');
@@ -1581,6 +1620,7 @@ async function init(){
     loadWritersDB(), loadOccupationDB(), loadReligionDB(), loadNarrativeDefaults(), loadSubRegDB()
   ]);
   ['donors','grantees'].forEach(renderPersonList);
+  restoreAfterScanReload();
   regenerateNarrative();
   if(window.lucide) lucide.createIcons();
   // বাকিগুলো পরে, ব্যাকগ্রাউন্ডে
@@ -1839,7 +1879,7 @@ function buildPersonBlock(role, idx, p){
       <b>${roleLabels[role]} নং ${toBnDigits(idx+1)}</b>
       <div class="row-actions" style="margin:0;">
         <input class="reuse-search" list="personList" placeholder="🔍 পূর্বের তথ্য: নাম বা NID লিখে খুঁজুন" autocomplete="off" style="width:250px;max-width:100%;padding:6px 8px;border:1px solid var(--line);border-radius:4px;font-size:13px;" onchange="pickPersonByText('${role}',${idx},this.value)">
-        <button type="button" class="btn small" title="NID কার্ড বা হাতে লেখা তথ্যের ছবি থেকে তথ্য নিন" onclick="this.nextElementSibling.click()">🪪 স্ক্যান</button><input type="file" accept="image/*" style="display:none" onchange="scanIdForPerson('${role}',${idx},this.files[0]);this.value=''">
+        <button type="button" class="btn small" title="NID কার্ড বা হাতে লেখা তথ্যের ছবি থেকে তথ্য নিন" onclick="prepareScan('${role}',${idx},this)">🪪 স্ক্যান</button><input type="file" accept="image/*" style="display:none" onchange="scanIdForPerson('${role}',${idx},this.files[0]);this.value=''">
         <button type="button" class="btn small ghost" onclick="savePersonFromBlock('${role}',${idx})">সংরক্ষণ করুন</button>
         ${state[role].length>1 ? `<button type="button" class="btn small danger" onclick="removePerson('${role}',${idx})">মুছুন</button>` : ''}
       </div>
