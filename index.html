@@ -6,7 +6,7 @@
 <title>আপন কম্পিউটার এন্ড ষ্টেশনারীজ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@600;700&family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <style>
   :root{
     --ink:#1c2b22;
@@ -58,7 +58,7 @@
     font-size:15px;
     line-height:1.5;
   }
-  h1,h2,h3,.serif{font-family:'Noto Serif Bengali', serif;}
+  h1,h2,h3,.serif{font-family:'Hind Siliguri',sans-serif;}
   .app-shell{display:flex;align-items:flex-start;min-height:100vh;}
   .sidebar{
     width:230px;flex-shrink:0;background:var(--seal-dark);color:#f4ecd8;
@@ -74,7 +74,7 @@
   .sidebar-toggle:hover{background:rgba(255,255,255,.08);}
   .sidebar-brand{padding:0 16px 16px;border-bottom:1px solid rgba(255,255,255,.15);margin-bottom:8px;}
   .sidebar.collapsed .sidebar-brand{display:none;}
-  .sidebar .brand-title{font-family:'Noto Serif Bengali',serif;font-size:17px;font-weight:700;line-height:1.3;}
+  .sidebar .brand-title{font-family:'Hind Siliguri',sans-serif;font-size:17px;font-weight:700;line-height:1.3;}
   .sidebar .brand-tagline{font-size:11px;color:#cdd9c9;margin-top:5px;line-height:1.45;}
   .sidebar .tab-btn{
     background:none;border:none;color:#d9e2d3;padding:12px 16px;
@@ -176,7 +176,7 @@
   .person-block .pb-head b{color:var(--heading);font-size:14.5px;}
   select.reuse-select{max-width:220px;padding:6px 8px;border:1px solid var(--line);border-radius:4px;font-size:13px;}
   select.plain-select{max-width:260px;padding:6px 8px;border:1px solid var(--line);border-radius:4px;font-size:13px;}
-  .bn-num{font-family:'Noto Sans Bengali','Hind Siliguri',sans-serif!important;font-weight:600;font-size:15.5px!important;letter-spacing:.3px;}
+  .bn-num{font-family:'Hind Siliguri',sans-serif!important;font-weight:400;letter-spacing:normal;}
   .addr-toggle{font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:6px;margin:8px 0 2px;}
   .section-sub{font-size:12.5px;color:var(--brass);font-weight:700;margin:14px 0 -2px;text-transform:uppercase;letter-spacing:.4px;}
   .bn-preview{font-size:12.5px;color:var(--heading);margin-top:3px;background:var(--callout-green);border-radius:3px;padding:3px 7px;display:inline-block;}
@@ -197,11 +197,11 @@
   }
   .home-btn:hover{border-color:var(--seal);box-shadow:0 2px 8px rgba(11,94,58,.12);transform:translateY(-2px);}
   .home-btn .icon{font-size:30px;margin-bottom:8px;}
-  .home-btn .title{font-family:'Noto Serif Bengali',serif;font-size:16.5px;font-weight:700;color:var(--heading);}
+  .home-btn .title{font-family:'Hind Siliguri',sans-serif;font-size:16.5px;font-weight:700;color:var(--heading);}
   .home-btn .desc{font-size:12.5px;color:var(--muted);margin-top:4px;}
   .dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-top:14px;}
   .dash-stat{background:var(--block-bg);border:1px solid var(--line);border-radius:6px;padding:16px;text-align:center;}
-  .dash-stat .n{font-size:26px;font-weight:700;color:var(--seal);font-family:'Noto Serif Bengali',serif;}
+  .dash-stat .n{font-size:26px;font-weight:700;color:var(--seal);font-family:'Hind Siliguri',sans-serif;}
   .dash-stat .l{font-size:12.5px;color:var(--muted);margin-top:4px;}
   .nid-warn{color:var(--danger)!important;border-color:var(--danger)!important;font-weight:700;}
   .nid-msg{font-size:11.5px;color:var(--danger);margin-top:3px;min-height:14px;font-weight:600;}
@@ -256,6 +256,11 @@
     to{transform:translateX(120%);opacity:0;}
   }
   .ai-filled{background:var(--callout-yellow)!important;border-color:var(--brass)!important;}
+  button.btn.btn-scan{background:#89ff00;color:#0e2000;border:1px solid #89ff00;font-weight:700;padding:7px 14px;
+    box-shadow:0 0 6px #89ff00,0 0 16px rgba(137,255,0,.55);animation:scanGlow 2.4s ease-in-out infinite alternate;}
+  button.btn.btn-scan:hover{background:#a8ff47;box-shadow:0 0 10px #89ff00,0 0 26px rgba(137,255,0,.85);}
+  @keyframes scanGlow{from{box-shadow:0 0 5px #89ff00,0 0 12px rgba(137,255,0,.35);}to{box-shadow:0 0 10px #89ff00,0 0 26px rgba(137,255,0,.8);}}
+  @media (prefers-reduced-motion:reduce){button.btn.btn-scan{animation:none;}}
 </style>
 </head>
 <body>
@@ -720,6 +725,11 @@
     </div>
     <div class="row-actions"><button class="btn" onclick="saveAiSettings()">সংরক্ষণ করুন</button><button class="btn danger" onclick="clearAiKey()">Key মুছুন</button></div>
     <p class="hint" id="aiStatus"></p>
+    <div class="section-sub">সব ডিভাইসের জন্য (প্রক্সি) — কর্মচারীদের ফোনেও Key ছাড়া চলবে</div>
+    <p class="empty-note" style="margin-top:-2px;">একটি মধ্যবর্তী সার্ভার (Cloudflare Worker) বানিয়ে তার ঠিকানা এখানে দিলে সব কম্পিউটার ও মোবাইলে স্ক্যান নিজে চলবে, কারও ডিভাইসে Key বসাতে হবে না। প্রক্সি দেওয়া থাকলে সেটিই ব্যবহার হয়।</p>
+    <div class="grid wide"><div class="field"><label>প্রক্সি ঠিকানা</label><input id="ai_proxy" placeholder="https://dolil-scan.আপনার-নাম.workers.dev" autocomplete="off"></div></div>
+    <div class="row-actions"><button class="btn" onclick="saveScanProxy()">প্রক্সি সংরক্ষণ করুন</button><button class="btn danger" onclick="clearScanProxy()">প্রক্সি মুছুন</button></div>
+    <p class="hint" id="proxyStatus"></p>
   </div>
 
   <div class="card">
@@ -997,7 +1007,7 @@ function generateNarrative(){
       'দলিলের_ধরন':deedType, 'জেলা':district, 'থানা':thana, 'রেজিস্ট্রেশন_অফিস':office, 'মৌজা':mouza,
       'ইউনিয়ন': first.union || '.........', 'তফসিল_বিবরণ':scheduleDesc,
       'মোট_জমি_কথায়':landWords, 'মোট_জমি': totalLand ? toBnDigits(totalLand) : '...',
-      'মোট_মূল্য_কথায়':priceWords, 'মোট_মূল্য': totalPrice ? toBnDigits(totalPrice) : '...',
+      'মোট_মূল্য_কথায়':priceWords, 'মোট_মূল্য': totalPrice ? bnMoney(totalPrice)+'/-' : '...',
       'দাতার_নাম':donorNames, 'গ্রহীতার_নাম':granteeNames,
       'আমি_আমরা':dGr.pron, 'আমার_আমাদের':dGr.poss, 'দাতা_শব্দ':dGr.role, 'একত্রে':dGr.together,
       'আপনি_আপনারা':grGr.pron2, 'আপনার_আপনাদের':grGr.poss2, 'গ্রহীতা_শব্দ':grGr.role,
@@ -1031,7 +1041,7 @@ ${dGr.pron} পরস্পর সম্মতিক্রমে তপশীল
   if(deedType === 'বায়নাপত্র'){
     return `পরম করুণাময় মহান সৃষ্টিকর্তার নাম স্মরণপূর্বক অত্র বায়নাপত্র দলিল প্রসঙ্গে বর্ণনা ও প্রকাশ করিতেছি যে, জেলা-${district}, উপজেলা-${thana} ও সাবরেজিষ্ট্রারী ${office} অধীন মৌজা ${mouza} স্থিত ${scheduleDesc} ভুক্ত মোট ${landWords} ভূমির বৈধ মালিক ও দখলকার ${dGr.pron} ${dGr.role} ${donorNames}।
 
-বর্তমানে ${dGr.poss} টাকার প্রয়োজনে তপশীল বর্ণিত ভূমি বিক্রয় করিবার সিদ্ধান্ত গ্রহণ করিয়া মূল্য বাবদ ${priceWords} (${totalPrice?toBnDigits(totalPrice):'...'}) টাকা ধার্য্য করতঃ ${grGr.poss2} বরাবরে বিক্রয় করিতে সম্মত হই। অদ্য সাব্যস্তকৃত মূল্যের সমুদয় টাকা উপস্থিত সাক্ষীগণের সম্মুখে ${dGr.pron} ${grGr.poss2} নিকট হইতে এককালীন নগদ বুঝিয়া পাইয়া তপশীল বর্ণিত ভূমির স্বত্ব ও দখল ${grGr.poss2} বরাবরে সমজাইয়া দিয়া চিরতরে নিঃস্বত্ববান ও দখলত্যাগী হইলাম, তবে নিবন্ধনপূর্বক এই বায়নাপত্র কার্যকর হইবে।
+বর্তমানে ${dGr.poss} টাকার প্রয়োজনে তপশীল বর্ণিত ভূমি বিক্রয় করিবার সিদ্ধান্ত গ্রহণ করিয়া মূল্য বাবদ ${priceWords} (${totalPrice?bnMoney(totalPrice)+'/-':'...'}) টাকা ধার্য্য করতঃ ${grGr.poss2} বরাবরে বিক্রয় করিতে সম্মত হই। অদ্য সাব্যস্তকৃত মূল্যের সমুদয় টাকা উপস্থিত সাক্ষীগণের সম্মুখে ${dGr.pron} ${grGr.poss2} নিকট হইতে এককালীন নগদ বুঝিয়া পাইয়া তপশীল বর্ণিত ভূমির স্বত্ব ও দখল ${grGr.poss2} বরাবরে সমজাইয়া দিয়া চিরতরে নিঃস্বত্ববান ও দখলত্যাগী হইলাম, তবে নিবন্ধনপূর্বক এই বায়নাপত্র কার্যকর হইবে।
 
 বিক্রীত সম্পত্তি ${grGr.poss2} নামে নামজারি করাইয়া দান-বিক্রয় ও যাবতীয় ভোগদখল সংক্রান্ত কার্যাদিতে যথেচ্ছভাবে ${grGr.role} বংশানুক্রমিকভাবে ভোগদখল করিতে থাকিবেন। ইহাতে ${dGr.pron} বা ${dGr.poss} উত্তরাধিকারীগণের কাহারো কোনোরূপ দাবি-দাওয়া নাই বা রহিল না। ভবিষ্যতে কোনো প্রকার আপত্তি উত্থাপিত হইলে সমুদয় ক্ষতিপূরণসহ মূল্যের সাকুল্য টাকা ফেরত দিতে ${dGr.pron} বাধ্য থাকিব।`;
   }
@@ -1045,7 +1055,7 @@ ${dGr.pron} স্বেচ্ছায়, সন্তুষ্ট মনে �
   // Default: সাফ কবলা
   return `পরম করুণাময় মহান সৃষ্টিকর্তার নাম স্মরণপূর্বক অত্র ${deedType} দলিল প্রসঙ্গে বর্ণনা ও প্রকাশ করিতেছি যে, জেলা-${district}, উপজেলা-${thana} ও সাবরেজিষ্ট্রারী ${office} অধীন মৌজা ${mouza} স্থিত ${scheduleDesc} ভুক্ত মোট ${landWords} ভূমির বৈধ মালিক ও দখলকার ${dGr.pron} ${dGr.role} ${donorNames}।
 
-বর্তমানে ${dGr.poss} টাকার প্রয়োজনে তপশীল বর্ণিত ভূমি বিক্রয় করিবার সিদ্ধান্ত গ্রহণ করিয়া মূল্য বাবদ ${priceWords} (${totalPrice?toBnDigits(totalPrice):'...'}) টাকা ধার্য্য করতঃ ${grGr.poss2} বরাবরে বিক্রয় করিতে সম্মত হই। অদ্য সাব্যস্তকৃত মূল্যের সমুদয় টাকা উপস্থিত সাক্ষীগণের সম্মুখে ${dGr.pron} ${grGr.poss2} নিকট হইতে এককালীন নগদ বুঝিয়া পাইয়া তপশীল বর্ণিত ভূমির স্বত্ব ও দখল ${grGr.poss2} বরাবরে সমজাইয়া দিয়া চিরতরে নিঃস্বত্ববান ও দখলত্যাগী হইলাম।
+বর্তমানে ${dGr.poss} টাকার প্রয়োজনে তপশীল বর্ণিত ভূমি বিক্রয় করিবার সিদ্ধান্ত গ্রহণ করিয়া মূল্য বাবদ ${priceWords} (${totalPrice?bnMoney(totalPrice)+'/-':'...'}) টাকা ধার্য্য করতঃ ${grGr.poss2} বরাবরে বিক্রয় করিতে সম্মত হই। অদ্য সাব্যস্তকৃত মূল্যের সমুদয় টাকা উপস্থিত সাক্ষীগণের সম্মুখে ${dGr.pron} ${grGr.poss2} নিকট হইতে এককালীন নগদ বুঝিয়া পাইয়া তপশীল বর্ণিত ভূমির স্বত্ব ও দখল ${grGr.poss2} বরাবরে সমজাইয়া দিয়া চিরতরে নিঃস্বত্ববান ও দখলত্যাগী হইলাম।
 
 বিক্রীত সম্পত্তি ${grGr.poss2} নামে নামজারি করাইয়া দান-বিক্রয় ও যাবতীয় ভোগদখল সংক্রান্ত কার্যাদিতে যথেচ্ছভাবে ${grGr.role} বংশানুক্রমিকভাবে ভোগদখল করিতে থাকিবেন। ইহাতে ${dGr.pron} বা ${dGr.poss} উত্তরাধিকারীগণের কাহারো কোনোরূপ দাবি-দাওয়া নাই বা রহিল না। ভবিষ্যতে কোনো প্রকার আপত্তি উত্থাপিত হইলে সমুদয় ক্ষতিপূরণসহ মূল্যের সাকুল্য টাকা ফেরত দিতে ${dGr.pron} বাধ্য থাকিব।`;
 }
@@ -1246,13 +1256,14 @@ function loadAiSettingsUi(){
   const pv = aiLs('dolil_ai_provider') || 'claude';
   const sel = document.getElementById('ai_provider'); if(sel) sel.value = pv;
   fillAiFields(pv);
+  updateProxyUi();
 }
 function fillAiFields(pv){
   const st = getAiSettings(pv);
   const k = document.getElementById('ai_key'), m = document.getElementById('ai_model'), msg = document.getElementById('aiStatus');
   if(k){ k.value = st.key; k.placeholder = AI_KEY_PLACEHOLDER[pv]; }
   if(m){ m.value = st.model; m.placeholder = AI_DEFAULT_MODEL[pv]; }
-  if(msg) msg.textContent = st.key ? '✓ ' + (pv === 'gemini' ? 'Gemini' : 'Claude') + ' Key সংরক্ষিত আছে' : 'Key দেওয়া নেই — স্ক্যান বাটন কাজ করবে না';
+  if(msg) msg.textContent = st.key ? '✓ ' + (pv === 'gemini' ? 'Gemini' : 'Claude') + ' Key সংরক্ষিত আছে' : (scanProxyUrl ? 'প্রক্সি চালু আছে — এই ডিভাইসে Key লাগবে না' : 'Key দেওয়া নেই — স্ক্যান বাটন কাজ করবে না');
 }
 function onAiProviderChange(){ fillAiFields(document.getElementById('ai_provider').value); }
 function saveAiSettings(){
@@ -1318,6 +1329,40 @@ function applyScannedToPerson(role, idx, r){
   filled.forEach(k=>{ const el = block && block.querySelector('[data-f="'+k+'"]'); if(el) el.classList.add('ai-filled'); });
   return filled;
 }
+// (ঐচ্ছিক, আরও নিরাপদ) প্রক্সির ঠিকানা এখানে বসালে শুধু এটিই চলবে — Firebase/এডমিন থেকে বদলানো যাবে না।
+const SCAN_PROXY_FIXED = '';
+let scanProxyUrl = SCAN_PROXY_FIXED;
+try{ if(!scanProxyUrl) scanProxyUrl = localStorage.getItem('dolil_scan_proxy') || ''; }catch(e){}
+function updateProxyUi(){
+  const i = document.getElementById('ai_proxy'), m = document.getElementById('proxyStatus');
+  if(i) i.value = scanProxyUrl;
+  if(m) m.textContent = scanProxyUrl ? '✓ প্রক্সি চালু — সব ডিভাইসে Key ছাড়াই স্ক্যান চলবে' : 'প্রক্সি দেওয়া নেই';
+}
+async function loadScanProxy(){
+  const d = await storeGet('setting:scanproxy');
+  if(!SCAN_PROXY_FIXED && d && d.url){
+    scanProxyUrl = d.url;
+    try{ localStorage.setItem('dolil_scan_proxy', d.url); }catch(e){}
+  }
+  updateProxyUi(); fillAiFields((document.getElementById('ai_provider')||{}).value || 'claude');
+}
+async function saveScanProxy(){
+  if(SCAN_PROXY_FIXED){ showToast('প্রক্সির ঠিকানা কোডে স্থির করা আছে — এডমিন থেকে বদলানো যাবে না', 'error'); return; }
+  const url = (document.getElementById('ai_proxy').value || '').trim().replace(/\/+$/, '');
+  if(!/^https:\/\/[^\s]+$/.test(url)){ showToast('প্রক্সি ঠিকানা https:// দিয়ে শুরু হতে হবে', 'error'); return; }
+  scanProxyUrl = url;
+  try{ localStorage.setItem('dolil_scan_proxy', url); }catch(e){}
+  const ok = await storeSet('setting:scanproxy', {url});
+  updateProxyUi(); fillAiFields(document.getElementById('ai_provider').value);
+  showToast(ok ? 'প্রক্সি সংরক্ষিত — সব ডিভাইসে চলবে' : 'প্রক্সি শুধু এই ডিভাইসে সংরক্ষিত হয়েছে', ok ? 'success' : 'error');
+}
+async function clearScanProxy(){
+  if(!confirm('প্রক্সির ঠিকানা মুছে ফেলতে চান? তখন প্রতিটি ডিভাইসে নিজের Key লাগবে।')) return;
+  scanProxyUrl = '';
+  try{ localStorage.removeItem('dolil_scan_proxy'); }catch(e){}
+  await storeDelete('setting:scanproxy');
+  updateProxyUi(); fillAiFields(document.getElementById('ai_provider').value);
+}
 function prepareScan(role, idx, btn){
   // ছবি তুলতে ক্যামেরা খুললে মোবাইল ব্রাউজার অনেক সময় পেজ রিলোড করে — তাই আগেই ফর্মের তথ্য রেখে দিই
   try{
@@ -1343,6 +1388,13 @@ window.addEventListener('focus', ()=>{
   setTimeout(()=>{ try{ localStorage.removeItem('dolil_scan_pending'); }catch(e){} }, 4000);
 });
 async function callVisionAI(st, b64){
+  if(scanProxyUrl){
+    const res = await fetch(scanProxyUrl, {method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({image: b64})});
+    if(!res.ok){
+      throw {status: res.status, friendly: res.status === 403 ? 'এই সাইটের অনুমতি নেই (প্রক্সির ALLOWED_ORIGINS-এ সাইটের ঠিকানা দিন)' : res.status === 429 ? 'আজকের সীমা পার বা অনেক অনুরোধ — একটু পরে/কাল চেষ্টা করুন' : res.status === 400 ? 'ছবিটি ঠিক নয় — আবার ছবি দিন' : 'AI পরিষেবায় সমস্যা (প্রক্সির Key বা সেটিং দেখুন)'};
+    }
+    return (await res.json()).text || '';
+  }
   if(st.provider === 'gemini'){
     const url = 'https://generativelanguage.googleapis.com/v1beta/models/' + encodeURIComponent(st.model) + ':generateContent?key=' + encodeURIComponent(st.key);
     const res = await fetch(url, {
@@ -1387,7 +1439,7 @@ async function scanIdForPerson(role, idx, file){
   if(!file) return;
   try{ localStorage.removeItem('dolil_scan_pending'); }catch(e){}
   const st = getAiSettings();
-  if(!st.key){ showToast('আগে এডমিন ট্যাবে API Key দিয়ে সংরক্ষণ করুন', 'error'); return; }
+  if(!st.key && !scanProxyUrl){ showToast('আগে এডমিন ট্যাবে API Key বা প্রক্সি দিয়ে সংরক্ষণ করুন', 'error'); return; }
   showToast('ছবি পড়া হচ্ছে, কয়েক সেকেন্ড অপেক্ষা করুন…', 'success');
   try{
     const b64 = await imageFileToBase64(file, 1600);
@@ -1617,7 +1669,7 @@ async function init(){
   // শুধু ফর্মের জন্য জরুরি তথ্য আগে লোড হয়
   await Promise.allSettled([
     loadMouzaDB(), loadVillageDB(), loadClassDB(), loadOfficeDB(),
-    loadWritersDB(), loadOccupationDB(), loadReligionDB(), loadNarrativeDefaults(), loadSubRegDB()
+    loadWritersDB(), loadOccupationDB(), loadReligionDB(), loadNarrativeDefaults(), loadSubRegDB(), loadScanProxy()
   ]);
   ['donors','grantees'].forEach(renderPersonList);
   restoreAfterScanReload();
@@ -1879,7 +1931,7 @@ function buildPersonBlock(role, idx, p){
       <b>${roleLabels[role]} নং ${toBnDigits(idx+1)}</b>
       <div class="row-actions" style="margin:0;">
         <input class="reuse-search" list="personList" placeholder="🔍 পূর্বের তথ্য: নাম বা NID লিখে খুঁজুন" autocomplete="off" style="width:250px;max-width:100%;padding:6px 8px;border:1px solid var(--line);border-radius:4px;font-size:13px;" onchange="pickPersonByText('${role}',${idx},this.value)">
-        <button type="button" class="btn small" title="NID কার্ড বা হাতে লেখা তথ্যের ছবি থেকে তথ্য নিন" onclick="prepareScan('${role}',${idx},this)">🪪 স্ক্যান</button><input type="file" accept="image/*" style="display:none" onchange="scanIdForPerson('${role}',${idx},this.files[0]);this.value=''">
+        <button type="button" class="btn small btn-scan" title="NID কার্ড বা হাতে লেখা তথ্যের ছবি থেকে তথ্য নিন" onclick="prepareScan('${role}',${idx},this)">🪪 স্ক্যান</button><input type="file" accept="image/*" style="display:none" onchange="scanIdForPerson('${role}',${idx},this.files[0]);this.value=''">
         <button type="button" class="btn small ghost" onclick="savePersonFromBlock('${role}',${idx})">সংরক্ষণ করুন</button>
         ${state[role].length>1 ? `<button type="button" class="btn small danger" onclick="removePerson('${role}',${idx})">মুছুন</button>` : ''}
       </div>
@@ -2057,7 +2109,7 @@ function renderSchedules(){
 
 function numPreview(val, kind){
   if(!val || !String(val).trim()) return '';
-  if(kind==='money') return numberToBanglaWords(parseNum(val))+' টাকা মাত্র ('+toBnDigits(parseNum(val))+')';
+  if(kind==='money') return numberToBanglaWords(parseNum(val))+' টাকা মাত্র ('+bnMoney(parseNum(val))+'/-)';
   if(kind==='land') return acreToShotokWords(parseNum(val));
   if(kind==='mutation') return toBnDigits(bnToEnDigits(val)) + ' (' + mutationToWords(val) + ')';
   const n = parseNum(val);
@@ -2226,7 +2278,7 @@ function refreshScheduleTotals(){
   totalLand = round6(totalLand);
   totalPrice = round6(totalPrice);
   document.getElementById('totalScheduleLand').textContent = toBnDigits(totalLand);
-  document.getElementById('totalSchedulePrice').textContent = toBnDigits(totalPrice);
+  document.getElementById('totalSchedulePrice').textContent = bnMoney(totalPrice);
   syncAutoShares();
   updateShareInputsInPlace();
   refreshShareValidation();
@@ -2944,7 +2996,7 @@ function formatScheduleForTemplate(s, idx){
     `এস.এ দাগঃ ${s.saDag?toBnDigits(s.saDag)+' ('+numberToBanglaWords(parseNum(s.saDag))+')':''}`,
     `আর.এস দাগঃ ${s.rsDag?toBnDigits(s.rsDag)+' ('+numberToBanglaWords(parseNum(s.rsDag))+')':''}`,
     `জমির পরিমাণঃ ${s.landAmount?toBnDigits(parseNum(s.landAmount)):''} একর${s.landAmount?' ('+acreToShotokWords(parseNum(s.landAmount))+')':''}`,
-    `শ্রেণিঃ ${s.landClass}`, `মূল্যঃ ${s.price?(toBnDigits(parseNum(s.price))+' ('+numberToBanglaWords(parseNum(s.price))+' টাকা মাত্র)'):''}`,
+    `শ্রেণিঃ ${s.landClass}`, `মূল্যঃ ${s.price?(bnMoney(parseNum(s.price))+'/- ('+numberToBanglaWords(parseNum(s.price))+' টাকা মাত্র)'):''}`,
     `চৌহদ্দিঃ উত্তরেঃ ${s.bN}; দক্ষিণেঃ ${s.bS}; পূর্বেঃ ${s.bE}; পশ্চিমেঃ ${s.bW}${s.extraBoundaries.length?'; '+s.extraBoundaries.map(b=>b.label+'ঃ '+b.value).join('; '):''}`
   ];
   return `তফসিল-${toBnDigits(idx+1)}:\n` + parts.join('\n');
@@ -3016,7 +3068,7 @@ function addScheduleTokensToMap(map, schedules){
       map[`তফসিল_${n}_জমির_পরিমাণ`] = land ? toBnDigits(land) : '';
       map[`তফসিল_${n}_জমির_পরিমাণ_কথায়`] = land ? acreToShotokWords(land) : '';
       map[`তফসিল_${n}_শ্রেণি`] = s.landClass || '';
-      map[`তফসিল_${n}_মূল্য`] = price ? toBnDigits(price) : '';
+      map[`তফসিল_${n}_মূল্য`] = price ? bnMoney(price)+'/-' : '';
       map[`তফসিল_${n}_মূল্য_কথায়`] = price ? (numberToBanglaWords(price)+' টাকা মাত্র') : '';
       map[`তফসিল_${n}_এসএ_জেএল_সহ`] = numWords(s.saJl);
       map[`তফসিল_${n}_আরএস_জেএল_সহ`] = numWords(s.rsJl);
@@ -3038,6 +3090,7 @@ function addScheduleTokensToMap(map, schedules){
     });
   });
 }
+function bnMoney(n){ return toBnDigits(indianComma(n)); }
 function indianComma(n){
   const d = String(Math.round(n));
   if(d.length <= 3) return d;
@@ -3051,7 +3104,7 @@ function indianComma(n){
 function numWords(v){ return v ? toBnDigits(bnToEnDigits(v)) + ' (' + numberToBanglaWords(parseNum(v)) + ')' : ''; }
 function mutWords(v){ return v ? toBnDigits(bnToEnDigits(v)) + ' (' + mutationToWords(v) + ')' : ''; }
 function landWordsFull(a){ return a ? toBnDigits(a) + ' (' + acreToShotokWords(a) + ')' : ''; }
-function priceWordsFull(p){ return p ? toBnDigits(p) + ' (' + numberToBanglaWords(p) + ' টাকা মাত্র)' : ''; }
+function priceWordsFull(p){ return p ? bnMoney(p) + '/- (' + numberToBanglaWords(p) + ' টাকা মাত্র)' : ''; }
 function isGregorianLeap(y){
   return (y%4===0 && y%100!==0) || y%400===0;
 }
@@ -3092,12 +3145,12 @@ function buildFieldMap(){
     'আরএস_দাগ': s0.rsDag?toBnDigits(s0.rsDag):'', 'আরএস_দাগ_কথায়': s0.rsDag?numberToBanglaWords(parseNum(s0.rsDag)):'',
     'জমির_পরিমাণ': land0?toBnDigits(land0):'', 'জমির_পরিমাণ_কথায়': land0?acreToShotokWords(land0):'',
     'জমির_শ্রেণি': s0.landClass,
-    'মূল্য': price0?toBnDigits(price0):'', 'মূল্য_কথায়': price0?(numberToBanglaWords(price0)+' টাকা মাত্র'):'',
+    'মূল্য': price0?bnMoney(price0)+'/-':'', 'মূল্য_কথায়': price0?(numberToBanglaWords(price0)+' টাকা মাত্র'):'',
     'চৌহদ্দি_উত্তর': s0.bN, 'চৌহদ্দি_দক্ষিণ': s0.bS, 'চৌহদ্দি_পূর্ব': s0.bE, 'চৌহদ্দি_পশ্চিম': s0.bW,
     'অতিরিক্ত_চৌহদ্দি': extraB,
     'তফসিলসমূহ': state.schedules.map((s,i)=>formatScheduleForTemplate(s,i)).join('\n\n'),
     'মোট_জমির_পরিমাণ': toBnDigits(round6(state.schedules.reduce((sum,s)=>sum+parseNum(s.landAmount),0))),
-    'মোট_মূল্য': toBnDigits(round6(state.schedules.reduce((sum,s)=>sum+parseNum(s.price),0))),
+    'মোট_মূল্য': (function(){ const t = round6(state.schedules.reduce((sum,s)=>sum+parseNum(s.price),0)); return t ? bnMoney(t)+'/-' : ''; })(),
     'বিবরণ': g('narrativeText'),
     'দাতাগণ': formatPersonListForTemplate(state.donors,false),
     'গ্রহীতাগণ': formatPersonListForTemplate(state.grantees,false),
@@ -3197,6 +3250,7 @@ async function exportCustomWord(){
       if(/^(দাতা|গ্রহীতা|সাক্ষী|সনাক্তকারী|তফসিল)_[০-৯0-9]+_/.test(key)) return ''; // unused indexed token
       return match;
     });
+    filled = filled.replace(/\/-(?:\s|&nbsp;)*\/-/g, '/-');
     filled = fixBengaliNukta(filled);
     // ফাঁকা/ট্যাগের পরে একা ঃ (বিসর্গ) এর আগে ◌ বসে — সেখানে সাধারণ কোলন (:) বসাও
     filled = filled.replace(/(\s|&nbsp;|&#160;|>|\)|\]|[.,;])ঃ/g, '$1:');
@@ -3781,7 +3835,7 @@ function scheduleBlockHtml(s, idx){
     </table>
     <table border="1" cellspacing="0" cellpadding="4" style="margin-top:6px;">
       <tr><td><b>জমির পরিমাণ</b></td><td><b>শ্রেণী</b></td><td><b>মূল্য</b></td></tr>
-      <tr><td>${land?toBnDigits(land)+' একর ('+acreToShotokWords(land)+')':''}</td><td>${escapeHtml(s.landClass)}</td><td>${price?toBnDigits(price)+' টাকা ('+numberToBanglaWords(price)+' টাকা মাত্র)':''}</td></tr>
+      <tr><td>${land?toBnDigits(land)+' একর ('+acreToShotokWords(land)+')':''}</td><td>${escapeHtml(s.landClass)}</td><td>${price?bnMoney(price)+'/- ('+numberToBanglaWords(price)+' টাকা মাত্র)':''}</td></tr>
     </table>
     <p><b>চৌহদ্দি:</b> উত্তরেঃ ${escapeHtml(s.bN)}; দক্ষিণেঃ ${escapeHtml(s.bS)}; পূর্বেঃ ${escapeHtml(s.bE)}; পশ্চিমেঃ ${escapeHtml(s.bW)}${s.extraBoundaries.length ? '; ' + s.extraBoundaries.map(b=>escapeHtml(b.label)+'ঃ '+escapeHtml(b.value)).join('; ') : ''}।</p>
   `;
@@ -3821,7 +3875,7 @@ function buildDocHtml(){
     </table>
     <table border="1" cellspacing="0" cellpadding="4" style="margin-top:6px;">
       <tr><td><b>মোট জমির পরিমাণ</b></td><td><b>তফসিল সংখ্যা</b></td><td><b>মোট মূল্য</b></td></tr>
-      <tr><td>${totalLand?toBnDigits(totalLand)+' একর ('+acreToShotokWords(totalLand)+')':''}</td><td>${toBnDigits(schedules.length)}</td><td>${totalPrice?toBnDigits(totalPrice)+' টাকা ('+numberToBanglaWords(totalPrice)+' টাকা মাত্র)':''}</td></tr>
+      <tr><td>${totalLand?toBnDigits(totalLand)+' একর ('+acreToShotokWords(totalLand)+')':''}</td><td>${toBnDigits(schedules.length)}</td><td>${totalPrice?bnMoney(totalPrice)+'/- ('+numberToBanglaWords(totalPrice)+' টাকা মাত্র)':''}</td></tr>
     </table>
 
     <h2>দলিলের বিবরণ</h2>
