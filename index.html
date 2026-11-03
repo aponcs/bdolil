@@ -1330,6 +1330,7 @@ function applyScannedToPerson(role, idx, r){
   const box = document.getElementById({donors:'donorList', grantees:'granteeList'}[role]);
   const block = box && box.children[idx];
   filled.forEach(k=>{ const el = block && block.querySelector('[data-f="'+k+'"]'); if(el) el.classList.add('ai-filled'); });
+  regenerateNarrative();
   return filled;
 }
 // (ঐচ্ছিক, আরও নিরাপদ) প্রক্সির ঠিকানা এখানে বসালে শুধু এটিই চলবে — Firebase/এডমিন থেকে বদলানো যাবে না।
@@ -1661,6 +1662,10 @@ async function init(){
   bindSimpleFieldPreviews();
   initNarrativeTokenBars();
   initDeedDates();
+  document.addEventListener('input', e=>{
+    const t = e.target;
+    if(t && t.matches && t.matches('#donorList [data-f="name"], #granteeList [data-f="name"]')) scheduleNarrativeRefresh();
+  });
   loadAiSettingsUi();
   if(window.lucide) lucide.createIcons();
   ['aw_name','aw_father','aw_mother'].forEach(id=>{
@@ -2427,6 +2432,7 @@ function reuseIntoBlock(role, idx, personId){
     sameAddr:src.sameAddr, cVillage:src.cVillage, cPost:src.cPost, cUpazila:src.cUpazila, cDistrict:src.cDistrict
   });
   renderPersonList(role);
+  regenerateNarrative();
 }
 function reuseIntoWriter(writerId){
   if(!writerId) { state.writer = blankPerson(); renderWriterBlock(); return; }
@@ -3238,6 +3244,7 @@ function expandRepeatBlocks(text){
   return text;
 }
 async function exportCustomWord(){
+  regenerateNarrative();
   const sel = document.getElementById('templateSelectForExport');
   if(!sel || !sel.value){ showToast('টেমপ্লেট নির্বাচন করুন', 'error'); return; }
   try {
@@ -3920,6 +3927,7 @@ function buildDocHtml(){
 }
 
 async function exportWord(){
+  regenerateNarrative();
   try {
     await loadDocx();
     const html = buildDocHtml();
