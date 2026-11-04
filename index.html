@@ -259,12 +259,8 @@
     to{transform:translateX(120%);opacity:0;}
   }
   .ai-filled{background:var(--callout-yellow)!important;border-color:var(--brass)!important;}
-  button.btn.btn-scan{background:#89ff00;color:#0e2000;border:1px solid #89ff00;font-weight:700;padding:7px 14px;
-    box-shadow:0 0 6px #89ff00,0 0 16px rgba(137,255,0,.55);animation:scanGlow 2.4s ease-in-out infinite alternate;}
-  button.btn.btn-scan:hover{background:#a8ff47;box-shadow:0 0 10px #89ff00,0 0 26px rgba(137,255,0,.85);}
-  @keyframes scanGlow{from{box-shadow:0 0 5px #89ff00,0 0 12px rgba(137,255,0,.35);}to{box-shadow:0 0 10px #89ff00,0 0 26px rgba(137,255,0,.8);}}
-  @media (prefers-reduced-motion:reduce){button.btn.btn-scan{animation:none;}}
 </style>
+<base target="_blank">
 </head>
 <body>
 
@@ -436,11 +432,11 @@
   </div>
 
   <div class="card highlight-card">
-    <h2><i data-lucide="file-down" class="lucide-icon"></i> দলিল ডাউনলোড করুন</h2>
-    <p class="empty-note" style="margin-top:-4px;">বর্তমান দলিলের তথ্য অনুযায়ী সরাসরি স্ট্যান্ডার্ড Word ফাইল ডাউনলোড করুন, অথবা কাস্টম টেমপ্লেট বেছে নিন।</p>
+    <h2><i data-lucide="file-down" class="lucide-icon"></i> নোটিশ ডাউনলোড করুন</h2>
+    <p class="empty-note" style="margin-top:-4px;">নিচের বাটনে চাপলে এডমিন ট্যাবে সংরক্ষিত "নোটিশ" টেমপ্লেট অনুযায়ী Word ফাইল ডাউনলোড হবে। অথবা কাস্টম টেমপ্লেট বেছে নিন।</p>
     
     <div style="display:flex;flex-wrap:wrap;gap:12px;margin:12px 0 16px;">
-      <button type="button" class="btn" onclick="exportWord()"><i data-lucide="download" class="lucide-icon"></i> সাধারণ Word (.docx) ডাউনলোড</button>
+      <button type="button" class="btn" onclick="exportWord()"><i data-lucide="download" class="lucide-icon"></i> নোটিশ ডাউনলোড করুন</button>
     </div>
 
     <div style="border-top:1px dashed var(--line);padding-top:14px;margin-top:10px;">
@@ -1684,7 +1680,7 @@ async function init(){
   regenerateNarrative();
   if(window.lucide) lucide.createIcons();
   // বাকিগুলো পরে, ব্যাকগ্রাউন্ডে
-  setTimeout(()=>{ loadPersonsDB(); loadDraftList(); loadTemplateList(); }, 300);
+  setTimeout(async ()=>{ await seedDefaultNoticeTemplate(); loadPersonsDB(); loadDraftList(); loadTemplateList(); }, 300);
   setTimeout(()=>{ loadDocx().catch(()=>{}); }, 5000);
 }
 let adminListsPromise = null;
@@ -3351,6 +3347,30 @@ function clearTemplateEditor(){
   document.getElementById('templateHtmlMode').checked = false;
 }
 
+async function seedDefaultNoticeTemplate(){
+  if(await storeGet('customtemplate:নোটিশ')) return;
+  const text = `গণপ্রজাতন্ত্রী বাংলাদেশ সরকার
+
+নোটিশ
+
+জেলা: {{জেলা}}, উপজেলা: {{থানা}}, মৌজা: {{মৌজা}}
+
+দাতা: {{দাতাদের_নাম}}
+গ্রহীতা: {{গ্রহীতাদের_নাম}}
+
+তফসিল:
+{{তফসিলসমূহ}}
+
+বিবরণ:
+{{বিবরণ}}
+
+অতিরিক্ত তথ্য:
+{{অতিরিক্ত_তথ্য}}
+
+তারিখ: {{দলিলের_তারিখ_সম্পূর্ণ}}`;
+  await storeSet('customtemplate:নোটিশ', {text, pageSize:'A4', justify:true, fontSize:'12', htmlMode:false});
+}
+
 function insertTableIntoTemplate(){
   const colsStr = prompt('কয়টি কলাম (field) চান? (প্রতিটা কলামের উপরে শিরোনাম, নিচে মান থাকবে — যেমন সরকারি দলিলের মতো)', '4');
   if(colsStr===null) return;
@@ -3930,10 +3950,42 @@ async function exportWord(){
   regenerateNarrative();
   try {
     await loadDocx();
-    const html = buildDocHtml();
-    const firstMouza = (state.schedules[0] && state.schedules[0].mouza) || '';
-    const fname = (document.getElementById('deedType').value || 'দলিল') + '_' + (firstMouza || 'খসড়া');
-    await downloadDocxFromHtml(html, fname, pageSizeTwipsMap['A4'], docx.AlignmentType.JUSTIFIED);
+    const tpl = await storeGet('customtemplate:নোটিশ');
+    if(tpl && tpl.text){
+      // এডমিন ট্যাবে সংরক্ষিত "নোটিশ" টেমপ্লেট অনুযায়ী ডাউনলোড
+      const map = buildFieldMap();
+      let filled = expandRepeatBlocks(tpl.text).replace(/\{\{#([^}]+?)\}\}([\s\S]*?)\{\{\/\1\}\}\n?/g, (m,k,inner)=>{
+        const kk = k.trim();
+        return (kk in map && map[kk]) ? inner : '';
+      });
+      filled = filled.replace(/\{\{\s*([^}]+?)\s*\}\}/g, (m,key)=>{
+        if(key in map) return escapeHtml(map[key]).replace(/\n/g,'<br/>');
+        if(/^(দাতা|গ্রহীতা|সাক্ষী|সনাক্তকারী|তফসিল)_[০-৯0-9]+_/.test(key)) return '';
+        return m;
+      });
+      filled = filled.replace(/\/-(?:\s|&nbsp;)*\/-/g, '/-');
+      filled = fixBengaliNukta(filled);
+      filled = filled.replace(/(\s|&nbsp;|&#160;|>|\)|\]|[.,;])ঃ/g, '$1:');
+      filled = filled.replace(/<!--[\s\S]*?-->/g, '')
+                     .replace(/<\/?[a-zA-Z][^<>]*>/g, tag => tag.replace(/\s*\r?\n\s*/g, ' '));
+      filled = filled.replace(/(<(?:table|tr|td|th|tbody|thead)\b[^>]*>|<\/(?:tr|td|th|tbody|thead)>)[ \t]*\r?\n[ \t]*/gi, '$1')
+                     .replace(/[ \t]*\r?\n[ \t]*(?=<(?:\/table|\/tr|tr|td|th|\/td|\/th|\/tbody|\/thead)\b)/gi, '');
+      filled = filled.replace(/\r\n/g, '\n');
+      if(tpl.htmlMode){
+        filled = filled.replace(/[ \t]*\n[ \t\n]*/g, ' ').replace(/\s+(<br\s*\/?>)/gi, '$1').replace(/(<br\s*\/?>)\s+/gi, '$1');
+      } else {
+        filled = filled.replace(/\n/g, '<br data-nl="1"/>');
+      }
+      const align = tpl.justify !== false ? docx.AlignmentType.JUSTIFIED : undefined;
+      const baseSize = (parseInt(tpl.fontSize) || 12) * 2;
+      await downloadDocxFromHtml(filled, 'নোটিশ', pageSizeTwipsMap[tpl.pageSize] || pageSizeTwipsMap['A4'], align, baseSize, true);
+    } else {
+      // "নোটিশ" টেমপ্লেট এখনো বানানো হয়নি — আগের মতো স্ট্যান্ডার্ড ফরম্যাটে ডাউনলোড
+      const html = buildDocHtml();
+      const firstMouza = (state.schedules[0] && state.schedules[0].mouza) || '';
+      const fname = (document.getElementById('deedType').value || 'দলিল') + '_' + (firstMouza || 'খসড়া');
+      await downloadDocxFromHtml(html, fname, pageSizeTwipsMap['A4'], docx.AlignmentType.JUSTIFIED);
+    }
     showToast('Word (.docx) ডাউনলোড সম্পন্ন হয়েছে', 'success');
   } catch(e) {
     console.error('Word export error:', e);
