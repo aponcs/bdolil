@@ -572,6 +572,17 @@
           <option value="18">সবচেয়ে বড় (১৮pt)</option>
         </select>
       </div>
+      <div class="field" style="grid-column:1/-1;">
+        <label>মার্জিন (ইঞ্চিতে) — পেপার সাইজ অনুযায়ী কাগজের চারপাশের ফাঁকা জায়গা</label>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;">
+          <div style="flex:1;min-width:90px;"><label style="font-size:12px;">উপরে</label><input type="number" id="templateMarginTop" min="0" max="5" step="0.05" value="1"></div>
+          <div style="flex:1;min-width:90px;"><label style="font-size:12px;">নিচে</label><input type="number" id="templateMarginBottom" min="0" max="5" step="0.05" value="1"></div>
+          <div style="flex:1;min-width:90px;"><label style="font-size:12px;">বামে</label><input type="number" id="templateMarginLeft" min="0" max="5" step="0.05" value="1"></div>
+          <div style="flex:1;min-width:90px;"><label style="font-size:12px;">ডানে</label><input type="number" id="templateMarginRight" min="0" max="5" step="0.05" value="1"></div>
+          <button type="button" class="btn small ghost" onclick="resetTemplateMargins()">ডিফল্ট (১")</button>
+        </div>
+        <p class="hint" style="margin-top:6px;">পেপার সাইজ বদলালে মার্জিন আপনা-আপনি বদলাবে না — আপনার দেওয়া মান টেমপ্লেটের সাথে সংরক্ষিত হবে। ০ থেকে ৫ ইঞ্চির মধ্যে দিন।</p>
+      </div>
     </div>
     <div class="row-actions">
       <button class="btn" onclick="saveNamedTemplate()">এই নামে সংরক্ষণ করুন</button>
@@ -3277,7 +3288,7 @@ async function exportCustomWord(){
     }
     const align = data.justify !== false ? docx.AlignmentType.JUSTIFIED : undefined;
     const baseSize = (parseInt(data.fontSize) || 12) * 2; // docx uses half-points
-    await downloadDocxFromHtml(filled, sel.value, pageSizeTwipsMap[data.pageSize] || pageSizeTwipsMap['A4'], align, baseSize, true);
+    await downloadDocxFromHtml(filled, sel.value, pageSizeTwipsMap[data.pageSize] || pageSizeTwipsMap['A4'], align, baseSize, true, marginsFromTemplate(data));
     showToast('টেমপ্লেট Word ফাইল ডাউনলোড সম্পন্ন হয়েছে', 'success');
   } catch(e) {
     console.error('Template export error:', e);
@@ -3287,7 +3298,7 @@ async function exportCustomWord(){
 
 async function loadTemplateList(){
   const rows = await storeListWithData('customtemplate:');
-  const items = rows.filter(r=>r.value).map(r=>({name: r.key.replace('customtemplate:',''), text: r.value.text, pageSize: r.value.pageSize, justify: r.value.justify, fontSize: r.value.fontSize || '12'}));
+  const items = rows.filter(r=>r.value).map(r=>({name: r.key.replace('customtemplate:',''), text: r.value.text, pageSize: r.value.pageSize, justify: r.value.justify, fontSize: r.value.fontSize || '12', marginTop: r.value.marginTop, marginBottom: r.value.marginBottom, marginLeft: r.value.marginLeft, marginRight: r.value.marginRight}));
   items.sort((a,b)=>a.name.localeCompare(b.name,'bn'));
 
   const t = document.getElementById('templateTable');
@@ -3307,6 +3318,28 @@ async function loadTemplateList(){
   }
 }
 
+function getMarginInputs(){
+  const v = id => { const el = document.getElementById(id); return el ? el.value : ''; };
+  return { marginTop: v('templateMarginTop'), marginBottom: v('templateMarginBottom'), marginLeft: v('templateMarginLeft'), marginRight: v('templateMarginRight') };
+}
+function setMarginInputs(d){
+  d = d || {};
+  const set = (id, val) => { const el = document.getElementById(id); if(el) el.value = (val === undefined || val === null || val === '') ? '1' : val; };
+  set('templateMarginTop', d.marginTop); set('templateMarginBottom', d.marginBottom);
+  set('templateMarginLeft', d.marginLeft); set('templateMarginRight', d.marginRight);
+}
+function resetTemplateMargins(){ setMarginInputs({}); }
+// ইঞ্চি → twips (১ ইঞ্চি = ১৪৪০); ভুল/খালি মান হলে ১ ইঞ্চি
+function marginToTwips(val){
+  let n = parseFloat(String(val).replace(/[০-৯]/g, d=>'০১২৩৪৫৬৭৮৯'.indexOf(d)));
+  if(!isFinite(n)) n = 1;
+  n = Math.min(Math.max(n, 0), 5);
+  return Math.round(n * 1440);
+}
+function marginsFromTemplate(t){
+  t = t || {};
+  return { top: marginToTwips(t.marginTop), bottom: marginToTwips(t.marginBottom), left: marginToTwips(t.marginLeft), right: marginToTwips(t.marginRight) };
+}
 async function saveNamedTemplate(){
   const name = document.getElementById('templateNameInput').value.trim();
   if(!name){ showToast('টেমপ্লেটের নাম দিন', 'error'); return; }
@@ -3316,7 +3349,7 @@ async function saveNamedTemplate(){
   const justify = document.getElementById('templateJustify').checked;
   const fontSize = document.getElementById('templateFontSize').value;
   const htmlMode = document.getElementById('templateHtmlMode').checked;
-  await storeSet('customtemplate:'+name, {text, pageSize, justify, fontSize, htmlMode});
+  await storeSet('customtemplate:'+name, Object.assign({text, pageSize, justify, fontSize, htmlMode}, getMarginInputs()));
   await loadTemplateList();
   showToast('"'+name+'" টেমপ্লেট সংরক্ষণ করা হয়েছে', 'success');
 }
@@ -3330,6 +3363,7 @@ async function loadTemplateForEdit(name){
   document.getElementById('templateJustify').checked = data.justify !== false;
   document.getElementById('templateFontSize').value = data.fontSize || '12';
   document.getElementById('templateHtmlMode').checked = !!data.htmlMode;
+  setMarginInputs(data);
 }
 
 async function deleteTemplateEntry(name){
@@ -3345,6 +3379,7 @@ function clearTemplateEditor(){
   document.getElementById('templateJustify').checked = true;
   document.getElementById('templateFontSize').value = '12';
   document.getElementById('templateHtmlMode').checked = false;
+  setMarginInputs({});
 }
 
 async function seedDefaultNoticeTemplate(){
@@ -3768,8 +3803,9 @@ const pageSizeTwipsMap = {
   'Letter': {width:12240, height:15840},
   'Deed8.5x13.5': {width:12240, height:19440}
 };
-async function downloadDocxFromHtml(htmlStr, filename, pageSizeTwips, defaultAlign, defaultSize, newlineMode){
+async function downloadDocxFromHtml(htmlStr, filename, pageSizeTwips, defaultAlign, defaultSize, newlineMode, margins){
   defaultSize = defaultSize || 24;
+  margins = margins || {top:1440,bottom:1440,left:1440,right:1440};
   let bodyEl;
   if(/<html[\s>]/i.test(htmlStr)){
     const parsed = new DOMParser().parseFromString(htmlStr, 'text/html');
@@ -3779,11 +3815,11 @@ async function downloadDocxFromHtml(htmlStr, filename, pageSizeTwips, defaultAli
     wrapper.innerHTML = htmlStr;
     bodyEl = wrapper;
   }
-  docxAvail = Math.max((pageSizeTwips ? pageSizeTwips.width : 11906) - 2880, 3000);
+  docxAvail = Math.max((pageSizeTwips ? pageSizeTwips.width : 11906) - (margins.left + margins.right), 3000);
   const blocks = htmlToDocxBlocks(bodyEl, defaultAlign, defaultSize, newlineMode);
   const sectionProps = {};
   if(pageSizeTwips){
-    sectionProps.page = { size: { width: pageSizeTwips.width, height: pageSizeTwips.height }, margin: {top:1440,bottom:1440,left:1440,right:1440} };
+    sectionProps.page = { size: { width: pageSizeTwips.width, height: pageSizeTwips.height }, margin: {top:margins.top,bottom:margins.bottom,left:margins.left,right:margins.right} };
   }
   const doc = new docx.Document({
     sections: [{ properties: sectionProps, children: blocks.length ? blocks : [new docx.Paragraph('')] }],
@@ -3978,7 +4014,7 @@ async function exportWord(){
       }
       const align = tpl.justify !== false ? docx.AlignmentType.JUSTIFIED : undefined;
       const baseSize = (parseInt(tpl.fontSize) || 12) * 2;
-      await downloadDocxFromHtml(filled, 'নোটিশ', pageSizeTwipsMap[tpl.pageSize] || pageSizeTwipsMap['A4'], align, baseSize, true);
+      await downloadDocxFromHtml(filled, 'নোটিশ', pageSizeTwipsMap[tpl.pageSize] || pageSizeTwipsMap['A4'], align, baseSize, true, marginsFromTemplate(tpl));
     } else {
       // "নোটিশ" টেমপ্লেট এখনো বানানো হয়নি — আগের মতো স্ট্যান্ডার্ড ফরম্যাটে ডাউনলোড
       const html = buildDocHtml();
